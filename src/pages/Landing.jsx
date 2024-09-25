@@ -5,8 +5,8 @@ import { FaHamburger, FaMobile } from "react-icons/fa";
 import { MdNavigation } from "react-icons/md";
 export default function Landing() {
   return (
-    <section className="flex nav-wrapper my-10 justify-between items-center">
-      <div className="flex items-center gap-4 lg:gap-6">
+    <section className="flex nav-wrapper border-b   justify-between items-center">
+      <div className="flex items-center my-8 gap-4 lg:gap-6">
         <Image
           width={200}
           className="w-6 h-6 object-cover"

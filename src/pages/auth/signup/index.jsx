@@ -1,8 +1,8 @@
-import Button from "@/components/Buttons";
-import Input from "@/components/Input";
-import Link from "next/link";
-import React, { useState } from "react";
-import { FaGoogle } from "react-icons/fa";
+import Button from "@/components/Buttons"
+import Input from "@/components/Input"
+import Link from "next/link"
+import React, { useState } from "react"
+import { FaGoogle } from "react-icons/fa"
 
 export default function Signup() {
   const [payload, setPayload] = useState({
@@ -10,15 +10,15 @@ export default function Signup() {
     email: "",
     password: "",
     passwordConfirm: "",
-  });
+  })
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setPayload((prevPayload) => ({
       ...prevPayload,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   return (
     <section className="grid h-screen place-items-center w-full">
@@ -67,6 +67,7 @@ export default function Signup() {
               payload={payload}
               fieldName={fieldName}
               handleChange={handleChange}
+              className="appearance-none flex w-full h-10 px-3 py-2 text-sm bg-white  border rounded-md border-gray-300  ring-offset-background placeholder:text-gray-500  focus:border-gray-300  focus:outline-none focus:ring-2 focus:ring-gray-200/60  disabled:cursor-not-allowed disabled:opacity-50 "
             />
           ))}
 
@@ -79,5 +80,5 @@ export default function Signup() {
         </form>
       </div>
     </section>
-  );
+  )
 }

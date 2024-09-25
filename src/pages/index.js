@@ -17,7 +17,6 @@ export default function Home() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
       </Head>
       <main>
-        <Landing />
         <Heading/>
         <CheckIn/>
       </main>

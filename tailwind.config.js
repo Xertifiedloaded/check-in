@@ -12,10 +12,11 @@ module.exports = {
         foreground: "var(--foreground)",
         lightGray: "rgb(107 114 128 / 1)",
       },
-      backgroundColor:{
-        goldenYellow:'rgb(255 206 81 / 1)'
-      }
+      backgroundColor: {
+        goldenYellow: "rgb(255 206 81 / 1)",
+        bgColorRed: "#F00",
+      },
     },
   },
   plugins: [],
-};
+}
