@@ -1,36 +1,63 @@
+'use client'
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
 const CheckInContext = createContext()
+
+
 
 export const CheckInProvider = ({ children }) => {
   const [checkIns, setCheckIns] = useState({
     todayCheckIns: [],
     yesterdayCheckIns: [],
   })
+
+  const [streaks, setStreaks] = useState([])
   const [loading, setLoading] = useState(true)
   const [checkInLoading, setCheckInLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const fetchCheckIns = async () => {
-    setLoading(true)
+
+
+
+const fetchCheckIns = async () => {
+    setLoading(true);
     try {
-      const response = await fetch("/api/check-in")
+      const response = await fetch("/api/check-in");
       if (!response.ok) {
-        throw new Error("Failed to fetch check-ins")
+        throw new Error("Failed to fetch check-ins");
       }
-      const data = await response.json()
+      const data = await response.json();
       setCheckIns({
-        todayCheckIns: data.todayCheckIns,
-        yesterdayCheckIns: data.yesterdayCheckIns,
-      })
+        todayCheckIns: data.todayCheckIns.map(checkIn => ({
+          id: checkIn._id, 
+          name: checkIn.user?.name,
+          profilePicture: checkIn.user?.profilePicture,
+          message: checkIn.message,
+          date: checkIn.date,
+          streak: checkIn.streak,
+          lastCheckInDate: checkIn.lastCheckInDate,
+        })),
+        yesterdayCheckIns: data.yesterdayCheckIns.map(checkIn => ({
+          id: checkIn._id, 
+          name: checkIn.user.name,
+          profilePicture: checkIn.user.profilePicture,
+          message: checkIn.message,
+          date: checkIn.date,
+          streak: checkIn.streak,
+          lastCheckInDate: checkIn.lastCheckInDate,
+        })),
+      });
     } catch (err) {
-      console.error("Error fetching check-ins:", err)
-      setError(err.message)
+      console.error("Error fetching check-ins:", err);
+      setError(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+  
+
+
 
   const postCheckIn = async (userId, message) => {
     try {
@@ -63,7 +90,9 @@ export const CheckInProvider = ({ children }) => {
   }, [])
 
   return (
-    <CheckInContext.Provider value={{ checkIns, loading, error, postCheckIn,checkInLoading }}>
+    <CheckInContext.Provider
+      value={{ checkIns, loading, error, postCheckIn, checkInLoading }}
+    >
       {children}
     </CheckInContext.Provider>
   )
