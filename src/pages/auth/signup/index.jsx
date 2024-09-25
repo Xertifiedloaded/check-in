@@ -1,10 +1,15 @@
 import Button from "@/components/Buttons"
 import Input from "@/components/Input"
+import { useAuth } from "@/context/AuthContext"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import React, { useState } from "react"
 import { FaGoogle } from "react-icons/fa"
 
 export default function Signup() {
+  const [loading, setLoading] = useState(false)
+  const { create, error, setError } = useAuth()
+  const router = useRouter()
   const [payload, setPayload] = useState({
     name: "",
     email: "",
@@ -20,6 +25,16 @@ export default function Signup() {
     }))
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      setLoading(true)
+      await create(payload)
+      router.push("/auth/login")
+      setLoading(false)
+    } catch (err) {}
+  }
   return (
     <section className="grid h-screen place-items-center w-full">
       <div className="p-4 max-w-md w-full mx-auto">
@@ -38,8 +53,12 @@ export default function Signup() {
           </p>
         </div>
 
-        <form className="space-y-4 shadow-sm border p-6 rounded-md">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4   shadow-sm border p-6 rounded-md"
+        >
           <Button
+            type="button"
             className="flex justify-center items-center px-4 py-2 mt-5 space-x-2 text-sm font-medium text-gray-500 bg-gray-100 border rounded-md hover:text-gray-700 border-gray-200/70 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 w-full focus:ring-offset-2 focus:ring-gray-200/60 focus:shadow-outline"
             value={
               <div className="flex justify-center items-center">
@@ -49,6 +68,7 @@ export default function Signup() {
             }
           />
           <Button
+            type="button"
             className="flex justify-center items-center px-4 py-2 mt-5 space-x-2 text-sm font-medium text-gray-500 bg-gray-100 border rounded-md hover:text-gray-700 border-gray-200/70 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 w-full focus:ring-offset-2 focus:ring-gray-200/60 focus:shadow-outline"
             value={
               <div className="flex justify-center items-center">
@@ -75,7 +95,7 @@ export default function Signup() {
             type="submit"
             className="bg-black text-white py-2 px-4 rounded w-full"
           >
-            Submit
+            {loading ? "Submitting" : "Submit"}
           </button>
         </form>
       </div>

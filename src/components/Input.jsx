@@ -2,8 +2,9 @@ import React from "react"
 import Image from "next/image"
 import Button from "./Buttons"
 export default function Input({ payload, fieldName, handleChange, className }) {
+  
   return (
-    <div className="my-3">
+    <div className="my-6">
       <label
         htmlFor={fieldName}
         className="block text-sm text-gray-700 font-medium"
@@ -31,10 +32,10 @@ export default function Input({ payload, fieldName, handleChange, className }) {
 
 export function ImageUpload() {
   return (
-    <div class="flex flex-col items-center md:items-start justify-center">
+    <div className="flex flex-col items-center md:items-start justify-center">
       <div
         for="dropzone-file"
-        class="relative flex flex-col items-center justify-center w-64 h-64 border border-gray-300 border-dashed rounded-lg bg-gray-50      "
+        className="relative flex flex-col items-center justify-center w-64 h-64 border border-gray-300 border-dashed rounded-lg bg-gray-50      "
       >
         <div className="absolute p-1 rounded-full cursor-pointer right-3 top-3 bg-slate-900 ">
           <Image

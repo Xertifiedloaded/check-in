@@ -1,0 +1,46 @@
+import React from "react"
+import Image from "next/image"
+import Button from "@/components/Buttons"
+import Link from "next/link"
+import { MdNavigation } from "react-icons/md"
+export default function Header() {
+  return (
+    <section>
+      <div className="flex nav-wrapper border-b   justify-between items-center">
+        <div className="flex items-center my-8 gap-4 lg:gap-6">
+          <Link href="/">
+            <Image
+              width={200}
+              className="w-6 h-6 object-cover"
+              height={200}
+              alt="check"
+              src="/check.svg"
+            />
+          </Link>
+          <Button
+            className="bg-[#e2e8f099] hidden lg:block  text-lightGray text-sm py-2 px-6 rounded-[25px]"
+            value="Home"
+          />
+          <Button
+            className="bg-[#e2e8f099] block lg:hidden  text-lightGray text-sm py-2 px-4 rounded-[25px]"
+            value={<MdNavigation />}
+          />
+        </div>
+        <div className="flex items-center gap-6">
+          <Link href="/auth/login">
+            <Button
+              className="bg-transparent shadow-sm border border-gray-300 text-lightGray text-sm py-2 px-6 rounded-[25px]"
+              value="Login"
+            />
+          </Link>
+          <Link href="/auth/signup">
+            <Button
+              className="bg-gray-800 text-white text-sm py-2 px-6 rounded-[25px]"
+              value="Signup"
+            />
+          </Link>
+        </div>
+      </div>
+    </section>
+  )
+}

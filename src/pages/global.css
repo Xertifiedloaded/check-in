@@ -20,3 +20,17 @@ body {
   background-size: 100%;
   background-position: top;
 }
+
+
+
+
+.Toastify__ToastContainer {
+  z-index: 9999;
+  margin: 0; 
+}
+
+.Toastify__toast {
+  margin: 5px 0; 
+  max-width: 400px; 
+  width: auto; 
+}

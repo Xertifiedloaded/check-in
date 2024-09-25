@@ -1,9 +1,13 @@
-import Head from "next/head";
-import React from "react";
-import Landing from "./Landing";
-import Heading from "@/components/Heading";
-import CheckIn from "@/components/CheckIn";
+import Head from "next/head"
+import React from "react"
+import Heading from "@/components/Heading"
+import CheckIn from "@/components/CheckIn"
+import { useAuth } from "@/context/AuthContext"
+
 export default function Home() {
+  const {user}=useAuth()
+  const userId = user?._id
+  
   return (
     <>
       <Head>
@@ -17,9 +21,9 @@ export default function Home() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
       </Head>
       <main>
-        <Heading/>
-        <CheckIn/>
+        <Heading userId={userId} />
+        <CheckIn />
       </main>
     </>
-  );
+  )
 }

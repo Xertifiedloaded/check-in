@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import Button from "./Buttons";
-export default function Card() {
+export default function Card({name}) {
   return (
     <div className="shadow-md border rounded-md  bg-white my-3 flex flex-col justify-center items-center p-6">
       <Image
@@ -11,7 +10,7 @@ export default function Card() {
         height={200}
         alt="img"
       />
-      <h1 className="mt-3 text-sm font-medium">Olaitan</h1>
+      <h1 className="mt-3 text-sm font-medium">{name}</h1>
     </div>
   );
 }
@@ -34,7 +33,7 @@ export function StreakCard() {
       <Image
           src="/flame.svg"
           width={200}
-          className="w-[15px] h-[15px] "
+          className="w-[15px] h-[15px]"
           height={200}
           alt="img"
         />

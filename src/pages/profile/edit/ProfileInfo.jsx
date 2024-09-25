@@ -6,7 +6,7 @@ import UpdateHeading from "./UpdateHeading"
 export default function ProfileInfo() {
   const [payload, setPayload] = useState({
     name: "",
-    password: "",
+    email: "",
   })
 
   const handleChange = (e) => {
@@ -23,7 +23,7 @@ export default function ProfileInfo() {
         heading="Profile Information"
         paragraph="Update your account's profile information and email address."
       />
-      
+
       <form className="my-4 ">
         <ImageUpload />
       </form>

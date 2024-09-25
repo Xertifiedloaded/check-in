@@ -9,7 +9,6 @@ export const postCheckIn = async (req, res) => {
     const today = new Date().toISOString().split("T")[0];
     try {
       const existingCheckIn = await CheckIn.findOne({ userId, date: today });
-
       const checkIn = await CheckIn.create({ userId, message, date: today });
       let userStreak = await StreakModel.findOne({ userId });
 
@@ -61,7 +60,7 @@ export const getCheckIns = async (req, res) => {
     if (checkIns.length === 0) {
       console.log("No check-ins found for today and yesterday.");
     } else {
-      console.log("Check-ins found:", checkIns);
+  
     }
 
     res.status(200).json({

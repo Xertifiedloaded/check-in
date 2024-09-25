@@ -2,6 +2,7 @@ import DeleteAccount from "./DeleteAccount"
 import ProfileInfo from "./ProfileInfo"
 import UpdatePassword from "./UpdatePassword"
 
+
 export default function UpdateProfile() {
   return (
     <section className=" ">

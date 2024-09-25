@@ -1,11 +1,12 @@
 import Input from "@/components/Input"
 import React, { useState } from "react"
 import UpdateHeading from "./UpdateHeading"
+import Button from "@/components/Buttons"
 
 export default function UpdatePassword() {
   const [payload, setPayload] = useState({
-    name: "",
-    password: "",
+    currentPassword: "",
+    newPassword: "",
     confimNewPassword: "",
   })
   const handleChange = (e) => {
@@ -33,6 +34,13 @@ export default function UpdatePassword() {
               className="appearance-none flex w-full h-10  px-3 py-2 text-sm bg-white  border rounded-md border-gray-300  ring-offset-background placeholder:text-gray-500  focus:border-gray-300  focus:outline-none focus:ring-2 focus:ring-gray-200/60  disabled:cursor-not-allowed disabled:opacity-50 "
             />
           ))}
+        </div>
+        <div className="mb-2">
+          <Button
+            type="submit"
+            value="Update"
+            className="px-4 py-2  text-sm font-medium rounded-full bg-gray-800  text-white hover:bg-gray-900  dark:focus:ring-gray-100   focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer inline-flex items-center  justify-center disabled:opacity-50  focus:outline-none"
+          />
         </div>
       </form>
     </div>
