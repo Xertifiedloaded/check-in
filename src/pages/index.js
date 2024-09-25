@@ -2,7 +2,6 @@ import Head from "next/head"
 import React from "react"
 import Heading from "@/components/Heading"
 import CheckIn from "@/components/CheckIn"
-import { useAuth } from "@/context/AuthContext"
 import { useCheckIn } from "@/context/CheckInContext"
 
 export default function Home() {
@@ -14,8 +13,7 @@ export default function Home() {
       </section>
     )
   }
-  const { user } = useAuth()
-  const userId = user?._id
+
 
   return (
     <>
@@ -30,7 +28,7 @@ export default function Home() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
       </Head>
       <main>
-        <Heading userId={userId} />
+        <Heading  />
         <CheckIn />
       </main>
     </>

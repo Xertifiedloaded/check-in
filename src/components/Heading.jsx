@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react"
 import Button from "./Buttons"
 import { useCheckIn } from "@/context/CheckInContext"
 import { toast } from "react-toastify"
+import { useAuth } from "@/context/AuthContext"
 
-export default function Heading({ userId }) {
+export default function Heading() {
   const [message, setMessage] = useState("")
+  
   const { postCheckIn, checkInLoading } = useCheckIn()
-
+  const { user } = useAuth()
+  const userId = user && user._id
   const handleFocus = () => {
     if (!userId) {
       toast.error("You need to log in to check in.")
@@ -45,7 +48,6 @@ export default function Heading({ userId }) {
               value={message}
               onChange={(e) => userId && setMessage(e.target.value)} 
               onFocus={handleFocus}
-              disabled={!userId} 
             ></textarea>
           </label>
           <div className="text-center mt-10">
