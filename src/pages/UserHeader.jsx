@@ -82,10 +82,10 @@ export default function UserHeader() {
 
       {user && isOpen && (
         <ul className="nav-wrapper fixed p bg-white w-full ">
-          <Link href="/" className="my-3 px-2 text-slate-500 block">
+          <Link onClick={toggleMenu} href="/" className="my-3 px-2 text-slate-500 block">
             <li>Home</li>
           </Link>
-          <Link href="/" className="my-3  px-2 text-slate-500 block">
+          <Link  onClick={toggleMenu}  href="/" className="my-3  px-2 text-slate-500 block">
             <li>Feed</li>
           </Link>
         </ul>
