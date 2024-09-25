@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext"
 
 export default function Heading() {
   const [message, setMessage] = useState("")
-  
+
   const { postCheckIn, checkInLoading } = useCheckIn()
   const { user } = useAuth()
   const userId = user && user._id
@@ -39,14 +39,21 @@ export default function Heading() {
         <form onSubmit={handleSubmit}>
           <label htmlFor="working" className="w-full">
             <p className="mt-10 mb-3 text-center text-sm text-slate-500">
-              Stay on track, achieve your goals, and beat procrastination together!
+              Stay on track, achieve your goals, and beat procrastination
+              together!
             </p>
             <textarea
-              className={`resize-none border-2 outline-none block w-full placeholder:text-xs shadow-sm h-[120px] p-4 rounded-lg border-gray-200 ${!userId ? ' cursor-not-allowed' : ''}`}
+              className={`resize-none border-2 outline-none block w-full placeholder:text-xs shadow-sm h-[120px] p-4 rounded-lg border-gray-200 ${
+                !userId ? " cursor-not-allowed" : ""
+              }`}
               id="working"
-              placeholder={userId ? "What are you working on today?" : "Log in to enable check-in."}
+              placeholder={
+                userId
+                  ? "What are you working on today?"
+                  : "Log in to enable check-in."
+              }
               value={message}
-              onChange={(e) => userId && setMessage(e.target.value)} 
+              onChange={(e) => userId && setMessage(e.target.value)}
               onFocus={handleFocus}
             ></textarea>
           </label>
@@ -55,7 +62,7 @@ export default function Heading() {
               type="submit"
               className="bg-blue-700 px-24 text-sm ring-4 py-4 font-medium rounded-[25px] text-white"
               value={checkInLoading ? "Posting..." : "Check-In"}
-              disabled={!userId} 
+              disabled={!userId}
             />
           </div>
         </form>

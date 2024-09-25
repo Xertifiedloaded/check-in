@@ -5,7 +5,6 @@ import { useCheckIn } from "@/context/CheckInContext"
 export default function CheckIn() {
   const { loading, checkIns, error } = useCheckIn()
 
-
   return (
     <section className="nav-wrapper mt-20 gap-6 flex flex-col lg:flex-row">
       <div className="flex flex-col w-full lg:w-[70%] space-y-6">
@@ -15,7 +14,8 @@ export default function CheckIn() {
             {checkIns.todayCheckIns.map(
               ({
                 _id: checkInId,
-                userId: { id: userId, name: userName, profilePicture },
+                userId: { id: userId, name: userName,},
+                profilePicture,
                 message,
                 streak,
               }) => (

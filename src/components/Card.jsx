@@ -8,7 +8,7 @@ export default function Card({ id, name, profilePicture, streak }) {
       className="relative shadow-md border rounded-md bg-white my-3 flex flex-col justify-center items-center p-6"
     >
       <Image
-        src={profilePicture || "/no-user.png"}
+          src={profilePicture || "/no-user.png"}
         width={200}
         className="w-[50px] h-[50px] rounded-full"
         height={200}
