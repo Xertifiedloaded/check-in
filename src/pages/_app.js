@@ -1,4 +1,3 @@
-
 import "./global.css"
 import "react-toastify/dist/ReactToastify.css"
 
@@ -7,6 +6,7 @@ import { AuthProvider } from "@/context/AuthContext"
 import { CheckInProvider } from "@/context/CheckInContext"
 import { ToastContainer } from "react-toastify"
 import MainHeader from "./MainHeader"
+import SessionWrapper from "@/sessionWrapper/SessionWrapper"
 
 const poppin = Poppins({
   weight: ["200", "300", "400", "600", "700", "800"],
@@ -16,24 +16,26 @@ const poppin = Poppins({
 function App({ Component, pageProps }) {
   return (
     <div className={`${poppin.className}`}>
-      <AuthProvider>
-        <ToastContainer
-          position="top-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          closeOnClick
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        <CheckInProvider>
-          <div>
-            <MainHeader />
-          </div>
+      <SessionWrapper>
+        <AuthProvider>
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            closeOnClick
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+          <CheckInProvider>
+            <div>
+              <MainHeader />
+            </div>
 
-          <Component {...pageProps} />
-        </CheckInProvider>
-      </AuthProvider>
+            <Component {...pageProps} />
+          </CheckInProvider>
+        </AuthProvider>
+      </SessionWrapper>
     </div>
   )
 }

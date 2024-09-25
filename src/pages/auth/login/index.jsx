@@ -1,14 +1,41 @@
 import Button from "@/components/Buttons"
 import Input from "@/components/Input"
 import { useAuth } from "@/context/AuthContext"
+import { signIn, useSession } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
 import { FaGoogle } from "react-icons/fa"
 
+
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   const result = await signIn("credentials", {
+//     redirect: false,
+//     email,
+//     password,
+//   });
+
+//   if (result.error) {
+//     setError(result.error);
+//   } else {
+//     // Redirect or perform any other action on successful login
+//     window.location.href = "/"; // Redirect to homepage or dashboard
+//   }
+// };
+
+
+
+
+
+
+
 export default function Login() {
   const [loading, setLoading] = useState(false)
   const { login, error, setError } = useAuth()
+  const { data: session } = useSession()
+  console.log(session ? "hello" : "yay")
   const router = useRouter()
   const [payload, setPayload] = useState({
     email: "",
@@ -50,8 +77,12 @@ export default function Login() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 shadow-sm border p-6 rounded-md">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 shadow-sm border p-6 rounded-md"
+        >
           <Button
+            onClick={() => signIn("google")}
             type="button"
             className="flex justify-center items-center px-4 py-2 mt-5 space-x-2 text-sm font-medium text-gray-500 bg-gray-100 border rounded-md hover:text-gray-700 border-gray-200/70 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 w-full focus:ring-offset-2 focus:ring-gray-200/60 focus:shadow-outline"
             value={
