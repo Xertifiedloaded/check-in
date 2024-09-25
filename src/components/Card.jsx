@@ -1,14 +1,18 @@
 import React from "react"
 import Image from "next/image"
-export default function Card({ name, streak,profilePicture }) {
+import Link from "next/link"
+export default function Card({ id, name, profilePicture, streak }) {
   return (
-    <div className="relative shadow-md border rounded-md  bg-white my-3 flex flex-col justify-center items-center p-6">
+    <Link
+      href={`/user/${id}`} 
+      className="relative shadow-md border rounded-md bg-white my-3 flex flex-col justify-center items-center p-6"
+    >
       <Image
-        src={profilePicture || "/test.jpeg"}
+        src={profilePicture || "/no-user.png"}
         width={200}
         className="w-[50px] h-[50px] rounded-full"
         height={200}
-        alt="img"
+        alt={name} 
       />
       <h1 className="mt-3 text-sm font-medium">{name}</h1>
 
@@ -23,7 +27,7 @@ export default function Card({ name, streak,profilePicture }) {
           />
         </div>
       )}
-    </div>
+    </Link>
   )
 }
 
@@ -32,7 +36,7 @@ export function StreakCard({ name, profilePicture, streak }) {
     <div className="flex mb-3 justify-between items-center">
       <div className="flex justify-between items-center gap-10">
         <Image
-          src={profilePicture || "/test.jpeg"}
+        src={profilePicture || "/no-user.png"}
           width={200}
           className="w-[30px] h-[30px] rounded-full"
           height={200}
@@ -49,7 +53,9 @@ export function StreakCard({ name, profilePicture, streak }) {
           height={200}
           alt="img"
         />
-        <span class="text-orange-700  font-semibold">{streak} Day{streak > 1 && 's'}</span>
+        <span class="text-orange-700  font-semibold">
+          {streak} Day{streak > 1 && "s"}
+        </span>
       </div>
     </div>
   )

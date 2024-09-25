@@ -4,9 +4,9 @@ import { useCheckIn } from "@/context/CheckInContext"
 
 export default function CheckIn() {
   const { loading, checkIns, error } = useCheckIn()
-  if (loading) {
-    return <div>Loading check-ins...</div>
-  }
+  // if (loading) {
+  //   return <div className="loader"></div>
+  // }
 
   return (
     <section className="nav-wrapper mt-20 gap-6 flex flex-col lg:flex-row">
@@ -15,12 +15,19 @@ export default function CheckIn() {
           <h1 className="text-xl font-bold mb-4 border-b pb-3">Today</h1>
           <div className="grid lg:grid-cols-3 grid-cols-1 lg:gap-4 gap-2">
             {checkIns.todayCheckIns.map(
-              ({ id, name, profilePicture, message,streak }) => (
+              ({
+                _id: checkInId,
+                userId: { id: userId, name: userName, profilePicture },
+                message,
+                streak,
+              }) => (
                 <Card
-                  key={id}
-                  name={name}
+                  key={checkInId}
+                  id={userId}
+                  name={userName}
                   profilePicture={profilePicture}
                   message={message}
+                  streak={streak}
                 />
               )
             )}

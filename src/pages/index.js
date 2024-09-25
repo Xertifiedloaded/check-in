@@ -3,11 +3,20 @@ import React from "react"
 import Heading from "@/components/Heading"
 import CheckIn from "@/components/CheckIn"
 import { useAuth } from "@/context/AuthContext"
+import { useCheckIn } from "@/context/CheckInContext"
 
 export default function Home() {
-  const {user}=useAuth()
+  const { loading, checkIns, error } = useCheckIn()
+  if (loading) {
+    return (
+      <section className="flex justify-center items-center lg:h-screen h-[90vh] ">
+        <div className="loader"></div>
+      </section>
+    )
+  }
+  const { user } = useAuth()
   const userId = user?._id
-  
+
   return (
     <>
       <Head>

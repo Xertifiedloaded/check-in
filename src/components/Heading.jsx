@@ -34,18 +34,18 @@ export default function Heading({ userId }) {
           Daily Check-In
         </h1>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="working w-full">
-            <p className="w-full mt-10 mb-3 text-center text-sm text-slate-500">
-              Stay on track, achieve your goals, and beat procrastination
-              together!
+          <label htmlFor="working" className="w-full">
+            <p className="mt-10 mb-3 text-center text-sm text-slate-500">
+              Stay on track, achieve your goals, and beat procrastination together!
             </p>
             <textarea
-              className="resize-none border-2 outline-none block w-full placeholder:text-xs shadow-sm h-[120px] p-4 rounded-lg border-gray-200"
+              className={`resize-none border-2 outline-none block w-full placeholder:text-xs shadow-sm h-[120px] p-4 rounded-lg border-gray-200 ${!userId ? ' cursor-not-allowed' : ''}`}
               id="working"
-              placeholder="What are you working on today?"
+              placeholder={userId ? "What are you working on today?" : "Log in to enable check-in."}
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => userId && setMessage(e.target.value)} 
               onFocus={handleFocus}
+              disabled={!userId} 
             ></textarea>
           </label>
           <div className="text-center mt-10">
@@ -53,6 +53,7 @@ export default function Heading({ userId }) {
               type="submit"
               className="bg-blue-700 px-24 text-sm ring-4 py-4 font-medium rounded-[25px] text-white"
               value={checkInLoading ? "Posting..." : "Check-In"}
+              disabled={!userId} 
             />
           </div>
         </form>

@@ -1,10 +1,8 @@
-'use client'
+"use client"
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
 const CheckInContext = createContext()
-
-
 
 export const CheckInProvider = ({ children }) => {
   const [checkIns, setCheckIns] = useState({
@@ -17,20 +15,21 @@ export const CheckInProvider = ({ children }) => {
   const [checkInLoading, setCheckInLoading] = useState(false)
   const [error, setError] = useState(null)
 
-
-
-
-const fetchCheckIns = async () => {
-    setLoading(true);
+  const fetchCheckIns = async () => {
+    setLoading(true)
     try {
-      const response = await fetch("/api/check-in");
+      const response = await fetch("/api/check-in")
       if (!response.ok) {
-        throw new Error("Failed to fetch check-ins");
+        throw new Error("Failed to fetch check-ins")
       }
-      const data = await response.json();
+      const data = await response.json()
       setCheckIns({
-        todayCheckIns: data.todayCheckIns.map(checkIn => ({
-          id: checkIn._id, 
+        todayCheckIns: data.todayCheckIns.map((checkIn) => ({
+          id: checkIn.id,
+          userId: {
+            id: checkIn.userId._id,
+            name: checkIn.userId.name,
+          },
           name: checkIn.user?.name,
           profilePicture: checkIn.user?.profilePicture,
           message: checkIn.message,
@@ -38,8 +37,8 @@ const fetchCheckIns = async () => {
           streak: checkIn.streak,
           lastCheckInDate: checkIn.lastCheckInDate,
         })),
-        yesterdayCheckIns: data.yesterdayCheckIns.map(checkIn => ({
-          id: checkIn._id, 
+        yesterdayCheckIns: data.yesterdayCheckIns.map((checkIn) => ({
+          id: checkIn._id,
           name: checkIn.user.name,
           profilePicture: checkIn.user.profilePicture,
           message: checkIn.message,
@@ -47,17 +46,14 @@ const fetchCheckIns = async () => {
           streak: checkIn.streak,
           lastCheckInDate: checkIn.lastCheckInDate,
         })),
-      });
+      })
     } catch (err) {
-      console.error("Error fetching check-ins:", err);
-      setError(err.message);
+      console.error("Error fetching check-ins:", err)
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
-  
-
-
+  }
 
   const postCheckIn = async (userId, message) => {
     try {

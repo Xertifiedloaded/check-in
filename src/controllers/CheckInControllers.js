@@ -59,38 +59,37 @@ export const postCheckIn = async (req, res) => {
 }
 
 export const getCheckIns = async (req, res) => {
-  const today = new Date().toISOString().split("T")[0]
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  const yesterdayFormatted = yesterday.toISOString().split("T")[0]
+  const today = new Date().toISOString().split("T")[0];
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayFormatted = yesterday.toISOString().split("T")[0];
 
   try {
     const checkIns = await CheckIn.find({
       date: { $in: [today, yesterdayFormatted] },
     })
-      .populate("userId", "name profilePicture") 
+      .populate("userId", "name profilePicture");
 
     if (checkIns.length === 0) {
-      console.log("No check-ins found for today and yesterday.")
+      console.log("No check-ins found for today and yesterday.");
       return res.status(200).json({
         message: "No check-ins found for today and yesterday.",
         todayCheckIns: [],
         yesterdayCheckIns: [],
-      })
+      });
     }
 
     const streaks = await StreakModel.find({
-      userId: { $in: checkIns.map(checkIn => checkIn.userId._id) } 
-    })
+      userId: { $in: checkIns.map(checkIn => checkIn.userId._id) },
+    });
 
-
-    const streakMap = {}
+    const streakMap = {};
     streaks.forEach(streak => {
-      streakMap[streak.userId] = streak
-    })
+      streakMap[streak.userId] = streak;
+    });
 
     const formattedCheckIns = checkIns.map(checkIn => {
-      const streak = streakMap[checkIn.userId._id] || { streak: 0, lastCheckInDate: null } 
+      const streak = streakMap[checkIn.userId._id] || { streak: 0, lastCheckInDate: null };
       return {
         ...checkIn.toObject(),
         user: {
@@ -99,24 +98,27 @@ export const getCheckIns = async (req, res) => {
         },
         streak: streak.streak,
         lastCheckInDate: streak.lastCheckInDate,
-      }
-    })
+      };
+    });
+
+
+    formattedCheckIns.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     res.status(200).json({
       message: "Check-ins for today and yesterday",
-      todayCheckIns: formattedCheckIns.filter((checkIn) => checkIn.date === today),
-      yesterdayCheckIns: formattedCheckIns.filter(
-        (checkIn) => checkIn.date === yesterdayFormatted
-      ),
-    })
+      todayCheckIns: formattedCheckIns.filter(checkIn => checkIn.date === today),
+      yesterdayCheckIns: formattedCheckIns.filter(checkIn => checkIn.date === yesterdayFormatted),
+    });
   } catch (error) {
-    console.error("Error fetching check-ins:", error)
+    console.error("Error fetching check-ins:", error);
     res.status(500).json({
       message: "Error fetching check-ins",
       error: error.message,
-    })
+    });
   }
-}
+};
+
+
 
 function isYesterday(date) {
   const yesterday = new Date()
