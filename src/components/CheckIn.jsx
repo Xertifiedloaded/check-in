@@ -4,9 +4,7 @@ import { useCheckIn } from "@/context/CheckInContext"
 
 export default function CheckIn() {
   const { loading, checkIns, error } = useCheckIn()
-  // if (loading) {
-  //   return <div className="loader"></div>
-  // }
+
 
   return (
     <section className="nav-wrapper mt-20 gap-6 flex flex-col lg:flex-row">

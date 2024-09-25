@@ -1,4 +1,4 @@
-"use client"
+
 import "./global.css"
 import "react-toastify/dist/ReactToastify.css"
 

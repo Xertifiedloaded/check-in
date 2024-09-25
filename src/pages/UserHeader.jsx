@@ -3,7 +3,9 @@ import Image from "next/image"
 import Button from "@/components/Buttons"
 import Link from "next/link"
 import { MdNavigation } from "react-icons/md"
-export default function UserHeader({ user }) {
+import { useAuth } from "@/context/AuthContext"
+export default function UserHeader() {
+  const { user } = useAuth()
   return (
     <section>
       <div className="flex nav-wrapper border-b   justify-between items-center">
@@ -39,7 +41,7 @@ export default function UserHeader({ user }) {
           </Link>
           <Image
             className="w-10 h-10 ring-1 rounded-full"
-            src={user.profilePicture || "/no-user.png"}
+            src={user?.profilePicture || "/no-user.png"}
             alt="profile"
             width={200}
             height={200}
