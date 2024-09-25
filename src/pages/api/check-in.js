@@ -1,5 +1,5 @@
-import { postCheckIn } from "@/controllers/CheckInControllers";
-import { getCheckIns } from "@/controllers/TodayAndYesterdayCheckIn";
+import { getCheckIns, postCheckIn } from "@/controllers/CheckInControllers";
+
 import databaseConnection from "@/lib/database";
 
 
