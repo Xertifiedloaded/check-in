@@ -3,7 +3,7 @@ import Image from "next/image"
 import Button from "@/components/Buttons"
 import Link from "next/link"
 import MobileHamburger from "@/components/MobileHamburger"
-import { signOut, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 export default function UserHeader() {
   const { data: session } = useSession()
   const [isOpen, setIsOpen] = useState(false)
