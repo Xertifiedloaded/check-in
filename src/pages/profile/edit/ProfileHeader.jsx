@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { FaLightbulb } from "react-icons/fa"
+
 import Button from "@/components/Buttons"
 import { signOut, useSession } from "next-auth/react"
 import MobileHamburger from "@/components/MobileHamburger"
@@ -39,11 +39,13 @@ export default function ProfileHeader() {
             src="/bulb.svg"
           />
           <div className="relative hidden lg:block">
-            <Button
-              onClick={toggleMenuOpen}
-              className="bg-gray-300 hidden lg:block hover:bg-gray-400  text-black hover:border-gray-400 transition-all ease-in-out duration-300 text-xs lg:text-sm py-3 lg:px-8 px-5 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              value={session?.user?.name}
-            />
+            {session && (
+              <Button
+                onClick={toggleMenuOpen}
+                className="bg-gray-300 hidden lg:block hover:bg-gray-400  text-black hover:border-gray-400 transition-all ease-in-out duration-300 text-xs lg:text-sm py-3 lg:px-8 px-5 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                value={session?.user?.name}
+              />
+            )}
             {Open && <DropDown />}
           </div>
           <MobileHamburger isOpen={isOpen} toggleMenu={toggleMenu} />
