@@ -29,7 +29,6 @@ export const authOptions = {
           user.userId = existingUser._id; 
         }
       }
-
       return true; 
     },
     async jwt({ token, user }) {
@@ -43,6 +42,9 @@ export const authOptions = {
         session.user.id = token.id; 
       }
       return session; 
+    },
+    async redirect({ url, baseUrl }) {
+      return baseUrl; 
     },
   },
 };

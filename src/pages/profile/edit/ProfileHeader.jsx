@@ -69,10 +69,10 @@ export default function ProfileHeader() {
             <li>Feed</li>
           </Link>
           <li
-           onClick={() => signOut()}
+            onClick={() => signOut({ callbackUrl: "/" })}
             className="my-3  px-3 text-slate-500 block"
           >
-            Log Out
+            Sign Out
           </li>
         </ul>
       )}
