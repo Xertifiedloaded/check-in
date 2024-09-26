@@ -42,7 +42,7 @@ export default function Login() {
   }
 
   return (
-    <section className="grid h-screen place-items-center w-full">
+    <section className="grid lg:h-screen  place-items-center w-full">
       <div className="p-4 max-w-md w-full mx-auto">
         <div className="text-center my-5">
           <h2 class="my-4 text-2xl font-extrabold leading-9 text-center text-gray-800 ">

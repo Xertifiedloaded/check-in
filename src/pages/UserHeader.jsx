@@ -39,7 +39,7 @@ export default function UserHeader() {
   return (
     <section>
       <div className="flex nav-wrapper border-b   justify-between items-center">
-        <div className="flex items-center my-8 gap-4 lg:gap-6">
+        <div className="flex items-center my-4 gap-4 lg:gap-6">
           <Link href="/">
             <Image
               width={200}
@@ -56,10 +56,12 @@ export default function UserHeader() {
 
           <MobileHamburger isOpen={isOpen} toggleMenu={toggleMenu} />
           {session && (
-            <Button
-              className="bg-[#e2e8f099] hidden lg:block   text-lightGray text-sm py-2 px-4 rounded-[25px]"
-              value="News Feed"
-            />
+            <Link href="/feed">
+              <Button
+                className="bg-[#e2e8f099] hidden lg:block   text-lightGray text-sm py-2 px-4 rounded-[25px]"
+                value="News Feed"
+              />
+            </Link>
           )}
         </div>
         <div className="flex items-center gap-6">
@@ -89,7 +91,7 @@ export default function UserHeader() {
           </Link>
           <Link
             onClick={toggleMenu}
-            href="/"
+            href="/feed"
             className="my-3  px-2 text-slate-500 block"
           >
             <li>Feed</li>

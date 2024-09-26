@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <section>
       <div className="flex nav-wrapper border-b   justify-between items-center">
-        <div className="flex items-center my-8 gap-4 lg:gap-6">
+        <div className="flex items-center my-4 gap-4 lg:gap-6">
           <Link href="/">
             <Image
               width={200}

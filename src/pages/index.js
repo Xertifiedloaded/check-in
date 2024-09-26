@@ -27,7 +27,7 @@ export default function Home() {
         <link rel="icon" href="/" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
       </Head>
-      <main>
+      <main className="mt-28">
         <MainHeader />
         <Heading />
         <CheckIn />

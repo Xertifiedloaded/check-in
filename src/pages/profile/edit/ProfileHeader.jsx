@@ -31,12 +31,12 @@ export default function ProfileHeader() {
         </Link>
 
         <div className="flex justify-start gap-7 items-center">
-          <Image
+        <Image
             width={200}
-            className="w-4 h-4 object-cover"
+            className="w-8 h-8 ring-1 rounded-full"
             height={200}
-            alt="check"
-            src="/bulb.svg"
+            alt={session?.user?.name}
+            src={session?.user?.image || "/no-user.png"}
           />
           <div className="relative hidden lg:block">
             {session && (
@@ -63,7 +63,7 @@ export default function ProfileHeader() {
           </Link>
           <Link
             onClick={toggleMenu}
-            href="/"
+            href="/feed"
             className="my-3 px-3 text-slate-500 block"
           >
             <li>Feed</li>

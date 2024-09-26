@@ -11,10 +11,38 @@ export const CheckInProvider = ({ children }) => {
     allUserStreaks:[]
   })
 
+
   const [streaks, setStreaks] = useState([])
   const [loading, setLoading] = useState(true)
   const [checkInLoading, setCheckInLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [feed,setFeed]=useState([])
+
+
+  const FetchFeed = async () => {
+    const response = await fetch("/api/feed");
+    const data = await response.json();
+    const feedData = data.checkIns.map(({ 
+        user: { id: userId, name: userName, profilePicture }, 
+        message, 
+        date 
+    }) => ({
+        userId,
+        userName,
+        profilePicture,
+        message,
+        date,
+    }));
+console.log(feedData);
+
+    setFeed(feedData);
+};
+
+
+
+
+
+
 
   const fetchCheckIns = async () => {
     setLoading(true)
@@ -53,6 +81,7 @@ export const CheckInProvider = ({ children }) => {
         })),
         allUserStreaks: data.allUserStreaks || [],
       })
+      
     } catch (err) {
       console.error("Error fetching check-ins:", err)
       setError(err.message)
@@ -82,6 +111,7 @@ export const CheckInProvider = ({ children }) => {
       toast.success(data.message);
       setCheckInLoading(false);
       fetchCheckIns(); 
+      FetchFeed();
     } catch (error) {
       setCheckInLoading(false);
       console.error("Error posting check-in:", error);
@@ -92,12 +122,16 @@ export const CheckInProvider = ({ children }) => {
 
   
   useEffect(() => {
+    FetchFeed();
     fetchCheckIns()
   }, [])
 
+
+
+
   return (
     <CheckInContext.Provider
-      value={{ checkIns, loading, error, postCheckIn, checkInLoading }}
+      value={{ checkIns, loading, error,FetchFeed,feed, postCheckIn, checkInLoading }}
     >
       {children}
     </CheckInContext.Provider>

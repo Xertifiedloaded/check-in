@@ -41,7 +41,7 @@ export default function Heading() {
         </h1>
         <form onSubmit={handleSubmit}>
           <label htmlFor="working" className="w-full">
-            <p className="mt-10 mb-3 text-center text-sm text-slate-500">
+            <p className="lg:mt-10 my-6 lg:mb-3 text-center text-xs  md:text-sm text-slate-500">
               Stay on track, achieve your goals, and beat procrastination
               together!
             </p>

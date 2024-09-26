@@ -1,7 +1,8 @@
 import CredentialsProvider from "next-auth/providers/credentials"
 
 const URL =
-  "https://check-in-green.vercel.app/api/auth/login"
+  "https://check-in-green.vercel.app/api/auth/login" ||
+  "http://localhost:3000/api/auth/login"
 
 const credentialsProvider = CredentialsProvider({
   name: "Credentials",
