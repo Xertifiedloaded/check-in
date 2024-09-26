@@ -1,6 +1,5 @@
 import { authOptions } from "@/lib/authOptions"
 import { getServerSession } from "next-auth"
-import { NextResponse } from "next/server"
 
 const handler = async (req, res) => {
   if (req.method === "GET") {
