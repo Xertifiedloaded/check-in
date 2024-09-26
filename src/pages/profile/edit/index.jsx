@@ -9,7 +9,7 @@ export default function UpdateProfile() {
     <>
       <PageHead title="Profile" description="description" content="" />
       <ProfileHeader />
-      <section className=" ">
+      <section className=" mt-28">
         <div className="nav-wrapper my-6 ">
           <ProfileInfo />
         </div>

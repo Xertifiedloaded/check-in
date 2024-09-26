@@ -18,7 +18,7 @@ export default function ProfileHeader() {
   }
 
   return (
-    <header className="   ">
+    <header className="fixed top-0 z-50 shadow-md bg-white w-full">
       <div className="flex my-8 nav-wrapper gap-4 lg:gap-6   justify-between items-center">
         <Link href="/">
           <Image

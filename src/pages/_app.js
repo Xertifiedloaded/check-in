@@ -7,6 +7,8 @@ import { CheckInProvider } from "@/context/CheckInContext"
 import { ToastContainer } from "react-toastify"
 import MainHeader from "./MainHeader"
 import SessionWrapper from "@/sessionWrapper/SessionWrapper"
+import { useEffect } from "react"
+import Scheduler from "@/sessionWrapper/Scheduler.js"
 
 const poppin = Poppins({
   weight: ["200", "300", "400", "600", "700", "800"],
@@ -14,6 +16,7 @@ const poppin = Poppins({
 })
 
 function App({ Component, pageProps }) {
+  Scheduler()
   return (
     <div className={`${poppin.className}`}>
       <SessionWrapper>

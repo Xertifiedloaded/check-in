@@ -13,20 +13,20 @@ export default function Heading() {
   const userId = session?.user?.id || session?.user?.googleId
   console.log(userId);
   
-
   const handleFocus = () => {
     if (!userId) {
       toast.error("You need to log in to check in.")
     }
   }
   const handleSubmit = (e) => {
+    const toastId = toast.loading("Uploading, please wait...");
     e.preventDefault()
     if (!message.trim()) {
-      alert("Please enter a message before checking in.")
+      toast.error("You need to log in to check in.",{ toastId })
       return
     }
     if (!userId) {
-      toast.error("You need to log in to check in.")
+      toast.error("You need to log in to check in.",{ toastId })
       return
     }
     postCheckIn( message)

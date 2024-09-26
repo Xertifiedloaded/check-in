@@ -1,13 +1,13 @@
 import { verifyToken } from "@/lib/auth";
+import { authOptions } from "@/lib/authOptions";
 import databaseConnection from "@/lib/database";
 import UserModel from "@/models/UserModel";
+import { getServerSession } from "next-auth";
 
 export default async function handler(req, res) {
   await databaseConnection();
-
-  verifyToken(req, res, async () => {
-    const userId = req.userId;
-
+    const session = await getServerSession(req, res, authOptions)
+    const userId = session?.user?.id
     try {
       if (req.method === 'PATCH') {
         const { newEmail, newName } = req.body;
@@ -57,5 +57,4 @@ export default async function handler(req, res) {
       console.error(error);
       return res.status(500).json({ message: 'Server error', error: error.message });
     }
-  });
 }

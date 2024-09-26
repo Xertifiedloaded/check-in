@@ -24,9 +24,9 @@ export default function ProfileInfo() {
         paragraph="Update your account's profile information and email address."
       />
 
-      <form className="my-4 ">
+      <section className="my-4 ">
         <ImageUpload />
-      </form>
+      </section>
       <form className="my-4">
         <div className="w-full lg:w-[60%]">
           {Object.keys(payload).map((fieldName) => (
