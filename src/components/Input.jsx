@@ -73,7 +73,7 @@ export function ImageUpload() {
     setLoading(true)
     if (formData.img && userId) {
       try {
-        const response = await axios.post("/api/auth/profile-picture", {
+        const response = await axios.post("/api/profile-picture", {
           userId,
           imageUrl: formData.img,
         })
