@@ -1,8 +1,6 @@
 import CredentialsProvider from "next-auth/providers/credentials"
 
 const URL =
-  process.env.NEXT_CREDENTIAL_PRODUCTION ||
-  process.env.NEXT_CREDENTIAL_LOCAL ||
   "https://check-in-green.vercel.app/api/auth/login"
 
 const credentialsProvider = CredentialsProvider({
