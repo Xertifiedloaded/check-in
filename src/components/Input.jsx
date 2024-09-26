@@ -32,6 +32,7 @@ export default function Input({ payload, fieldName, handleChange, className }) {
   )
 }
 
+
 export function ImageUpload() {
   const { data: session } = useSession()
   const [formData, setFormData] = useState({ img: "" })
@@ -83,11 +84,10 @@ export function ImageUpload() {
           isLoading: false,
           autoClose: 3000,
         })
-
       } catch (error) {
         toast.update(toastId, {
           render:
-            "Error: " + error.response ? error.response.data : error.message,
+            "Error: " + (error.response ? error.response.data : error.message),
           type: "error",
           isLoading: false,
           autoClose: 3000,
@@ -174,6 +174,7 @@ export function ImageUpload() {
             value={loading ? "Uploading..." : "Upload Image"}
             type="submit"
             className="px-4 py-2 text-sm font-medium rounded-full bg-gray-800 text-white hover:bg-gray-900 dark:focus:ring-gray-100 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer inline-flex items-center w-full justify-center disabled:opacity-50 focus:outline-none"
+            disabled={!preview} // Disable button if no image preview
           />
         </div>
       </form>
