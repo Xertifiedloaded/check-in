@@ -83,36 +83,52 @@ export const CheckInProvider = ({ children }) => {
     }
   }
 
-  const postCheckIn = async (message) => {
-    const toastId = toast.loading("Uploading, please wait...")
+  const postCheckIn = async (message, toastId) => {
+    setCheckInLoading(true);
+
     try {
-      setCheckInLoading(true)
-      const response = await fetch("/api/check-in", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message }),
-      })
+        const response = await fetch("/api/check-in", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ message }),
+        });
 
-      const data = await response.json()
-      if (!response.ok) {
-        setCheckInLoading(false)
-        toast.error(data.message, { toastId })
-        return
-      }
+        const data = await response.json();
 
-      toast.success(data.message, { toastId })
-      setCheckInLoading(false)
-      fetchCheckIns()
-      FetchFeed()
+        if (!response.ok) {
+            setCheckInLoading(false);
+            toast.update(toastId, {
+                render: "Error: error posting",
+                type: "error",
+                checkInLoading: false,
+                autoClose: 3000,
+            });
+            return; 
+        }
+
+        toast.update(toastId, {
+            render: "Success! " + data.message,
+            type: "success",
+            checkInLoading: false, 
+            autoClose: 3000,
+        });
+
+        fetchCheckIns();
+        FetchFeed();
     } catch (error) {
-      setCheckInLoading(false)
-      console.error("Error posting check-in:", error)
-      toast.error("An error occurred while posting your check-in.", { toastId })
-      alert("An error occurred while posting your check-in.")
+        setCheckInLoading(false); 
+        toast.update(toastId, {
+            render: "Network error: " + error.message,
+            type: "error",
+            checkInLoading: false, 
+            autoClose: 3000,
+        });
+        console.error("Error posting check-in:", error);
     }
-  }
+};
+
 
   useEffect(() => {
     FetchFeed()

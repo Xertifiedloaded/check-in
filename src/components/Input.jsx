@@ -69,8 +69,7 @@ export function ImageUpload() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const toastId = toast.loading("Uploading, please wait...");
-    setLoading(true)
+    const toastId = toast.loading("Uploading, please wait...")
     if (formData.img && userId) {
       try {
         const response = await axios.post("/api/profile-picture", {
@@ -78,19 +77,36 @@ export function ImageUpload() {
           imageUrl: formData.img,
         })
         console.log("Profile picture uploaded successfully:", response.data)
-        toast.success("Profile Picture Uploaded Successfully", { toastId });
-        setLoading(false)
+        toast.update(toastId, {
+          render: "Success!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        })
+
       } catch (error) {
-        setLoading(false)
-        toast.error(error.response ? error.response.data : error.message, { toastId });
+        toast.update(toastId, {
+          render:
+            "Error: " + error.response ? error.response.data : error.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        })
+        toast.error(error.response ? error.response.data : error.message, {
+          toastId,
+        })
         console.error(
           "Failed to upload profile picture:",
           error.response ? error.response.data : error.message
         )
       }
     } else {
-      setLoading(false)
-      toast.error("You need to log in or upload an image", { toastId });
+      toast.update(toastId, {
+        render: "Network error: " + error.message,
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      })
       console.log("No image uploaded or user ID is missing")
     }
   }

@@ -8,28 +8,28 @@ import { useSession } from "next-auth/react"
 export default function Heading() {
   const [message, setMessage] = useState("")
   const { data: session } = useSession()
-  const { postCheckIn, checkInLoading } = useCheckIn()
-  
+  const { postCheckIn } = useCheckIn()
+
   const userId = session?.user?.id || session?.user?.googleId
-  console.log(userId);
-  
+  console.log(userId)
+
   const handleFocus = () => {
     if (!userId) {
-      toast.error("You need to log in to check in.")
+      toast.warning("You need to log in to check in.")
     }
   }
   const handleSubmit = (e) => {
-    const toastId = toast.loading("Uploading, please wait...");
     e.preventDefault()
+    const toastId = toast.loading("Posting, please wait...")
     if (!message.trim()) {
-      toast.error("You need to log in to check in.",{ toastId })
+      toast.warning("You need to log in to check in.")
       return
     }
     if (!userId) {
-      toast.error("You need to log in to check in.",{ toastId })
+      toast.error("You need to log in to check in.")
       return
     }
-    postCheckIn( message)
+    postCheckIn(message, toastId)
     setMessage("")
   }
 
@@ -64,7 +64,7 @@ export default function Heading() {
             <Button
               type="submit"
               className="bg-blue-700 px-24 text-sm ring-4 py-4 font-medium rounded-[25px] text-white"
-              value={checkInLoading ? "Posting..." : "Check-In"}
+              value="Check-In"
               disabled={!userId}
             />
           </div>
