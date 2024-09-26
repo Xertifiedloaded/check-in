@@ -28,10 +28,6 @@ function App({ Component, pageProps }) {
             theme="light"
           />
           <CheckInProvider>
-            <div>
-              <MainHeader />
-            </div>
-
             <Component {...pageProps} />
           </CheckInProvider>
         </AuthProvider>

@@ -40,6 +40,10 @@ export const CheckInProvider = ({ children }) => {
         })),
         yesterdayCheckIns: data.yesterdayCheckIns.map((checkIn) => ({
           id: checkIn._id,
+          userId: {
+            id: checkIn.userId._id,
+            name: checkIn.userId.name,
+          },
           name: checkIn.user.name,
           profilePicture: checkIn.user.profilePicture,
           message: checkIn.message,

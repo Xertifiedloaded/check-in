@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
       const checkIns = await CheckIn.find({ userId: id })
         .populate("userId", "name profilePicture")
-        .sort({ createdAt: -1 }); 
+        .sort({ createdAt: 1 }); 
 
       if (!checkIns || checkIns.length === 0) {
         return res.status(200).json({

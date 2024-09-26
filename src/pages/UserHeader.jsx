@@ -78,7 +78,6 @@ export default function UserHeader() {
           />
         </div>
       </div>
-      {session && <button onClick={() => signOut()}>Sign out</button>}
       {session && isOpen && (
         <ul className="nav-wrapper fixed p bg-white w-full ">
           <Link

@@ -3,6 +3,7 @@ import React from "react"
 import Heading from "@/components/Heading"
 import CheckIn from "@/components/CheckIn"
 import { useCheckIn } from "@/context/CheckInContext"
+import MainHeader from "./MainHeader"
 
 export default function Home() {
   const { loading, checkIns, error } = useCheckIn()
@@ -13,7 +14,6 @@ export default function Home() {
       </section>
     )
   }
-
 
   return (
     <>
@@ -28,7 +28,8 @@ export default function Home() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
       </Head>
       <main>
-        <Heading  />
+        <MainHeader />
+        <Heading />
         <CheckIn />
       </main>
     </>
