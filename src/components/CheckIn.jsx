@@ -11,7 +11,7 @@ export default function CheckIn() {
         <div>
           <h1 className="text-xl font-bold mb-4 border-b pb-3">Today</h1>
           <div className="grid lg:grid-cols-3 grid-cols-1 lg:gap-4 gap-2">
-            {checkIns.todayCheckIns.map(
+            {checkIns.todayCheckIns.reverse().map(
               ({
                 _id: checkInId,
                 userId: { id: userId, name: userName,},
@@ -50,7 +50,7 @@ export default function CheckIn() {
 
       <div className="w-full lg:w-[30%]">
         <h1 className="text-xl font-bold mb-4 border-b pb-3">Streak</h1>
-        {checkIns.todayCheckIns.map(
+        {checkIns?.allUserStreaks?.map(
           ({ id, name, profilePicture, message, streak }) => (
             <StreakCard
               key={id}

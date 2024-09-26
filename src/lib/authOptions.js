@@ -1,58 +1,53 @@
-// import GitHubProvider from 'next-auth/providers/github';
-// import GoogleProvider from 'next-auth/providers/google';
-
-// export const authOptions = {
-//   providers: [
-//     GitHubProvider({
-//       clientId: process.env.GITHUB_ID,
-//       clientSecret: process.env.GITHUB_SECRET,
-//     }),
-//     GoogleProvider({
-//       clientId: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//     }),
-//   ],
-// };
 
 
-
-import CredentialsProvider from "next-auth/providers/credentials";
-import GitHubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
+import credentialsProvider from "@/providers/Credential";
+import githubProvider from "@/providers/GitHubProvider";
+import googleProvider from "@/providers/GoogleProvider";
+import databaseConnection from "./database";
+import UserModel from "@/models/UserModel";
 
 export const authOptions = {
   providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text", placeholder: "your@example.com" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        const res = await fetch("http://localhost:3000/api/auth/login", {
-          method: "POST",
-          body: JSON.stringify({
-            email: credentials.email,
-            password: credentials.password,
-          }),
-          headers: { "Content-Type": "application/json" },
-        });
-
-        const user = await res.json();
-        if (res.ok && user) {
-          return user;
-        } else {
-          return null;
-        }
-      },
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
+    credentialsProvider,
+    githubProvider,
+    googleProvider,
   ],
+  callbacks: {
+    async signIn({ user, account, profile }) {
+      await databaseConnection()
+      if (account.provider === "google") {
+        const existingUser = await UserModel.findOne({ googleId: profile.id });
+        if (!existingUser) {
+          const newUser = await UserModel.create({
+            name: profile.name,
+            email: profile.email,
+            image: profile.picture,
+            googleId: profile.id,
+          });
+          user.userId = newUser._id; 
+        } else {
+          user.userId = existingUser._id; 
+        }
+      }
+
+      return true; 
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.userId; 
+      }
+      return token; 
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id; 
+      }
+      return session; 
+    },
+  },
 };
+
+
+
+
+

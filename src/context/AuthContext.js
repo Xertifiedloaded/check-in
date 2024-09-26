@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
     const fetchMe = async () => {
       try {
         const token = cookies.get("token");
-        const res = await fetch(`${API}/me`, {
+        const res = await fetch(`/api/auth/getUserSession`, {
           method: "GET",
           credentials: "include",
           headers: {
@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }) => {
 
         if (res.ok) {
           const { user: meUser } = await res.json();
-          console.log(meUser);
+          // console.log(meUser);
           setUser(meUser || null);
           setStatus(meUser ? "loggedIn" : undefined);
         } else {

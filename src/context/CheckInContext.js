@@ -8,6 +8,7 @@ export const CheckInProvider = ({ children }) => {
   const [checkIns, setCheckIns] = useState({
     todayCheckIns: [],
     yesterdayCheckIns: [],
+    allUserStreaks:[]
   })
 
   const [streaks, setStreaks] = useState([])
@@ -46,6 +47,7 @@ export const CheckInProvider = ({ children }) => {
           streak: checkIn.streak,
           lastCheckInDate: checkIn.lastCheckInDate,
         })),
+        allUserStreaks: data.allUserStreaks || [],
       })
     } catch (err) {
       console.error("Error fetching check-ins:", err)
@@ -55,32 +57,36 @@ export const CheckInProvider = ({ children }) => {
     }
   }
 
-  const postCheckIn = async (userId, message) => {
+  const postCheckIn = async (message) => {
     try {
-      setCheckInLoading(true)
+      setCheckInLoading(true);
       const response = await fetch("/api/check-in", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, message }),
-      })
-      const data = await response.json()
+        body: JSON.stringify({ message }), 
+      });
+  
+      const data = await response.json();
       if (!response.ok) {
-        setCheckInLoading(false)
-        toast.error(data.message)
+        setCheckInLoading(false);
+        toast.error(data.message);
+        return; 
       }
-      toast.success(data.message)
-      setCheckInLoading(false)
-      fetchCheckIns()
+  
+      toast.success(data.message);
+      setCheckInLoading(false);
+      fetchCheckIns(); 
     } catch (error) {
-      setCheckInLoading(false)
-      console.error("Error posting check-in:", error)
-      toast.error("An error occurred while posting your check-in.")
-      alert("An error occurred while posting your check-in.")
+      setCheckInLoading(false);
+      console.error("Error posting check-in:", error);
+      toast.error("An error occurred while posting your check-in.");
+      alert("An error occurred while posting your check-in.");
     }
-  }
+  };
 
+  
   useEffect(() => {
     fetchCheckIns()
   }, [])

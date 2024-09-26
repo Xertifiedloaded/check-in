@@ -8,7 +8,5 @@ export default function MainHeader() {
   const { data: session } = useSession()
   console.log(session ? "hello" : "yay")
 
-  const { user } = useAuth()
-
-  return <div>{user ? <UserHeader /> : <Header />}</div>
+  return <div>{session ? <UserHeader /> : <Header />}</div>
 }

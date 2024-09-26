@@ -3,19 +3,22 @@ import Button from "./Buttons"
 import { useCheckIn } from "@/context/CheckInContext"
 import { toast } from "react-toastify"
 import { useAuth } from "@/context/AuthContext"
+import { useSession } from "next-auth/react"
 
 export default function Heading() {
   const [message, setMessage] = useState("")
-
+  const { data: session } = useSession()
   const { postCheckIn, checkInLoading } = useCheckIn()
-  const { user } = useAuth()
-  const userId = user && user._id
+  
+  const userId = session?.user?.id || session?.user?.googleId
+  console.log(userId);
+  
+
   const handleFocus = () => {
     if (!userId) {
       toast.error("You need to log in to check in.")
     }
   }
-
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!message.trim()) {
@@ -26,7 +29,7 @@ export default function Heading() {
       toast.error("You need to log in to check in.")
       return
     }
-    postCheckIn(userId, message)
+    postCheckIn( message)
     setMessage("")
   }
 

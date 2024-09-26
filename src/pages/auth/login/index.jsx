@@ -7,35 +7,10 @@ import { useRouter } from "next/router"
 import React, { useState } from "react"
 import { FaGoogle } from "react-icons/fa"
 
-
-
-// const handleSubmit = async (e) => {
-//   e.preventDefault();
-//   const result = await signIn("credentials", {
-//     redirect: false,
-//     email,
-//     password,
-//   });
-
-//   if (result.error) {
-//     setError(result.error);
-//   } else {
-//     // Redirect or perform any other action on successful login
-//     window.location.href = "/"; // Redirect to homepage or dashboard
-//   }
-// };
-
-
-
-
-
-
-
 export default function Login() {
   const [loading, setLoading] = useState(false)
-  const { login, error, setError } = useAuth()
   const { data: session } = useSession()
-  console.log(session ? "hello" : "yay")
+  const [error, setError] = useState(null)
   const router = useRouter()
   const [payload, setPayload] = useState({
     email: "",
@@ -52,13 +27,20 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    try {
-      setLoading(true)
-      await login(payload)
-      router.push("/")
+    const result = await signIn("credentials", {
+      redirect: false,
+      ...payload,
+    })
+    setLoading(false)
+    if (result.error) {
+      setError(result.error)
       setLoading(false)
-    } catch (err) {}
+    } else {
+      setLoading(false)
+      window.location.href = "/"
+    }
   }
+
   return (
     <section className="grid h-screen place-items-center w-full">
       <div className="p-4 max-w-md w-full mx-auto">
