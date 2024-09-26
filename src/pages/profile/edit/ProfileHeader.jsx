@@ -5,11 +5,16 @@ import { FaLightbulb } from "react-icons/fa"
 import Button from "@/components/Buttons"
 import { signOut, useSession } from "next-auth/react"
 import MobileHamburger from "@/components/MobileHamburger"
+import DropDown from "./DropDown"
 export default function ProfileHeader() {
   const { data: session } = useSession()
   const [isOpen, setIsOpen] = useState(false)
   const toggleMenu = () => {
     setIsOpen((prev) => !prev)
+  }
+  const [Open, setOpen] = useState(false)
+  const toggleMenuOpen = () => {
+    setOpen((prev) => !prev)
   }
 
   return (
@@ -33,10 +38,14 @@ export default function ProfileHeader() {
             alt="check"
             src="/bulb.svg"
           />
-          <Button
-            className="bg-gray-300 hidden lg:block hover:bg-gray-400  text-black hover:border-gray-400 transition-all ease-in-out duration-300 text-xs lg:text-sm py-3 lg:px-8 px-5 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-400 disabled:cursor-not-allowed"
-            value={session?.user?.name}
-          />
+          <div className="relative hidden lg:block">
+            <Button
+              onClick={toggleMenuOpen}
+              className="bg-gray-300 hidden lg:block hover:bg-gray-400  text-black hover:border-gray-400 transition-all ease-in-out duration-300 text-xs lg:text-sm py-3 lg:px-8 px-5 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              value={session?.user?.name}
+            />
+            {Open && <DropDown />}
+          </div>
           <MobileHamburger isOpen={isOpen} toggleMenu={toggleMenu} />
         </div>
       </div>
@@ -57,7 +66,10 @@ export default function ProfileHeader() {
           >
             <li>Feed</li>
           </Link>
-          <li onClick={() => signOut()} className="my-3  px-3 text-slate-500 block">
+          <li
+            onClick={() => signOut()}
+            className="my-3  px-3 text-slate-500 block"
+          >
             Log Out
           </li>
         </ul>
