@@ -32,92 +32,100 @@ export default function Input({ payload, fieldName, handleChange, className }) {
   )
 }
 
-
-
-
 export function ImageUpload() {
-  const { data: session } = useSession();
-  const [formData, setFormData] = useState({ img: "" });
-  const [preview, setPreview] = useState("");
-  const [loading, setLoading] = useState(false);
-  const userId = session?.user?.id; 
+  const { data: session } = useSession()
+  const [formData, setFormData] = useState({ img: "" })
+  const [preview, setPreview] = useState("")
+  const [loading, setLoading] = useState(false)
+  const userId = session?.user?.id
 
-  const CLOUDINARY_UPLOAD_PRESET = "iboyi7t9";
-  const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/dpn9svwqm/image/upload`;
-
+  const CLOUDINARY_UPLOAD_PRESET = "iboyi7t9"
+  const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/dpn9svwqm/image/upload`
 
   useEffect(() => {
     const fetchCurrentImage = async () => {
       try {
-        const response = await axios.get(`/api/profile/profile-picture/${userId}`);
-        const profilePicture = response.data.profilePicture; 
+        setLoading(true); 
+        const response = await axios.get(`/api/profile/get-profile-picture`, {
+          data: { userId },
+        });
+        const profilePicture = response.data.profilePicture;
         if (profilePicture) {
           setPreview(profilePicture);
           setFormData((prev) => ({ ...prev, img: profilePicture }));
         }
       } catch (error) {
         console.error("Failed to fetch current profile picture:", error.message);
+      } finally {
+        setLoading(false); 
       }
     };
-
+  
     if (userId) {
       fetchCurrentImage();
     }
   }, [userId]);
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file) {
-      const data = new FormData();
-      data.append("file", file);
-      data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      const data = new FormData()
+      data.append("file", file)
+      data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET)
 
       try {
-        const response = await axios.post(CLOUDINARY_UPLOAD_URL, data);
-        setFormData((prev) => ({ ...prev, img: response.data.secure_url }));
-        setPreview(response.data.secure_url);
+        const response = await axios.post(CLOUDINARY_UPLOAD_URL, data)
+        setFormData((prev) => ({ ...prev, img: response.data.secure_url }))
+        setPreview(response.data.secure_url)
       } catch (error) {
-        console.error("Image upload failed:", error.response ? error.response.data : error.message);
+        console.error(
+          "Image upload failed:",
+          error.response ? error.response.data : error.message
+        )
       }
     }
-  };
+  }
 
   const handleClearImage = async () => {
     if (userId) {
       try {
-        await axios.delete(`/api/profile/profile-picture`, { data: { userId } }); 
-        setFormData({ img: "" });
-        setPreview("");
+        await axios.delete(`/api/profile/profile-picture`, { data: { userId } })
+        setFormData({ img: "" })
+        setPreview("")
       } catch (error) {
-        console.error("Failed to delete profile picture:", error.message);
+        console.error("Failed to delete profile picture:", error.message)
       }
     }
-  };
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const toastId = toast.loading("Uploading, please wait...");
+    e.preventDefault()
+    const toastId = toast.loading("Uploading, please wait...")
     if (formData.img && userId) {
       try {
         const response = await axios.post("/api/profile/profile-picture", {
-          userId, 
+          userId,
           imageUrl: formData.img,
-        });
-        console.log("Profile picture uploaded successfully:", response.data);
+        })
+        console.log("Profile picture uploaded successfully:", response.data)
         toast.update(toastId, {
           render: "Success!",
           type: "success",
           isLoading: false,
           autoClose: 3000,
-        });
+        })
       } catch (error) {
         toast.update(toastId, {
-          render: "Error: " + (error.response ? error.response.data : error.message),
+          render:
+            "Error: " + (error.response ? error.response.data : error.message),
           type: "error",
           isLoading: false,
           autoClose: 3000,
-        });
-        console.error("Failed to upload profile picture:", error.response ? error.response.data : error.message);
+        })
+        console.error(
+          "Failed to upload profile picture:",
+          error.response ? error.response.data : error.message
+        )
       }
     } else {
       toast.update(toastId, {
@@ -125,9 +133,9 @@ export function ImageUpload() {
         type: "error",
         isLoading: false,
         autoClose: 3000,
-      });
+      })
     }
-  };
+  }
 
   return (
     <div className="flex flex-col items-center md:items-start justify-center">
@@ -156,13 +164,13 @@ export function ImageUpload() {
             width={100}
             height={100}
             alt="cloud"
-            className="w-10 h-10"
+            className="w-8 h-8"
           />
-          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mb-2 text-sm text-gray-500 ">
             <span className="font-semibold">Click to upload</span> or drag and
             drop
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-gray-500 ">
             PNG, JPG (MAX. 800x400px)
           </p>
         </label>
@@ -192,10 +200,10 @@ export function ImageUpload() {
             value={loading ? "Uploading..." : "Upload Image"}
             type="submit"
             className="px-4 py-2 text-sm font-medium rounded-full bg-gray-800 text-white hover:bg-gray-900 dark:focus:ring-gray-100 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 cursor-pointer inline-flex items-center w-full justify-center disabled:opacity-50 focus:outline-none"
-            disabled={!preview} 
+            disabled={!preview}
           />
         </div>
       </form>
     </div>
-  );
+  )
 }
