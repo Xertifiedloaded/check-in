@@ -20,7 +20,7 @@ export default function Heading() {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    const toastId = toast.loading("Posting, please wait...")
+
     if (!message.trim()) {
       toast.warning("You need to log in to check in.")
       return
@@ -29,7 +29,7 @@ export default function Heading() {
       toast.error("You need to log in to check in.")
       return
     }
-    postCheckIn(message, toastId)
+    postCheckIn(message)
     setMessage("")
   }
 

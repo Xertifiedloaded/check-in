@@ -83,52 +83,54 @@ export const CheckInProvider = ({ children }) => {
     }
   }
 
-  const postCheckIn = async (message, toastId) => {
-    setCheckInLoading(true);
+  const postCheckIn = async (message) => {
+    setCheckInLoading(true)
+    const toastId = toast.loading("Posting check-in...")
 
     try {
-        const response = await fetch("/api/check-in", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ message }),
-        });
+      const response = await fetch("/api/check-in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
+      })
 
-        const data = await response.json();
+      const data = await response.json()
 
-        if (!response.ok) {
-            setCheckInLoading(false);
-            toast.update(toastId, {
-                render: "Error: error posting",
-                type: "error",
-                checkInLoading: false,
-                autoClose: 3000,
-            });
-            return; 
-        }
-
+      if (!response.ok) {
+        setCheckInLoading(false)
         toast.update(toastId, {
-            render: "Success! " + data.message,
-            type: "success",
-            checkInLoading: false, 
-            autoClose: 3000,
-        });
+          render: "Error: error posting",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        })
+        return
+      }
 
-        fetchCheckIns();
-        FetchFeed();
+      toast.update(toastId, {
+        render: "Success! " + data.message,
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      })
+
+      fetchCheckIns()
+      FetchFeed()
     } catch (error) {
-        setCheckInLoading(false); 
-        toast.update(toastId, {
-            render: "Network error: " + error.message,
-            type: "error",
-            checkInLoading: false, 
-            autoClose: 3000,
-        });
-        console.error("Error posting check-in:", error);
+      setCheckInLoading(false)
+      toast.update(toastId, {
+        render: "Network error: " + error.message,
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      })
+      console.error("Error posting check-in:", error)
+    } finally {
+      setCheckInLoading(false)
     }
-};
-
+  }
 
   useEffect(() => {
     FetchFeed()
