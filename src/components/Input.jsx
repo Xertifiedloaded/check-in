@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import Button from "./Buttons"
 import axios from "axios"
-import { useSession } from "next-auth/react"
+import { useSession, signIn } from "next-auth/react"
 import { toast } from "react-toastify"
 import { useCheckIn } from "@/context/CheckInContext"
 export default function Input({ payload, fieldName, handleChange, className }) {
@@ -32,6 +32,8 @@ export default function Input({ payload, fieldName, handleChange, className }) {
     </div>
   )
 }
+
+
 
 export function ImageUpload() {
   const { data: session, status } = useSession()
@@ -73,11 +75,6 @@ export function ImageUpload() {
     }
   }, [userId])
 
-
-
-
-
-  
   const handleImageUpload = async (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -137,6 +134,10 @@ export function ImageUpload() {
           imageUrl: formData.img,
         })
         console.log("Profile picture uploaded successfully:", response.data)
+
+        // Update session to reflect new profile picture
+        await signIn('credentials', { redirect: false }) 
+
         toast.update(toastId, {
           render: "Success!",
           type: "success",
