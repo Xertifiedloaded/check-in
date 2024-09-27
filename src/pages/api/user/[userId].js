@@ -11,10 +11,13 @@ export default async function handler(req, res) {
       if (!user) {
         return res.status(404).json({ message: "User not found" })
       }
+      console.log(user);
+      
       return res.status(200).json({
         id: user._id,
         name: user.name,
         email: user.email,
+        image: user.profilePicture,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       })

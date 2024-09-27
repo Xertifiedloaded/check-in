@@ -34,7 +34,7 @@ export default function Input({ payload, fieldName, handleChange, className }) {
 }
 
 export function ImageUpload() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const userId = session?.user?.id
   const [formData, setFormData] = useState({ img: "" })
   const [preview, setPreview] = useState("")
@@ -44,16 +44,22 @@ export function ImageUpload() {
   const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/dpn9svwqm/image/upload`
 
   useEffect(() => {
+    if (status === "authenticated") {
+      setFormData({
+        image: session.user.image || "",
+      })
+    }
+  }, [status, session])
+
+  useEffect(() => {
     const fetchCurrentImage = async () => {
       try {
         setLoading(true)
-        const response = await axios.get(`/api/profile/get-profile-picture`, {
-          data: { userId },
-        })
-        const { profilePicture } = response.user
-        if (profilePicture) {
-          setPreview(profilePicture)
-          setFormData((prev) => ({ ...prev, img: profilePicture }))
+        const response = await axios.get(`/api/user/${userId}`)
+        const { image } = response.data
+        if (image) {
+          setPreview(image)
+          setFormData((prev) => ({ ...prev, img: image }))
         }
       } catch (error) {
         console.error("Failed to fetch current profile picture:", error.message)
@@ -67,6 +73,11 @@ export function ImageUpload() {
     }
   }, [userId])
 
+
+
+
+
+  
   const handleImageUpload = async (e) => {
     const file = e.target.files[0]
     if (file) {

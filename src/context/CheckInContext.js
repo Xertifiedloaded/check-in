@@ -11,32 +11,41 @@ export const CheckInProvider = ({ children }) => {
     allUserStreaks: [],
   })
 
-  const [streaks, setStreaks] = useState([])
   const [loading, setLoading] = useState(true)
   const [checkInLoading, setCheckInLoading] = useState(false)
   const [error, setError] = useState(null)
   const [feed, setFeed] = useState([])
 
-  const FetchFeed = async () => {
-    const response = await fetch("/api/feed")
-    const data = await response.json()
-    const feedData = data.checkIns.map(
-      ({
-        user: { id: userId, name: userName, profilePicture },
-        message,
-        date,
-      }) => ({
-        userId,
-        userName,
-        profilePicture,
-        message,
-        date,
-      })
-    )
-    console.log(feedData)
+  // const FetchFeed = async () => {
+  //   const response = await fetch("/api/feed")
+  //   const data = await response.json()
+  //   console.log(data)
+  //   const feedData = data.checkIns.map(
+  //     ({
+  //       user: { id: userId, name: userName, profilePicture },
+  //       message,
+  //       date,
+  //     }) => ({
+  //       userId,
+  //       userName,
+  //       profilePicture,
+  //       message,
+  //       date,
+  //     })
+  //   )
 
-    setFeed(feedData)
-  }
+
+  //   setFeed(feedData)
+  // }
+
+
+
+
+
+
+
+
+
 
   const fetchCheckIns = async () => {
     setLoading(true)
@@ -46,6 +55,8 @@ export const CheckInProvider = ({ children }) => {
         throw new Error("Failed to fetch check-ins")
       }
       const data = await response.json()
+      console.log(data);
+      
       setCheckIns({
         todayCheckIns: data.todayCheckIns.map((checkIn) => ({
           id: checkIn.id,
@@ -83,6 +94,8 @@ export const CheckInProvider = ({ children }) => {
     }
   }
 
+
+
   const postCheckIn = async (message) => {
     setCheckInLoading(true)
     const toastId = toast.loading("Posting check-in...")
@@ -117,7 +130,7 @@ export const CheckInProvider = ({ children }) => {
       })
 
       fetchCheckIns()
-      FetchFeed()
+
     } catch (error) {
       setCheckInLoading(false)
       toast.update(toastId, {
@@ -133,7 +146,6 @@ export const CheckInProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    FetchFeed()
     fetchCheckIns()
   }, [])
 
@@ -143,7 +155,6 @@ export const CheckInProvider = ({ children }) => {
         checkIns,
         loading,
         error,
-        FetchFeed,
         feed,
         postCheckIn,
         checkInLoading,

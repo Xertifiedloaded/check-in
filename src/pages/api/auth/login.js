@@ -13,7 +13,10 @@ export default async function handler(req, res) {
       if (!user) {
         return res.status(400).json({ message: "Invalid email or password" })
       }
-console.log(user);
+      if (user.isGoogleAuth) {
+        return res.status(400).json({ message: "Please log in with Google" })
+      }
+      console.log(user)
       const isMatch = await comparePassword(password, user.password)
       if (!isMatch) {
         return res.status(400).json({ message: "Invalid email or password" })

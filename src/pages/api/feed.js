@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const checkIns = await CheckIn.find({}).populate("userId", "name profilePicture");
     const formattedCheckIns = checkIns.map((checkIn) => ({
       user: {
-        id: checkIn.userId._id,
+        id: checkIn.userId.id,
         name: checkIn.userId.name,
         profilePicture: checkIn.userId.profilePicture,
       },
@@ -21,6 +21,7 @@ export default async function handler(req, res) {
     }));
 
     formattedCheckIns.sort((a, b) => new Date(b.date) - new Date(a.date));
+
 
     res.status(200).json({
       message: "All check-ins retrieved successfully",
