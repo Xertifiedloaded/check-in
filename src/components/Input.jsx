@@ -45,26 +45,26 @@ export function ImageUpload() {
   useEffect(() => {
     const fetchCurrentImage = async () => {
       try {
-        setLoading(true); 
+        setLoading(true)
         const response = await axios.get(`/api/profile/get-profile-picture`, {
           data: { userId },
-        });
-        const profilePicture = response.data.profilePicture;
+        })
+        const { profilePicture } = response.data.user
         if (profilePicture) {
-          setPreview(profilePicture);
-          setFormData((prev) => ({ ...prev, img: profilePicture }));
+          setPreview(profilePicture)
+          setFormData((prev) => ({ ...prev, img: profilePicture }))
         }
       } catch (error) {
-        console.error("Failed to fetch current profile picture:", error.message);
+        console.error("Failed to fetch current profile picture:", error.message)
       } finally {
-        setLoading(false); 
+        setLoading(false)
       }
-    };
-  
-    if (userId) {
-      fetchCurrentImage();
     }
-  }, [userId]);
+
+    if (userId) {
+      fetchCurrentImage()
+    }
+  }, [userId])
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0]
@@ -138,7 +138,7 @@ export function ImageUpload() {
   }
 
   return (
-    <div className="flex flex-col items-center md:items-start justify-center">
+    <div className="flex flex-col   items-center md:items-start justify-center">
       <form
         onSubmit={handleSubmit}
         className="relative flex flex-col items-center justify-center w-64 h-64 border border-gray-300 border-dashed rounded-lg bg-gray-50"
@@ -170,9 +170,7 @@ export function ImageUpload() {
             <span className="font-semibold">Click to upload</span> or drag and
             drop
           </p>
-          <p className="text-xs text-gray-500 ">
-            PNG, JPG (MAX. 800x400px)
-          </p>
+          <p className="text-xs text-gray-500 ">PNG, JPG (MAX. 800x400px)</p>
         </label>
 
         <input
@@ -190,7 +188,7 @@ export function ImageUpload() {
               width={100}
               height={100}
               alt="Preview"
-              className="rounded-lg object-cover"
+              className="rounded-lg my-4 w-20 h-20 object-cover"
             />
           </div>
         )}
