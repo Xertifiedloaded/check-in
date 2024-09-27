@@ -88,12 +88,26 @@ export function ImageUpload() {
 
   const handleClearImage = async () => {
     if (userId) {
+      const toastId = toast.loading("Uploading, please wait...")
       try {
+       
         await axios.delete(`/api/profile/profile-picture`, { data: { userId } })
         setFormData({ img: "" })
         setPreview("")
+        toast.update(toastId, {
+          render: "Success! , Profile picture uploaded",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        })
       } catch (error) {
-        console.error("Failed to delete profile picture:", error.message)
+        toast.update(toastId, {
+          render: "Error Deleting Profile Picture",
+          type: "error" + error.message,
+          isLoading: false,
+          autoClose: 3000,
+        })
+        console.error("Failed to delete profile picture:", )
       }
     }
   }
