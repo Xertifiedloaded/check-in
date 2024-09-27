@@ -31,7 +31,7 @@ export default function ProfileHeader() {
         </Link>
 
         <div className="flex justify-start gap-7 items-center">
-        <Image
+          <Image
             width={200}
             className="w-8 h-8 ring-1 rounded-full"
             height={200}
@@ -46,7 +46,7 @@ export default function ProfileHeader() {
                 value={session?.user?.name}
               />
             )}
-            {Open && <DropDown />}
+            {Open && session && <DropDown />}
           </div>
           <MobileHamburger isOpen={isOpen} toggleMenu={toggleMenu} />
         </div>

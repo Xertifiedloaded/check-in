@@ -4,7 +4,7 @@ import Button from "@/components/Buttons"
 
 export default function DeleteAccount() {
   return (
-    <div className="shadow-md border p-6 rounded-md">
+    <div className="shadow-md  border p-6 rounded-md">
       <UpdateHeading
         heading="Delete Account"
         paragraph="After deleting your account, all data and resources are permanently removed. Enter your password to confirm deletion."

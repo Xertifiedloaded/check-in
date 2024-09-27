@@ -14,7 +14,6 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: "Invalid email or password" })
       }
 console.log(user);
-
       const isMatch = await comparePassword(password, user.password)
       if (!isMatch) {
         return res.status(400).json({ message: "Invalid email or password" })
