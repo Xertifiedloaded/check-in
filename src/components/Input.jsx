@@ -4,6 +4,7 @@ import Button from "./Buttons"
 import axios from "axios"
 import { useSession } from "next-auth/react"
 import { toast } from "react-toastify"
+import { useCheckIn } from "@/context/CheckInContext"
 export default function Input({ payload, fieldName, handleChange, className }) {
   return (
     <div className="my-6">
@@ -38,7 +39,7 @@ export function ImageUpload() {
   const [preview, setPreview] = useState("")
   const [loading, setLoading] = useState(false)
   const userId = session?.user?.id
-
+  const { fetchCheckIns, FetchFeed } = useCheckIn()
   const CLOUDINARY_UPLOAD_PRESET = "iboyi7t9"
   const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/dpn9svwqm/image/upload`
 
@@ -77,6 +78,9 @@ export function ImageUpload() {
         const response = await axios.post(CLOUDINARY_UPLOAD_URL, data)
         setFormData((prev) => ({ ...prev, img: response.data.secure_url }))
         setPreview(response.data.secure_url)
+        fetchCheckIns()
+        FetchFeed()
+        
       } catch (error) {
         console.error(
           "Image upload failed:",
@@ -90,10 +94,11 @@ export function ImageUpload() {
     if (userId) {
       const toastId = toast.loading("Uploading, please wait...")
       try {
-       
         await axios.delete(`/api/profile/profile-picture`, { data: { userId } })
         setFormData({ img: "" })
         setPreview("")
+        fetchCheckIns()
+        FetchFeed()
         toast.update(toastId, {
           render: "Success! , Profile picture uploaded",
           type: "success",
@@ -107,7 +112,7 @@ export function ImageUpload() {
           isLoading: false,
           autoClose: 3000,
         })
-        console.error("Failed to delete profile picture:", )
+        console.error("Failed to delete profile picture:")
       }
     }
   }
