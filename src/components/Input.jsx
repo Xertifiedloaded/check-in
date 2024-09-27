@@ -50,7 +50,7 @@ export function ImageUpload() {
         const response = await axios.get(`/api/profile/get-profile-picture`, {
           data: { userId },
         })
-        const { profilePicture } = response.data.user
+        const { profilePicture } = response.user
         if (profilePicture) {
           setPreview(profilePicture)
           setFormData((prev) => ({ ...prev, img: profilePicture }))
@@ -80,7 +80,6 @@ export function ImageUpload() {
         setPreview(response.data.secure_url)
         fetchCheckIns()
         FetchFeed()
-        
       } catch (error) {
         console.error(
           "Image upload failed:",
