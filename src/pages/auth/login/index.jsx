@@ -1,5 +1,6 @@
 import Button from "@/components/Buttons"
 import Input from "@/components/Input"
+import PageHead from "@/components/PageHead"
 import { useAuth } from "@/context/AuthContext"
 import { signIn, useSession } from "next-auth/react"
 import Link from "next/link"
@@ -42,6 +43,8 @@ export default function Login() {
   }
 
   return (
+   <>
+      <PageHead title="Login" description="description" content="" />
     <section className="grid lg:h-screen  place-items-center w-full">
       <div className="max-w-lg  w-full mx-auto">
         <div className="text-center my-5">
@@ -106,5 +109,6 @@ export default function Login() {
         </form>
       </div>
     </section>
+   </>
   )
 }

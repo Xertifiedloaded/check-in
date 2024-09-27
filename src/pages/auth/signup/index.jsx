@@ -1,5 +1,6 @@
 import Button from "@/components/Buttons"
 import Input from "@/components/Input"
+import PageHead from "@/components/PageHead"
 import { useAuth } from "@/context/AuthContext"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
@@ -8,6 +9,7 @@ import React, { useState } from "react"
 import { FaGoogle } from "react-icons/fa"
 
 export default function Signup() {
+
   const [loading, setLoading] = useState(false)
   const { create, error, setError } = useAuth()
   const router = useRouter()
@@ -37,6 +39,8 @@ export default function Signup() {
     } catch (err) {}
   }
   return (
+  <>
+      <PageHead title="Sign Up" description="description" content="" />
     <section className="grid h-screen place-items-center w-full">
       <div className=" max-w-lg  w-full mx-auto">
         <div className="text-center my-5">
@@ -102,5 +106,6 @@ export default function Signup() {
         </form>
       </div>
     </section>
+  </>
   )
 }
