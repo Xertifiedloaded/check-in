@@ -63,7 +63,7 @@ export default function Login() {
           onSubmit={handleSubmit}
           className="space-y-4 shadow-sm border p-6 rounded-md"
         >
-          <Button
+          {/* <Button
            onClick={() => signIn("google", { callbackUrl: "/" })}
             type="button"
             className="flex justify-center items-center px-4 py-2 mt-5 space-x-2 text-sm font-medium text-gray-500 bg-gray-100 border rounded-md hover:text-gray-700 border-gray-200/70 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 w-full focus:ring-offset-2 focus:ring-gray-200/60 focus:shadow-outline"
@@ -83,7 +83,7 @@ export default function Login() {
                 <p className="text-black">Login With GitHub</p>
               </div>
             }
-          />
+          /> */}
           <fieldset className="border-t  my-4 text-center text-xs">
             <legend>or</legend>
           </fieldset>
