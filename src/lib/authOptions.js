@@ -42,9 +42,9 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async signIn(user, account) {
-      console.log("User:", user);
-      console.log("Account:", account);
+    async signIn({user, account}) {
+      console.log("User:", user)
+      console.log("Account:", account)
       if (!account || !account.provider) {
         console.error("Account is undefined or missing provider")
         return null
@@ -57,7 +57,7 @@ export const authOptions = {
           if (ifUserExist) {
             return user
           }
-          const newUser = new UserModel({ name, email })
+          const newUser = new UserModel({ name: name, email: email })
           const res = await newUser.save()
           if (res.status === 200 || res.status === 201) {
             return user
@@ -69,7 +69,6 @@ export const authOptions = {
       }
       return user
     },
-
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
