@@ -34,7 +34,7 @@ export default function Card({ id, name, profilePicture, streak }) {
   )
 }
 
-export function StreakCard({ name, profilePicture, streak }) {
+export function StreakCard({ name, profilePicture, streakCount }) {
   return (
     <div className="flex mb-3 justify-between items-center">
       <div className="flex justify-between items-center gap-10">
@@ -57,7 +57,7 @@ export function StreakCard({ name, profilePicture, streak }) {
           alt="img"
         />
         <small class="text-orange-700 text-[9px] md:text-sm  font-semibold">
-          {streak} Day{streak > 1 && "s"}
+          {streakCount} Day{streakCount > 1 && "s"}
         </small>
       </div>
     </div>

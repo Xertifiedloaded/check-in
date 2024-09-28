@@ -7,14 +7,14 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const user = await UserModel.findById(userId)
+      const user = await UserModel.findOne({ id: userId }) 
       if (!user) {
         return res.status(404).json({ message: "User not found" })
       }
       console.log(user);
       
       return res.status(200).json({
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         image: user.profilePicture,
@@ -26,22 +26,22 @@ export default async function handler(req, res) {
       return res.status(500).json({ message: "Server error" })
     }
   }
+  
   if (req.method === "DELETE") {
     try {
-      const user = await UserModel.findById(userId)
+      const user = await UserModel.findOne({ id: userId }) 
       if (!user) {
         return res.status(404).json({ message: "User not found" })
       }
 
-      await UserModel.findByIdAndDelete(userId)
-      return res
-        .status(200)
-        .json({ message: "User account deleted successfully" })
+      await UserModel.deleteOne({ id: userId }) 
+      return res.status(200).json({ message: "User account deleted successfully" })
     } catch (error) {
       console.error("Error deleting user:", error)
       return res.status(500).json({ message: "Server error" })
     }
   }
+  
   if (req.method === "PATCH") {
     const { newEmail, newName } = req.body
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: "Invalid email format" })
     }
 
-    const user = await UserModel.findById(userId)
+    const user = await UserModel.findOne({ id: userId }) 
     if (!user) {
       return res.status(404).json({ message: "User not found" })
     }
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       message: "User details updated successfully",
-      id: user._id,
+      id: user.id, 
       userId: userId,
       name: user.name,
       email: user.email,

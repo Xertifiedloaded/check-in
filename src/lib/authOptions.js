@@ -19,6 +19,7 @@ export const authOptions = {
             return null
           }
           const isMatch = await comparePassword(password, user.password)
+          
           if (!isMatch) {
             return null
           }
