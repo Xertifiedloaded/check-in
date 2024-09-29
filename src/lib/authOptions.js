@@ -1,33 +1,33 @@
-import { comparePassword } from "./auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import GitHubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
-import { prisma } from "./prisma";
+import { comparePassword } from "./auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import GitHubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google"
+import { prisma } from "./prisma"
 
 export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
       async authorize(credentials) {
-        const { email, password } = credentials;
+        const { email, password } = credentials
         try {
           const user = await prisma.user.findUnique({
             where: { email },
-          });
+          })
 
           if (!user) {
-            return null;
+            return null
           }
 
-          const isMatch = await comparePassword(password, user.password);
+          const isMatch = await comparePassword(password, user.password)
           if (!isMatch) {
-            return null;
+            return null
           }
 
-          return user;
+          return user
         } catch (error) {
-          console.log(error);
-          return null;
+          console.log(error)
+          return null
         }
       },
     }),
@@ -46,71 +46,79 @@ export const authOptions = {
   callbacks: {
     async signIn({ user, account }) {
       if (!account || !account.provider) {
-        console.error("Account is undefined or missing provider");
-        return false;
+        console.error("Account is undefined or missing provider")
+        return false
       }
 
       if (account.provider === "google") {
-        const { name, email } = user;
+        const { name, email, image } = user 
         try {
           let dbUser = await prisma.user.findUnique({
             where: { email },
-          });
+          })
 
           if (!dbUser) {
             dbUser = await prisma.user.create({
               data: {
                 name,
                 email,
+                profilePicture: image,
                 isGoogleAuth: true,
               },
-            });
+            })
+          } else {
+            if (!dbUser.profilePicture || dbUser.profilePicture !== image) {
+              dbUser = await prisma.user.update({
+                where: { email },
+                data: {
+                  profilePicture: image,
+                },
+              })
+            }
           }
-          // set googleID correct database ID
-          user.id = dbUser.id; 
-          return true;
+          user.id = dbUser.id
+          return true
         } catch (error) {
-          console.log(error);
-          return false;
+          console.log(error)
+          return false
         }
       }
-      return true;
+      return true
     },
+
     async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.name = user.name;
+        token.id = user.id
+        token.email = user.email
+        token.name = user.name
       }
-      
-      // If it's a Google sign-in, ensure we're using the correct ID
       if (account && account.provider === "google") {
         const dbUser = await prisma.user.findUnique({
           where: { email: token.email },
-        });
+        })
         if (dbUser) {
-          token.id = dbUser.id;
+          token.id = dbUser.id
         }
       }
-      
-      console.log(`JWT token:`, token);
-      return token;
+
+      console.log(`JWT token:`, token)
+      return token
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.name = token.name;
+        session.user.id = token.id
+        session.user.email = token.email
+        session.user.name = token.name
       }
-      console.log(`Session:`, session);
-      return session;
+      console.log(`Session:`, session)
+      return session
     },
     async redirect({ url, baseUrl }) {
-      return baseUrl;
+      return baseUrl
     },
   },
   pages: {
     signIn: "/",
   },
   secret: process.env.NEXTAUTH_SECRET,
-};
+}

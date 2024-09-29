@@ -20,6 +20,8 @@ export default function Input({ payload, fieldName, handleChange, className }) {
             ? "password"
             : fieldName === "email"
             ? "email"
+            : fieldName === "passwordConfirm"
+            ? "password"
             : "text"
         }
         id={fieldName}
@@ -33,10 +35,8 @@ export default function Input({ payload, fieldName, handleChange, className }) {
   )
 }
 
-
-
 export function ImageUpload() {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
   const userId = session?.user?.id
   const [formData, setFormData] = useState({ img: "" })
   const [preview, setPreview] = useState("")
@@ -46,33 +46,21 @@ export function ImageUpload() {
   const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/dpn9svwqm/image/upload`
 
   useEffect(() => {
-    if (status === "authenticated") {
-      setFormData({
-        image: session.user.image || "",
-      })
-    }
-  }, [status, session])
-
-  useEffect(() => {
-    const fetchCurrentImage = async () => {
-      try {
-        setLoading(true)
-        const response = await axios.get(`/api/user/${userId}`)
-        const { image } = response.data
-        if (image) {
-          setPreview(image)
-          setFormData((prev) => ({ ...prev, img: image }))
+    const fetchProfilePicture = async () => {
+      if (userId) {
+        try {
+          const response = await axios.get(`/api/user/${userId}`);
+          console.log(response)
+          const userProfile = response.data.profilePicture
+          setPreview(userProfile)
+          setFormData((prev) => ({ ...prev, img: userProfile.profilePicture }))
+        } catch (error) {
+          console.error("Failed to fetch user profile:", error)
         }
-      } catch (error) {
-        console.error("Failed to fetch current profile picture:", error.message)
-      } finally {
-        setLoading(false)
       }
     }
 
-    if (userId) {
-      fetchCurrentImage()
-    }
+    fetchProfilePicture()
   }, [userId])
 
   const handleImageUpload = async (e) => {
@@ -99,27 +87,27 @@ export function ImageUpload() {
 
   const handleClearImage = async () => {
     if (userId) {
-      const toastId = toast.loading("Uploading, please wait...")
+      const toastId = toast.loading("Deleting profile picture, please wait...")
       try {
-        await axios.delete(`/api/profile/profile-picture`, { data: { userId } })
+        await axios.delete(`/api/user/user-profile`, { data: { userId } })
         setFormData({ img: "" })
         setPreview("")
         fetchCheckIns()
         FetchFeed()
         toast.update(toastId, {
-          render: "Success! , Profile picture uploaded",
+          render: "Success! Profile picture deleted",
           type: "success",
           isLoading: false,
           autoClose: 3000,
         })
       } catch (error) {
         toast.update(toastId, {
-          render: "Error Deleting Profile Picture",
-          type: "error" + error.message,
+          render: "Error deleting profile picture: " + error.message,
+          type: "error",
           isLoading: false,
           autoClose: 3000,
         })
-        console.error("Failed to delete profile picture:")
+        console.error("Failed to delete profile picture:", error)
       }
     }
   }
@@ -129,17 +117,17 @@ export function ImageUpload() {
     const toastId = toast.loading("Uploading, please wait...")
     if (formData.img && userId) {
       try {
-        const response = await axios.post("/api/profile/profile-picture", {
+        const response = await axios.post("/api/user/user-profile", {
           userId,
           imageUrl: formData.img,
         })
-        console.log("Profile picture uploaded successfully:", response.data)
+        console.log("Profile picture updated successfully:", response.data)
 
         // Update session to reflect new profile picture
-        await signIn('credentials', { redirect: false }) 
+        await signIn("credentials", { redirect: false })
 
         toast.update(toastId, {
-          render: "Success!",
+          render: "Success! Profile picture updated.",
           type: "success",
           isLoading: false,
           autoClose: 3000,
@@ -169,7 +157,7 @@ export function ImageUpload() {
 
   return (
     <section className="mt-4">
-      <div className="flex flex-col   items-center md:items-start justify-center">
+      <div className="flex flex-col items-center md:items-start justify-center">
         <form
           onSubmit={handleSubmit}
           className="relative flex flex-col items-center justify-center w-64 h-64 border border-gray-300 border-dashed rounded-lg bg-gray-50"

@@ -15,27 +15,46 @@ export const CheckInProvider = ({ children }) => {
   const [streaks, setStreaks] = useState([])
 
   const fetchCheckIns = async () => {
-    setLoading(true)
-    const response = await fetch("/api/post/today-yesterday") 
-    const data = await response.json()
+    setLoading(true);
+    try {
+      const response = await fetch("/api/post/today-yesterday");
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+    
+      if (!Array.isArray(data)) {
+        console.error("Expected an array but got:", data);
+        setLoading(false);
+        return; 
+      }
+      
+      const today = new Date().setHours(0, 0, 0, 0);
+      const yesterday = new Date(today).setDate(new Date(today).getDate() - 1);
+      
+      const todayFiltered = data.filter((post) => {
+        const postDate = new Date(post.createdAt).setHours(0, 0, 0, 0);
+        return postDate === today;
+      });
+      
+      const yesterdayFiltered = data.filter((post) => {
+        const postDate = new Date(post.createdAt).setHours(0, 0, 0, 0);
+        return postDate === yesterday;
+      });
+      
+      setTodayPosts(todayFiltered);
+      setYesterdayPosts(yesterdayFiltered);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
-    const today = new Date().setHours(0, 0, 0, 0)
-    const yesterday = new Date(today).setDate(new Date(today).getDate() - 1)
 
-    const todayFiltered = data.filter((post) => {
-      const postDate = new Date(post.createdAt).setHours(0, 0, 0, 0)
-      return postDate === today
-    })
-
-    const yesterdayFiltered = data.filter((post) => {
-      const postDate = new Date(post.createdAt).setHours(0, 0, 0, 0)
-      return postDate === yesterday
-    })
-
-    setTodayPosts(todayFiltered)
-    setYesterdayPosts(yesterdayFiltered)
-  }
-
+  
   const fetchStreaks = async () => {
     setLoading(true)
     try {

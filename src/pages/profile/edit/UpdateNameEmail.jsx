@@ -1,8 +1,8 @@
 import Button from "@/components/Buttons"
 import Input from "@/components/Input"
-import { useSession } from "next-auth/react";
-import React, { useState,useEffect } from "react"
-
+import axios from "axios"
+import { useSession } from "next-auth/react"
+import React, { useState, useEffect } from "react"
 
 export default function UpdateProfileNameAndEmail() {
   const [payload, setPayload] = useState({
@@ -10,34 +10,25 @@ export default function UpdateProfileNameAndEmail() {
     email: "",
   })
 
-  const { data: session, status } = useSession();
-  const userId=session?.user?.id 
-  
-  useEffect(() => {
-    if (status === "authenticated") {
-      setPayload({
-        name: session.user.name || "",
-        email: session.user.email || "",
-      });
-    }
-  }, [status, session]);
-
-
+  const { data: session, status } = useSession()
+  const userId = session?.user?.id
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!userId) return; 
-
+      if (!userId) return;
       try {
-        const response = await axios.get(`/api/user/${userId}`); // Fetch user by ID
-        const { name = "", email = "" } = response.data; 
+        const response = await axios.get(`/api/user/${userId}`);
+        console.log(response.data);
+        const { name = "", email = "" } = response.data;
         setPayload({ name, email });
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
 
-    fetchUserData();
-  }, [userId]);
+    if (status === "authenticated") {
+      fetchUserData();
+    }
+  }, [userId, status]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,34 +42,32 @@ export default function UpdateProfileNameAndEmail() {
     e.preventDefault();
     if (!userId) {
       alert("User ID not found.");
-      return; 
+      return;
     }
     try {
       await axios.patch(`/api/user/${userId}`, {
-        newName: payload.name,
-        newEmail: payload.email,
+        name: payload.name,  
+        email: payload.email,
       });
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Error updating profile: " + error.response?.data?.message || "An unexpected error occurred.");
+      alert(
+        "Error updating profile: " + error.response?.data?.message ||
+          "An unexpected error occurred."
+      );
     }
   };
 
 
-  const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this account? This action cannot be undone.")) {
-      try {
-        await axios.delete(`/api/user/${userId}`); 
-        alert("Account deleted successfully!");
-      } catch (error) {
-        console.error("Error deleting account:", error);
-      }
-    }
-  };
+
+
+
+
+
 
   return (
-    <form className="my-4">
+    <form className="my-4" onSubmit={handleSubmit}>
       <div className="w-full lg:w-[60%]">
         {Object.keys(payload).map((fieldName) => (
           <Input
