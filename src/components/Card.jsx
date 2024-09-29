@@ -3,22 +3,23 @@ import Image from "next/image"
 import Link from "next/link"
 
 export default function Card({ post, streak }) {
-
-  const user = post.user || {}; 
+  const user = post.user || {}
 
   return (
     <Link
-      href={`/user/${user.id}`} 
+      href={`/user/${user.id}`}
       className="relative shadow-md border rounded-md bg-white my-3 flex flex-col justify-center items-center p-6"
     >
       <Image
-        src={user.profilePicture || "/no-user-pic.png"} 
-        width={50} 
+        src={user.profilePicture || "/no-user-pic.png"}
+        width={50}
         className="w-[50px] h-[50px] rounded-full"
-        height={50} 
-        alt={user.name || "User"} 
+        height={50}
+        alt={user.name || "User"}
       />
-      <h1 className="mt-3 text-sm font-medium">{user.name || "Unknown User"}</h1>
+      <h1 className="mt-3 text-sm font-medium">
+        {user.name || "Unknown User"}
+      </h1>
 
       {streak > 1 && (
         <div className="text-xs justify-center absolute w-[20px] h-[20px] right-1 top-1 rounded-full bg-[#FFCE51] text-white flex items-center space-x-1">
@@ -32,9 +33,8 @@ export default function Card({ post, streak }) {
         </div>
       )}
     </Link>
-  );
+  )
 }
-
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
@@ -77,13 +77,13 @@ export function FeedUserCard({ post }) {
           <Image
             src={post.user.profilePicture || "/no-user.png"}
             width={200}
-            className="w-[30px] h-[30px] rounded-full"
+            className="md:w-[30px] md:h-[30px] w-[20px] h-[20px] rounded-full"
             height={200}
             alt={post.user.name}
           />
-          <p className="capitalize">{post.user.name}</p>
+          <p className="capitalize md:text-base text-xs font-semibold">{post.user.name}</p>
         </div>
-        <div class="flex space-x-2 items-center text-gray-500 dark:text-gray-400">
+        <div class="md:flex hidden space-x-2 items-center text-gray-500 dark:text-gray-400">
           <Image
             src={"/calender.svg"}
             width={200}
@@ -99,17 +99,25 @@ export function FeedUserCard({ post }) {
           </span>
         </div>
       </div>
-
-      <p className="text-gray-800">{post.content}</p>
+      <p className="text-gray-800 text-xs md:text-sm">{post.content}</p>
+      <div class="md:hidden flex mt-2 justify-end space-x-2 items-center text-gray-500 dark:text-gray-400">
+        <Image
+          src={"/calender.svg"}
+          width={200}
+          className="w-[15px] h-[15px] rounded-full"
+          height={200}
+          alt={post.user.name}
+        />
+        <span class="text-xs">
+          {new Date(post.createdAt).toLocaleString("en-US", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}
+        </span>
+      </div>
     </div>
   )
 }
-
-
-
-
-
-
 
 export function FeedDataCard({
   userId,
@@ -119,34 +127,51 @@ export function FeedDataCard({
   date,
 }) {
   return (
-    <div
-      key={userId}
-      className="checkin border rounded-lg shadow-md py-8 px-5 hover:shadow-lg transition-shadow duration-300"
-    >
-      <div className="flex justify-between items-center">
-        <div className="flex items-center justify-start gap-4 mb-3">
-          <Image
-            src={profilePicture || "/no-user-pic.png"}
-            width={200}
-            className="w-[30px] h-[30px] rounded-full"
-            height={200}
-            alt={userName}
-          />
-          <p className="capitalize">{userName}</p>
+    <section>
+      <div
+        key={userId}
+        className="checkin border rounded-lg shadow-md py-8 px-5 hover:shadow-lg transition-shadow duration-300"
+      >
+        <div className="flex justify-between items-center">
+          <div className="flex items-center justify-start gap-4 mb-3">
+            <Image
+              src={profilePicture || "/no-user-pic.png"}
+              width={200}
+              className="md:w-[30px] md:h-[30px] w-[20px] h-[20px] rounded-full"
+              height={200}
+              alt={userName}
+            />
+            <p className="capitalize text-xs font-semibold">{userName}</p>
+          </div>
+          <div class="md:hidden flex space-x-2 items-center text-gray-500">
+            <Image
+              src={"/calender.svg"}
+              width={200}
+              className="md:w-[30px] md:h-[30px] w-[20px] h-[20px] rounded-full"
+              height={200}
+              alt={name}
+            />
+            <span class="text-sm"> {date}</span>
+          </div>
         </div>
-        <div class="flex space-x-2 items-center text-gray-500 dark:text-gray-400">
+        <p className="text-xs md:text-md text-gray-800">{message}</p>
+
+        <div class="md:hidden flex justify-end mt-2 space-x-2 items-center text-gray-500 dark:text-gray-400">
           <Image
             src={"/calender.svg"}
             width={200}
-            className="w-[20px] h-[20px] rounded-full"
+            className="w-[15px] h-[15px] rounded-full"
             height={200}
-            alt={name}
+            alt={post.user.name}
           />
-          <span class="text-sm"> {date}</span>
+          <span class="text-xs">
+            {new Date(post.createdAt).toLocaleString("en-US", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            })}
+          </span>
         </div>
       </div>
-
-      <p className="text-gray-800">{message}</p>
-    </div>
+    </section>
   )
 }
