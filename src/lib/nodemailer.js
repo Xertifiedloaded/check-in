@@ -1,5 +1,5 @@
-
 import nodemailer from 'nodemailer';
+import { createEmailContent } from './emailContent';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
@@ -9,12 +9,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendNotification = async (user) => {
+export const sendNotification = async (user, type) => {
+  const { subject, body } = createEmailContent(user.name, type);
+  
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: user.email, 
-    subject: 'Reminder: Check in to maintain your streak!',
-    text: `Hello ${user.name},\n\nThis is a friendly reminder to check in today to keep your streak going!\n\nBest regards,\nYour App Team`,
+    subject: subject,
+    text: body,
   };
 
   try {
@@ -24,5 +26,3 @@ const sendNotification = async (user) => {
     console.error(`Error sending email to ${user.email}:`, error);
   }
 };
-
-export default sendNotification;
