@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
 
   const create = useCallback(async (payload) => {
     try {
-      const res = await fetch(`${API}/create`, {
+      const res = await fetch(`/api/post/postsignup`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -41,6 +41,8 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+
+  
   const login = useCallback(async (payload) => {
     try {
       const res = await fetch(`${API}/login`, {

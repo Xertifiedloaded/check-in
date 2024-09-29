@@ -5,86 +5,69 @@ import { toast } from "react-toastify"
 const CheckInContext = createContext()
 
 export const CheckInProvider = ({ children }) => {
-  const [checkIns, setCheckIns] = useState({
-    todayCheckIns: [],
-    yesterdayCheckIns: [],
-  })
+  const [todayPosts, setTodayPosts] = useState([])
+  const [yesterdayPosts, setYesterdayPosts] = useState([])
 
   const [loading, setLoading] = useState(true)
   const [checkInLoading, setCheckInLoading] = useState(false)
   const [error, setError] = useState(null)
   const [feed, setFeed] = useState([])
-  const [streaks, setStreaks] = useState([]);
-
-
-
-
-
-
-
-
+  const [streaks, setStreaks] = useState([])
 
   const fetchCheckIns = async () => {
-    setLoading(true);
+    setLoading(true)
+    const response = await fetch("/api/post/today-yesterday") 
+    const data = await response.json()
 
-    try {
-      const response = await fetch("/api/latest-checkin");
-      if (!response.ok) {
-        throw new Error("Failed to fetch check-ins");
-      }
-      const data = await response.json();
-  
-      setCheckIns({
-        todayCheckIns: data.today,
-        yesterdayCheckIns: data.yesterday,
-      });
-  
-      console.log(data); 
-  
-    } catch (err) {
-      console.error("Error fetching check-ins:", err);
+    const today = new Date().setHours(0, 0, 0, 0)
+    const yesterday = new Date(today).setDate(new Date(today).getDate() - 1)
 
-    } finally {
-      setLoading(false);
-    }
-  };
-  
+    const todayFiltered = data.filter((post) => {
+      const postDate = new Date(post.createdAt).setHours(0, 0, 0, 0)
+      return postDate === today
+    })
+
+    const yesterdayFiltered = data.filter((post) => {
+      const postDate = new Date(post.createdAt).setHours(0, 0, 0, 0)
+      return postDate === yesterday
+    })
+
+    setTodayPosts(todayFiltered)
+    setYesterdayPosts(yesterdayFiltered)
+  }
 
   const fetchStreaks = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await fetch("/api/streak"); 
+      const response = await fetch("/api/post/streak")
       if (!response.ok) {
-        throw new Error("Failed to fetch ongoing streaks");
+        throw new Error("Failed to fetch ongoing streaks")
       }
-      const data = await response.json();
-      setStreaks(data.streaks); 
+      const data = await response.json()
+
+      setStreaks(data)
     } catch (err) {
-      console.error("Error fetching streaks:", err);
+      console.error("Error fetching streaks:", err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-
-
-
-
-
-  const postCheckIn = async (message) => {
+  const postCheckIn = async (content, userId) => {
     setCheckInLoading(true)
     const toastId = toast.loading("Posting check-in...")
 
     try {
-      const response = await fetch("/api/post-checkin", {
+      const response = await fetch("/api/post/post", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ content, userId }),
       })
 
       const data = await response.json()
+      console.log(data)
 
       if (!response.ok) {
         setCheckInLoading(false)
@@ -98,7 +81,7 @@ export const CheckInProvider = ({ children }) => {
       }
 
       toast.update(toastId, {
-        render: "Success! " + data.message,
+        render: data.message,
         type: "success",
         isLoading: false,
         autoClose: 3000,
@@ -128,7 +111,8 @@ export const CheckInProvider = ({ children }) => {
   return (
     <CheckInContext.Provider
       value={{
-        checkIns,
+        todayPosts,
+        yesterdayPosts,
         loading,
         error,
         feed,

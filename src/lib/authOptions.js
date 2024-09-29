@@ -1,32 +1,33 @@
-import databaseConnection from "./database"
-import { comparePassword } from "./auth"
-import UserModel from "@/models/UserModel"
-import CredentialsProvider from "next-auth/providers/credentials"
-import GitHubProvider from "next-auth/providers/github"
-import GoogleProvider from "next-auth/providers/google"
+import { comparePassword } from "./auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+import { prisma } from "./prisma";
 
 export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
       async authorize(credentials) {
-        const { email, password } = credentials
+        const { email, password } = credentials;
         try {
-          await databaseConnection()
-          const user = await UserModel.findOne({ email })
-          console.log(user)
+          const user = await prisma.user.findUnique({
+            where: { email },
+          });
+
           if (!user) {
-            return null
+            return null;
           }
-          const isMatch = await comparePassword(password, user.password)
-          
+
+          const isMatch = await comparePassword(password, user.password);
           if (!isMatch) {
-            return null
+            return null;
           }
-          return user
+
+          return user;
         } catch (error) {
-          console.log(error)
-          return null
+          console.log(error);
+          return null;
         }
       },
     }),
@@ -43,56 +44,73 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async signIn({user, account}) {
-      console.log("User:", user)
-      console.log("Account:", account)
+    async signIn({ user, account }) {
       if (!account || !account.provider) {
-        console.error("Account is undefined or missing provider")
-        return null
+        console.error("Account is undefined or missing provider");
+        return false;
       }
+
       if (account.provider === "google") {
+        const { name, email } = user;
         try {
-          const { name, email } = user
-          await databaseConnection()
-          const ifUserExist = await UserModel.findOne({ email })
-          if (ifUserExist) {
-            return user
+          let dbUser = await prisma.user.findUnique({
+            where: { email },
+          });
+
+          if (!dbUser) {
+            dbUser = await prisma.user.create({
+              data: {
+                name,
+                email,
+                isGoogleAuth: true,
+              },
+            });
           }
-          const newUser = new UserModel({ name: name, email: email })
-          const res = await newUser.save()
-          if (res.status === 200 || res.status === 201) {
-            return user
-          }
+          // set googleID correct database ID
+          user.id = dbUser.id; 
+          return true;
         } catch (error) {
-          console.log(error)
-          return null
+          console.log(error);
+          return false;
         }
       }
-      return user
+      return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id
-        token.email = user.email
-        token.name = user.name
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
       }
-      return token
+      
+      // If it's a Google sign-in, ensure we're using the correct ID
+      if (account && account.provider === "google") {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+        });
+        if (dbUser) {
+          token.id = dbUser.id;
+        }
+      }
+      
+      console.log(`JWT token:`, token);
+      return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id
-        session.user.email = token.email
-        session.user.name = token.name
+      if (token) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.name = token.name;
       }
-      console.log(session)
-      return session
+      console.log(`Session:`, session);
+      return session;
     },
     async redirect({ url, baseUrl }) {
-      return baseUrl
+      return baseUrl;
     },
   },
   pages: {
     signIn: "/",
   },
   secret: process.env.NEXTAUTH_SECRET,
-}
+};

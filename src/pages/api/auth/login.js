@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       if (user.isGoogleAuth) {
         return res.status(400).json({ message: "Please log in with Google" })
       }
-      console.log(user)
+      console.log(user.id)
       const isMatch = await comparePassword(password, user.password)
       if (!isMatch) {
         return res.status(400).json({ message: "Invalid email or password" })
@@ -25,6 +25,8 @@ export default async function handler(req, res) {
       user.token = token
       const cookie = cookiesSerialize(token)
       res.setHeader("Set-Cookie", cookie)
+      console.log(user);
+      
       res.status(200).json({ user, token })
     } catch (error) {
       console.log(error)

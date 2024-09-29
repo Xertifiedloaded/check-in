@@ -42,7 +42,6 @@ export const verifyTokenFromHeader = (req, res, next) => {
 }
 
 export const verifyToken = (req, res, next) => {
-  // const token = req.cookies.token
   const { token } = parse(req.headers.cookie || "")
   if (!token) {
     return res.status(403).json({ message: "No token provided" })
@@ -53,9 +52,8 @@ export const verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: "Unauthorized" })
     }
-
-    req.userId = decoded.userId
-    console.log(req.userId)
+    req.id = decoded.id
+    console.log(req.id)
     next()
   })
 }
