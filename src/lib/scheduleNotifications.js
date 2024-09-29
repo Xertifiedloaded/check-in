@@ -14,7 +14,7 @@ const scheduleNotifications = () => {
       });
 
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Normalize to the start of the day
+      today.setHours(0, 0, 0, 0); 
 
       for (const user of users) {
         let notificationSent = false;
