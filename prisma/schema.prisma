@@ -1,6 +1,7 @@
 datasource db {
     provider = "mongodb"
-    url      = env("DATABASE_URL")
+    // url      = env("DATABASE_URL")
+    url = "mongodb+srv://certifiedloaded:KhsBpLQcK31murUr@checkin.r5ib3.mongodb.net/checkin-daily"
 }
 
 generator client {
