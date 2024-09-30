@@ -4,6 +4,8 @@ import { useCheckIn } from "@/context/CheckInContext"
 
 export default function TodayCheckIn() {
   const { todayPosts } = useCheckIn();
+  console.log(todayPosts);
+  
   return (
     <div className="grid lg:grid-cols-3 grid-cols-1 lg:gap-4 gap-2">
       {todayPosts.length > 0 ? (

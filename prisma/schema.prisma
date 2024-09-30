@@ -32,6 +32,7 @@ model Post {
     createdAt DateTime @default(now())
     user      User?    @relation(fields: [userId], references: [id],onDelete: Cascade)
     userId    String   @db.ObjectId
+   likes     String[] @db.ObjectId
 }
 
 model Streak {

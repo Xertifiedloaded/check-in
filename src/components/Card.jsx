@@ -1,15 +1,32 @@
-import React from "react"
+"use client"
+import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { Heart } from "lucide-react"
+import useLikeStatus from "@/utils/actions"
 
 export default function Card({ post, streak }) {
   const user = post.user || {}
 
+  const { isLiked, count, toggleLike, loading } = useLikeStatus(
+    user.id,
+    post.id
+  )
+
+  const handleToggleLike = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    toggleLike()
+  }
+
   return (
-    <Link
-      href={`/user/${user.id}`}
-      className="relative shadow-md border rounded-md bg-white my-3 flex flex-col justify-center items-center p-6"
-    >
+    <div className="relative shadow-md border rounded-md bg-white my-3 flex flex-col justify-center items-center p-6">
+      <Link
+        href={`/user/${user.id}`}
+        className="w-full h-full absolute top-0 left-0 z-10"
+      >
+        <span className="sr-only">View user profile</span>
+      </Link>
       <Image
         src={user.profilePicture || "/no-user-pic.png"}
         width={50}
@@ -17,12 +34,12 @@ export default function Card({ post, streak }) {
         height={50}
         alt={user.name || "User"}
       />
+
       <h1 className="mt-3 text-sm font-medium">
         {user.name || "Unknown User"}
       </h1>
-
       {streak > 1 && (
-        <div className="text-xs justify-center absolute w-[20px] h-[20px] right-1 top-1 rounded-full bg-[#FFCE51] text-white flex items-center space-x-1">
+        <div className="text-xs justify-center absolute w-[20px] h-[20px] right-1 top-1 rounded-full bg-[#FFCE51] text-white flex items-center space-x-1 z-20">
           <Image
             src="/flame.svg"
             width={15}
@@ -32,7 +49,23 @@ export default function Card({ post, streak }) {
           />
         </div>
       )}
-    </Link>
+
+      <button
+        onClick={handleToggleLike}
+        disabled={loading}
+        className="absolute  gap-1 items-center flex justify-between  right-0 top-0 p-1 z-20"
+      >
+        <Heart
+          size={20}
+          fontSize={10}
+          fill={isLiked ? "red" : "none"}
+          stroke={isLiked ? "red" : "currentColor"}
+        />
+        <small className="text-xs">
+          {count || 0} {count === 1 ? "Like" : "Likes"}
+        </small>
+      </button>
+    </div>
   )
 }
 
@@ -63,115 +96,5 @@ export function StreakCard({ userName, userProfilePicture, currentStreak }) {
         </small>
       </div>
     </div>
-  )
-}
-
-export function FeedUserCard({ post }) {
-  return (
-    <div
-      key={post.id}
-      className="checkin border rounded-lg shadow-md py-8 px-5 hover:shadow-lg transition-shadow duration-300"
-    >
-      <div className="flex justify-between items-center">
-        <div className="flex items-center justify-start gap-4 mb-3">
-          <Image
-            src={post.user.profilePicture || "/no-user.png"}
-            width={200}
-            className="md:w-[30px] md:h-[30px] w-[20px] h-[20px] rounded-full"
-            height={200}
-            alt={post.user.name}
-          />
-          <p className="capitalize md:text-base text-xs font-semibold">{post.user.name}</p>
-        </div>
-        <div class="md:flex hidden space-x-2 items-center text-gray-500 dark:text-gray-400">
-          <Image
-            src={"/calender.svg"}
-            width={200}
-            className="w-[20px] h-[20px] rounded-full"
-            height={200}
-            alt={post.user.name}
-          />
-          <span class="text-sm">
-            {new Date(post.createdAt).toLocaleString("en-US", {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
-          </span>
-        </div>
-      </div>
-      <p className="text-gray-800 text-xs md:text-sm">{post.content}</p>
-      <div class="md:hidden flex mt-2 justify-end space-x-2 items-center text-gray-500 dark:text-gray-400">
-        <Image
-          src={"/calender.svg"}
-          width={200}
-          className="w-[15px] h-[15px] rounded-full"
-          height={200}
-          alt={post.user.name}
-        />
-        <span class="text-xs">
-          {new Date(post.createdAt).toLocaleString("en-US", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          })}
-        </span>
-      </div>
-    </div>
-  )
-}
-
-export function FeedDataCard({
-  userId,
-  userName,
-  profilePicture,
-  message,
-  date,
-}) {
-  return (
-    <section>
-      <div
-        key={userId}
-        className="checkin border rounded-lg shadow-md py-8 px-5 hover:shadow-lg transition-shadow duration-300"
-      >
-        <div className="flex justify-between items-center">
-          <div className="flex items-center justify-start gap-4 mb-3">
-            <Image
-              src={profilePicture || "/no-user-pic.png"}
-              width={200}
-              className="md:w-[30px] md:h-[30px] w-[20px] h-[20px] rounded-full"
-              height={200}
-              alt={userName}
-            />
-            <p className="capitalize text-xs font-semibold">{userName}</p>
-          </div>
-          <div class="md:hidden flex space-x-2 items-center text-gray-500">
-            <Image
-              src={"/calender.svg"}
-              width={200}
-              className="md:w-[30px] md:h-[30px] w-[20px] h-[20px] rounded-full"
-              height={200}
-              alt={name}
-            />
-            <span class="text-sm"> {date}</span>
-          </div>
-        </div>
-        <p className="text-xs md:text-md text-gray-800">{message}</p>
-
-        <div class="md:hidden flex justify-end mt-2 space-x-2 items-center text-gray-500 dark:text-gray-400">
-          <Image
-            src={"/calender.svg"}
-            width={200}
-            className="w-[15px] h-[15px] rounded-full"
-            height={200}
-            alt={post.user.name}
-          />
-          <span class="text-xs">
-            {new Date(post.createdAt).toLocaleString("en-US", {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
-          </span>
-        </div>
-      </div>
-    </section>
   )
 }

@@ -1,9 +1,9 @@
 "use client";
-import { FeedUserCard } from "@/components/Card"
 import { useCheckIn } from "@/context/CheckInContext"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import MainHeader from "../MainHeader"
+import { FeedUserCard } from "@/components/UserFeedCard";
 
 const CheckInList = () => {
   const router = useRouter()

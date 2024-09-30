@@ -4,6 +4,7 @@ import Heading from "@/components/Heading"
 import CheckIn from "@/components/CheckIn"
 import { useCheckIn } from "@/context/CheckInContext"
 import MainHeader from "./MainHeader"
+import PageHead from "@/components/PageHead"
 
 export default function Home() {
   const { loading, checkIns, error } = useCheckIn()
@@ -17,16 +18,11 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>DailyCheck-In</title>
-        <meta
-          name="description"
-          content="Department Of Animal Breeding And Genetics"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-      </Head>
+      <PageHead
+        content="Stay on track, achieve your goals, and beat procrastination together!"
+        title="DailyCheck-In"
+      />
+
       <main className="mt-28">
         <MainHeader />
         <Heading />

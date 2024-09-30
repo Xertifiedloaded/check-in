@@ -1,8 +1,10 @@
 "use client";
-import { FeedUserCard } from "@/components/Card"
+
 import axios from "axios"
 import { useState, useEffect } from "react"
 import MainHeader from "../MainHeader"
+import PageHead from "@/components/PageHead";
+import { FeedUserCard } from "@/components/UserFeedCard";
 
 export default function Index() {
   const [posts, setPosts] = useState([])
@@ -37,7 +39,13 @@ export default function Index() {
   return (
     <>
       <div >
-        <MainHeader />
+      <PageHead
+        content="Stay on track, achieve your goals, and beat procrastination together!"
+        title="Feed"
+      />
+        <MainHeader
+        
+        />
         <h1>Posts</h1>
         <ul className="nav-wrapper mt-28">
           {posts.map((post) => (

@@ -63,6 +63,14 @@ export default function UserHeader() {
               />
             </Link>
           )}
+          {session && (
+            <Link href="/manage-checkin">
+              <Button
+                className="bg-[#e2e8f099] hidden lg:block   text-lightGray text-sm py-2 px-4 rounded-[25px]"
+                value="Manage our Checkin"
+              />
+            </Link>
+          )}
         </div>
         <div className="flex items-center gap-6">
           <Link href="/profile/edit">
@@ -95,6 +103,13 @@ export default function UserHeader() {
             className="my-3  px-2 text-slate-500 block"
           >
             <li>Feed</li>
+          </Link>
+          <Link
+            onClick={toggleMenu}
+            href="/manage-checkin"
+            className="my-3  px-2 text-slate-500 block"
+          >
+            <li>Manage your checkin</li>
           </Link>
         </ul>
       )}
