@@ -1,3 +1,4 @@
+'use client'
 import Button from "@/components/Buttons"
 import Input from "@/components/Input"
 import PageHead from "@/components/PageHead"

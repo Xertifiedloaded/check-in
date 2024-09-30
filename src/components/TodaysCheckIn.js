@@ -1,3 +1,4 @@
+'use client'
 import React from "react"
 import Card, { StreakCard } from "./Card"
 import { useCheckIn } from "@/context/CheckInContext"
