@@ -12,6 +12,9 @@ module.exports = {
         foreground: "var(--foreground)",
         lightGray: "rgb(107 114 128 / 1)",
       },
+      fontFamily: {
+        poppins: "Poppins,sans-serif",
+      },
       backgroundColor: {
         goldenYellow: "rgb(255 206 81 / 1)",
         bgColorRed: "#F00",

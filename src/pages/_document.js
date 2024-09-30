@@ -6,7 +6,7 @@ export default function RootLayout() {
   return (
     <Html lang="en">
       <Head />
-      <body>
+      <body className="font-poppins">
         <Main />
         <NextScript />
       </body>
