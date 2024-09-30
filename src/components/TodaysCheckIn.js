@@ -23,7 +23,7 @@ export function YesterDayCheckIn() {
   return (
     <div className="grid lg:grid-cols-3 grid-cols-1 lg:gap-4 gap-2">
       {yesterdayPosts.length > 0 ? (
-        todayPosts.map((post) => <Card key={post.id} post={post} />) 
+        yesterdayPosts.map((post) => <Card key={post.id} post={post} />) 
       ) : (
         <div className="col-span-2 text-center">
           <p className="text-gray-500">No check-ins available for Yesterday.</p>

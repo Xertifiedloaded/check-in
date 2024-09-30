@@ -1,3 +1,4 @@
+"use client";
 import { FeedUserCard } from "@/components/Card"
 import { useCheckIn } from "@/context/CheckInContext"
 import { useRouter } from "next/router"

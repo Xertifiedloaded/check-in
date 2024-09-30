@@ -1,3 +1,4 @@
+"use client";
 import { FeedUserCard } from "@/components/Card"
 import axios from "axios"
 import { useState, useEffect } from "react"
