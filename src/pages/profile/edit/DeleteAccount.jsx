@@ -1,3 +1,4 @@
+'use client'
 import React from "react"
 import UpdateHeading from "./UpdateHeading"
 import Button from "@/components/Buttons"

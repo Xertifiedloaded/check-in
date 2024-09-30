@@ -1,3 +1,4 @@
+'use client'
 import Input from "@/components/Input"
 import React, { useState } from "react"
 import UpdateHeading from "./UpdateHeading"
