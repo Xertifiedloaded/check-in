@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image"
 import { signOut, useSession } from "next-auth/react"
 export default function DropDown() {
