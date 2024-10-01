@@ -7,7 +7,7 @@ export default async function handleGetComments(req, res) {
     try {
       const comments = await prisma.comment.findMany({
         where: { postId },
-        include: { user: { select: { name: true }, profilePicture: true, } },
+        include: { user: { select: { name: true } } },
         orderBy: { createdAt: 'desc' }, 
       })
       res.status(200).json(comments)
@@ -23,7 +23,7 @@ export default async function handleGetComments(req, res) {
     try {
       const comment = await prisma.comment.create({
         data: { content, userId, postId },
-        include: { user: { select: { name: true }, profilePicture: true, } },
+        include: { user: { select: { name: true } } },
       })
       res.status(201).json(comment)
     } catch (error) {
@@ -35,7 +35,9 @@ export default async function handleGetComments(req, res) {
 
   export async function handleUpdateComment(req, res, userId) {
     const { id, content } = req.body
-  
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid comment id' });
+    }
     try {
       const comment = await prisma.comment.findUnique({ where: { id } })
       if (!comment) {
@@ -58,7 +60,9 @@ export default async function handleGetComments(req, res) {
   
   export async function handleDeleteComment(req, res, userId) {
   const { id } = req.query
-
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid comment id' });
+  }
   try {
     const comment = await prisma.comment.findUnique({ where: { id } })
     if (!comment) {
