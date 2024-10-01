@@ -34,7 +34,7 @@ export default function UserPosts({ userId }) {
   const handleEdit = (post) => {
     setCurrentPost(post)
     setModalOpen(true)
-  }
+  };
 
   const handleDelete = async (postId) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
