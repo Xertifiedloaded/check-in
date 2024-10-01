@@ -1,20 +1,28 @@
-import React, { useState } from "react"
-import Image from "next/image"
-import { Heart, LucideCalendarCheck } from "lucide-react"
-import useLikeStatus from "@/utils/actions"
-import { FaCalendar } from "react-icons/fa"
+import React, { useState } from "react";
+import Image from "next/image";
+import { Heart, LucideCalendarCheck, MessageCircle } from "lucide-react";
+import useLikeStatus from "@/utils/actions";
+import CommentSection from "./CommentSection";
+
 
 export function FeedUserCard({ post }) {
-  const user = post.user || {}
+  const user = post.user || {};
   const { isLiked, count, toggleLike, loading } = useLikeStatus(
     user.id,
     post.id
-  )
+  );
+  const [showComments, setShowComments] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
+
   const handleToggleLike = async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    toggleLike()
-  }
+    e.preventDefault();
+    e.stopPropagation();
+    toggleLike();
+  };
+
+  const handleToggleComments = () => {
+    setShowComments(!showComments);
+  };
 
   return (
     <div
@@ -46,15 +54,6 @@ export function FeedUserCard({ post }) {
       </div>
 
       <p className="text-gray-800 text-sm md:text-base">{post.content}</p>
-      <div className="md:hidden flex justify-end items-center space-x-2 text-gray-500 dark:text-gray-400">
-        <LucideCalendarCheck className="text-xs" />
-        <span className="text-xs">
-          {new Date(post.createdAt).toLocaleString("en-US", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          })}
-        </span>
-      </div>
 
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center space-x-2">
@@ -75,10 +74,16 @@ export function FeedUserCard({ post }) {
           </span>
         </div>
 
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          <span>{post.commentCount || 0} Comments</span>
-        </div>
+        <button
+          onClick={handleToggleComments}
+          className="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-blue-600"
+        >
+          <MessageCircle size={24} />
+          <span>{commentCount} {commentCount === 1 ? "Comment" : "Comments"}</span> 
+        </button>
       </div>
+
+      {showComments && <CommentSection postId={post.id} updateCommentCount={setCommentCount} />}
     </div>
-  )
+  );
 }

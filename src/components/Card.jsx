@@ -69,32 +69,34 @@ export default function Card({ post, streak }) {
   )
 }
 
+
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
-    <div className="flex mb-3 justify-between items-center">
-      <div className="flex justify-between items-center gap-10">
+    <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-3">
+      <div className="flex items-center gap-4">
         <Image
           src={userProfilePicture || "/no-user.png"}
-          width={200}
-          className="w-[30px] h-[30px] rounded-full"
-          height={200}
-          alt="img"
+          width={40}
+          height={40}
+          className="w-10 h-10 rounded-full object-cover border border-gray-300"
+          alt={userName || "User profile picture"}
         />
-        <h1 className="mt-3 text-xs md:text-sm  font-semibold">{userName}</h1>
+        <h1 className="text-sm truncate font-semibold text-gray-800">{userName}</h1>
       </div>
 
-      <div class="text-xs rounded-full bg-[#FFCE51] text-white lg:px-2 px-2 py-1 flex items-center space-x-1">
+      <div className="flex items-center bg-[#FFCE51] text-white rounded-full px-3 py-1">
         <Image
-          src={"/flame.svg"}
-          width={200}
-          className="md:w-[15px] w-[12px] h-[12px] md:h-[15px]"
-          height={200}
-          alt="img"
+          src="/flame.svg"
+          width={15}
+          height={15}
+          className="w-4 h-4"
+          alt="Streak Flame Icon"
         />
-        <small class="text-orange-700 text-[9px] md:text-sm  font-semibold">
-          {currentStreak} Day{currentStreak > 1 && "s"}
+        <small className="text-xs font-semibold ml-1">
+          {currentStreak} Day{currentStreak > 1 ? "s" : ""}
         </small>
       </div>
     </div>
-  )
+  );
 }
+

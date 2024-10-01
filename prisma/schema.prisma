@@ -24,6 +24,7 @@ model User {
     updatedAt               DateTime  @updatedAt
     posts                   Post[] @relation()
     streaks                 Streak[]
+    comments                Comment[] @relation("UserComments")
 }
 
 model Post {
@@ -33,6 +34,7 @@ model Post {
     user      User?    @relation(fields: [userId], references: [id],onDelete: Cascade)
     userId    String   @db.ObjectId
    likes     String[] @db.ObjectId
+   comments  Comment[] @relation("PostComments")
 }
 
 model Streak {
@@ -44,4 +46,14 @@ model Streak {
     userId        String    @db.ObjectId
 }
 
+model Comment {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    content   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    user      User     @relation("UserComments", fields: [userId], references: [id], onDelete: Cascade)
+    userId    String   @db.ObjectId
+    post      Post     @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
+    postId    String   @db.ObjectId
+}
 

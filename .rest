@@ -1,7 +1,6 @@
-GET   http://localhost:3000/api/post/like-unlike
+GET   http://localhost:3000/api/comment/comment
 Content-Type: application/json
 
 {
-  "userId": "66f91220a12d967d2b4126b9",
-  "postId": "66f917eda12d967d2b4126cb"
+  "postId": "66f917eda12d967d2b4126cb",
 }
