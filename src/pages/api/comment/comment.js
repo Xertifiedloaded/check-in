@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       const userId = session.user.id
       if (req.method === "POST") {
         return handleCreateComment(req, res, userId)
-      } else if (req.method === "PUT") {
+      } else if (req.method === "PATCH") {
         return handleUpdateComment(req, res, userId)
       } else if (req.method === "DELETE") {
         return handleDeleteComment(req, res, userId)

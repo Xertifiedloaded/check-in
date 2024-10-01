@@ -3,10 +3,12 @@ import Image from "next/image";
 import { Heart, LucideCalendarCheck, MessageCircle } from "lucide-react";
 import useLikeStatus from "@/utils/actions";
 import CommentSection from "./CommentSection";
+import { useSession } from "next-auth/react";
 
 
 export function FeedUserCard({ post }) {
   const user = post.user || {};
+  const { data: session } = useSession()
   const { isLiked, count, toggleLike, loading } = useLikeStatus(
     user.id,
     post.id
@@ -83,7 +85,7 @@ export function FeedUserCard({ post }) {
         </button>
       </div>
 
-      {showComments && <CommentSection postId={post.id} updateCommentCount={setCommentCount} />}
+      {showComments && <CommentSection userId={session?.user?.id} postId={post.id} updateCommentCount={setCommentCount} />}
     </div>
   );
 }

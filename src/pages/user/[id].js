@@ -12,6 +12,8 @@ const CheckInList = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+
+
   const fetchCheckIns = async () => {
     if (!id) return
 

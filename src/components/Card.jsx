@@ -69,7 +69,6 @@ export default function Card({ post, streak }) {
   )
 }
 
-
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
     <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-3">
@@ -81,7 +80,9 @@ export function StreakCard({ userName, userProfilePicture, currentStreak }) {
           className="w-10 h-10 rounded-full object-cover border border-gray-300"
           alt={userName || "User profile picture"}
         />
-        <h1 className="text-sm truncate font-semibold text-gray-800">{userName}</h1>
+        <h1 className="text-sm font-semibold text-gray-800 truncate max-w-[150px]">
+          {userName}
+        </h1>
       </div>
 
       <div className="flex items-center bg-[#FFCE51] text-white rounded-full px-3 py-1">
@@ -97,6 +98,5 @@ export function StreakCard({ userName, userProfilePicture, currentStreak }) {
         </small>
       </div>
     </div>
-  );
+  )
 }
-
