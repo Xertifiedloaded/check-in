@@ -1,89 +1,59 @@
-'use client'
+
+
+
+'use client';
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function useLikeStatus(userId, postId) {
   const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [count, setCount] = useState(0); 
+  const [count, setCount] = useState(0);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchLikeStatus = async () => {
       try {
         setLoading(true);
+        setError(null); 
+
         const response = await axios.get("/api/post/like-unlike", {
-          params: {
-            userId,
-            postId,
-          },
+          params: { postId },
         });
-        setIsLiked(response.data.liked);
+        
+        setIsLiked(response.data.liked || false); 
         setCount(response.data.likeCount);
       } catch (error) {
         console.error("Error fetching like status:", error);
+        setError("Failed to fetch like status");
       } finally {
         setLoading(false);
       }
     };
 
-    if (userId && postId) {
+    if (postId) {
       fetchLikeStatus();
     }
-  }, [userId, postId]);
+  }, [postId]);
 
   const toggleLike = async () => {
     try {
-      const response = await axios.post("/api/post/like-unlike", {
-        userId,
-        postId,
-      });
-      
-      setIsLiked((prevLiked) => !prevLiked);
-    
+      if (!userId) {
+        toast.error("You need to log in before you can like the post");
+        return;
+      }
+
+      const response = await axios.post("/api/post/like-unlike", { postId });
+
+      setIsLiked((prevLiked) => !prevLiked); 
       setCount(response.data.likeCount); 
     } catch (error) {
       console.error("Error toggling like:", error);
+      setError("Failed to toggle like");
     }
   };
 
-  return { isLiked, toggleLike, loading, count }; 
+  return { isLiked, toggleLike, loading, count, error };
 }
 
-
-
-
-
-const editPost = async (postId, userId, content) => {
-  try {
-    const response = await axios.put(`/api/post/${postId}`, { userId, content })
-    console.log(response.data.message)
-  } catch (error) {
-    console.error("Error editing post:", error)
-  }
-}
-
-const deletePost = async (postId, userId) => {
-  try {
-    const response = await axios.delete(`/api/post/${postId}`, {
-      data: { userId },
-    })
-    console.log(response.data.message)
-  } catch (error) {
-    console.error("Error deleting post:", error)
-  }
-}
-
-
-const fetchUserPosts = async (userId) => {
-    try {
-      const response = await axios.get('/api/posts', {
-        params: { userId }, 
-      });
-      console.log('User posts:', response.data); 
-    } catch (error) {
-      console.error('Error fetching user posts:', error.response.data.message);
-    }
-  };
-  
-
-  

@@ -1,17 +1,29 @@
+
+import { authOptions } from "@/lib/authOptions"
 import { prisma } from "@/lib/prisma"
+import { getServerSession } from "next-auth"
+
+
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { content, userId } = req.body
+    const { content } = req.body
+    const session = await getServerSession(req, res, authOptions)
+
+    if (!session || !session.user || !session.user.id) {
+      return res.status(401).json({ message: "Unauthorized" })
+    }
+
+    const userId = session.user.id
+
     if (!content) {
       return res.status(400).json({ message: "Check-in message is required" })
     }
-    if (!userId) {
-      return res.status(400).json({ message: "User ID is required" })
-    }
+
     try {
       const currentDate = new Date()
+
       let streak = await prisma.streak.findFirst({
-        where: { userId: userId },
+        where: { userId },
       })
 
       let streakUpdated = false
@@ -20,7 +32,7 @@ export default async function handler(req, res) {
       if (!streak) {
         newStreak = await prisma.streak.create({
           data: {
-            userId: userId,
+            userId,
             startDate: currentDate,
             currentStreak: 1,
             lastCheckIn: currentDate,
@@ -46,12 +58,14 @@ export default async function handler(req, res) {
           newStreak = null
         }
       }
+
       const checkIn = await prisma.post.create({
         data: {
           content,
           userId,
         },
       })
+
       return res.status(201).json({
         message: "Check-in posted successfully",
         checkIn,
@@ -67,6 +81,7 @@ export default async function handler(req, res) {
   }
 }
 
+// Helper functions to check if days are consecutive or the same
 function isConsecutiveDay(date1, date2) {
   const oneDayInMilliseconds = 24 * 60 * 60 * 1000
   const differenceInDays = Math.round((date2 - date1) / oneDayInMilliseconds)
