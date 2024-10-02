@@ -1,7 +1,10 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
+import { io } from "socket.io-client";
+
+const socket = io("https://check-in-psi.vercel.app"); 
 
 function CommentSection({ postId, userId, comments: initialComments, updateCommentCount }) {
   const [newComment, setNewComment] = useState("");
@@ -11,40 +14,105 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   const [updatedComment, setUpdatedComment] = useState("");
   const [deletingCommentId, setDeletingCommentId] = useState(null);
 
+  useEffect(() => {
+    //To Listene for new comments
+    socket.on("newComment", (newComment) => {
+      setComments((prevComments) => [...prevComments, newComment]);
+      updateCommentCount((prevCount) => prevCount + 1); 
+    });
+  
+    // Listener for updated comments
+    socket.on("updatedComment", (updatedComment) => {
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === updatedComment.id ? updatedComment : comment
+        )
+      );
+    });
+  
+    // Listener for deleted comments
+    socket.on("deletedComment", (commentId) => {
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      );
+      updateCommentCount((prevCount) => prevCount - 1); 
+    });
+  
+    return () => {
+      socket.off("newComment");
+      socket.off("updatedComment");
+      socket.off("deletedComment");
+    };
+  }, [socket, updateCommentCount]); 
+  
+
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim()) {
-      setLoading(true);
-      try {
-        const response = await axios.post("/api/comment/comment", {
-          content: newComment,
-          postId,
-          userId,
-        });
+        setLoading(true);
+        try {
+            const response = await axios.post("/api/comment/comment", {
+                content: newComment,
+                postId,
+                userId,
+            });
 
-        if (response.status === 201) {
-          const newCommentObj = response.data;
-          setComments([...comments, newCommentObj]);
-          setNewComment("");
-          updateCommentCount(comments.length + 1);
-        } else {
-          console.error("Failed to submit comment");
+            if (response.status === 201) {
+                const newCommentObj = response.data; 
+                setComments((prevComments) => [...prevComments, newCommentObj]);
+                socket.emit("createComment", newCommentObj);
+                setNewComment("");
+                updateCommentCount((prevCount) => prevCount + 1); 
+            } else {
+                console.error("Failed to submit comment");
+            }
+        } catch (error) {
+            console.error("Error submitting comment:", error);
+        } finally {
+            setLoading(false);
         }
-      } catch (error) {
-        console.error("Error submitting comment:", error);
-      } finally {
-        setLoading(false);
-      }
     }
-  };
+};
 
-  // Edit a comment
+
+
+
+
+
   const handleEditComment = (comment) => {
     setEditingComment(comment.id);
     setUpdatedComment(comment.content);
   };
 
-  // Submit the updated comment
+
+
+
+  const handleDeleteComment = async (commentId) => {
+    if (confirm("Are you sure you want to delete this comment?")) {
+      setDeletingCommentId(commentId);
+      try {
+        const response = await axios.delete(`/api/comment/comment?commentid=${commentId}`);
+        if (response.status === 204) {
+          socket.emit("deleteComment", commentId); 
+          setComments((prevComments) => 
+            prevComments.filter((comment) => comment.id !== commentId)
+          );
+          updateCommentCount(comments.length - 1);
+        } else {
+          console.error("Failed to delete comment");
+        }
+      } catch (error) {
+        if (error.response?.status === 403) {
+          alert("You are not authorized to delete this comment.");
+        } else {
+          console.error("Error deleting comment:", error);
+        }
+      } finally {
+        setDeletingCommentId(null);
+      }
+    }
+  };
+  
   const handleUpdateComment = async (e, commentId) => {
     e.preventDefault();
     if (updatedComment.trim()) {
@@ -53,12 +121,16 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
         const response = await axios.patch(`/api/comment/comment?commentid=${commentId}`, {
           content: updatedComment,
         });
-
+  
         if (response.status === 200) {
-          const updatedComments = comments.map((comment) =>
-            comment.id === commentId ? { ...comment, content: updatedComment } : comment
+          const updatedCommentObj = { ...response.data, id: commentId };
+          socket.emit("updateComment", updatedCommentObj); 
+          setComments((prevComments) => 
+            prevComments.map((comment) => 
+              comment.id === commentId ? updatedCommentObj : comment
+            )
           );
-          setComments(updatedComments);
+          
           setEditingComment(null);
           setUpdatedComment("");
         } else {
@@ -75,31 +147,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
       }
     }
   };
-
-
-  const handleDeleteComment = async (commentId) => {
-    if (confirm("Are you sure you want to delete this comment?")) {
-      setDeletingCommentId(commentId);
-      try {
-        const response = await axios.delete(`/api/comment/comment?commentid=${commentId}`);
-        if (response.status === 204) {
-          setComments(comments.filter((comment) => comment.id !== commentId));
-          updateCommentCount(comments.length - 1);
-        } else {
-          console.error("Failed to delete comment");
-        }
-      } catch (error) {
-        if (error.response?.status === 403) {
-          alert("You are not authorized to delete this comment.");
-        } else {
-          console.error("Error deleting comment:", error);
-        }
-      } finally {
-        setDeletingCommentId(null);
-      }
-    }
-  };
-
+  
   return (
     <div className="mt-6 space-y-6">
       <form onSubmit={handleCommentSubmit} className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">

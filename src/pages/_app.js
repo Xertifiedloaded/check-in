@@ -1,15 +1,12 @@
 import "./global.css"
 import "react-toastify/dist/ReactToastify.css"
-
 import { Poppins } from "next/font/google"
 import { AuthProvider } from "@/context/AuthContext"
 import { CheckInProvider } from "@/context/CheckInContext"
 import { ToastContainer } from "react-toastify"
-import MainHeader from "./MainHeader"
 import SessionWrapper from "@/sessionWrapper/SessionWrapper"
-import { useEffect } from "react"
 import Scheduler from "@/sessionWrapper/Scheduler.js"
-import { SocketProvider } from "@/context/SocketProvider"
+
 
 const poppin = Poppins({
   weight: ["200", "300", "400", "600", "700", "800"],
@@ -20,24 +17,24 @@ function App({ Component, pageProps }) {
   Scheduler()
   return (
     <div className={`${poppin.className}`}>
-      <SocketProvider>
-        <SessionWrapper>
-          <AuthProvider>
-            <ToastContainer
-              position="top-center"
-              autoClose={5000}
-              hideProgressBar={false}
-              closeOnClick
-              draggable
-              pauseOnHover
-              theme="light"
-            />
-            <CheckInProvider>
+      <SessionWrapper>
+        <AuthProvider>
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            closeOnClick
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+          <CheckInProvider>
+
               <Component {...pageProps} />
-            </CheckInProvider>
-          </AuthProvider>
-        </SessionWrapper>
-      </SocketProvider>
+
+          </CheckInProvider>
+        </AuthProvider>
+      </SessionWrapper>
     </div>
   )
 }
