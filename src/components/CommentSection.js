@@ -1,9 +1,11 @@
+
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 
-let socket;
+const socket = io("/api/socket"); 
 
 function CommentSection({ postId, userId, comments: initialComments, updateCommentCount }) {
   const [newComment, setNewComment] = useState("");
@@ -14,31 +16,11 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   const [deletingCommentId, setDeletingCommentId] = useState(null);
 
   useEffect(() => {
-    socketInitializer();
-
-    return () => {
-      if (socket) {
-        socket.off("newComment");
-        socket.off("updatedComment");
-        socket.off("deletedComment");
-        socket.disconnect();
-      }
-    };
-  }, []);
-
-  const socketInitializer = async () => {
-    await fetch('/api/socket');
-    socket = io();
-
-    socket.on('connect', () => {
-      console.log('Connected to socket');
-    });
-
     socket.on("newComment", (newComment) => {
       setComments((prevComments) => [...prevComments, newComment]);
-      updateCommentCount((prevCount) => prevCount + 1);
+      updateCommentCount((prevCount) => prevCount + 1); 
     });
-
+  
     socket.on("updatedComment", (updatedComment) => {
       setComments((prevComments) =>
         prevComments.map((comment) =>
@@ -51,40 +33,57 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
       setComments((prevComments) =>
         prevComments.filter((comment) => comment.id !== commentId)
       );
-      updateCommentCount((prevCount) => prevCount - 1);
+      updateCommentCount((prevCount) => prevCount - 1); 
     });
-  };
+  
+    return () => {
+      socket.off("newComment");
+      socket.off("updatedComment");
+      socket.off("deletedComment");
+    };
+  }, [socket, updateCommentCount]); 
+  
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim()) {
-      setLoading(true);
-      try {
-        const response = await axios.post("/api/comment/comment", {
-          content: newComment,
-          postId,
-          userId,
-        });
+        setLoading(true);
+        try {
+            const response = await axios.post("/api/comment/comment", {
+                content: newComment,
+                postId,
+                userId,
+            });
 
-        if (response.status === 201) {
-          const newCommentObj = response.data;
-          socket.emit("createComment", newCommentObj);
-          setNewComment("");
-        } else {
-          console.error("Failed to submit comment");
+            if (response.status === 201) {
+                const newCommentObj = response.data; 
+                setComments((prevComments) => [...prevComments, newCommentObj]);
+                socket.emit("createComment", newCommentObj);
+                setNewComment("");
+                updateCommentCount((prevCount) => prevCount + 1); 
+            } else {
+                console.error("Failed to submit comment");
+            }
+        } catch (error) {
+            console.error("Error submitting comment:", error);
+        } finally {
+            setLoading(false);
         }
-      } catch (error) {
-        console.error("Error submitting comment:", error);
-      } finally {
-        setLoading(false);
-      }
     }
-  };
+};
+
+
+
+
+
 
   const handleEditComment = (comment) => {
     setEditingComment(comment.id);
     setUpdatedComment(comment.content);
   };
+
+
+
 
   const handleDeleteComment = async (commentId) => {
     if (confirm("Are you sure you want to delete this comment?")) {
@@ -92,18 +91,26 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
       try {
         const response = await axios.delete(`/api/comment/comment?commentid=${commentId}`);
         if (response.status === 204) {
-          socket.emit("deleteComment", commentId);
+          socket.emit("deleteComment", commentId); 
+          setComments((prevComments) => 
+            prevComments.filter((comment) => comment.id !== commentId)
+          );
+          updateCommentCount(comments.length - 1);
         } else {
           console.error("Failed to delete comment");
         }
       } catch (error) {
-        console.error("Error deleting comment:", error);
+        if (error.response?.status === 403) {
+          alert("You are not authorized to delete this comment.");
+        } else {
+          console.error("Error deleting comment:", error);
+        }
       } finally {
         setDeletingCommentId(null);
       }
     }
   };
-
+  
   const handleUpdateComment = async (e, commentId) => {
     e.preventDefault();
     if (updatedComment.trim()) {
@@ -112,23 +119,33 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
         const response = await axios.patch(`/api/comment/comment?commentid=${commentId}`, {
           content: updatedComment,
         });
-
+  
         if (response.status === 200) {
           const updatedCommentObj = { ...response.data, id: commentId };
-          socket.emit("updateComment", updatedCommentObj);
+          socket.emit("updateComment", updatedCommentObj); 
+          setComments((prevComments) => 
+            prevComments.map((comment) => 
+              comment.id === commentId ? updatedCommentObj : comment
+            )
+          );
+          
           setEditingComment(null);
           setUpdatedComment("");
         } else {
           console.error("Failed to update comment");
         }
       } catch (error) {
-        console.error("Error updating comment:", error);
+        if (error.response?.status === 403) {
+          alert("You are not authorized to update this comment.");
+        } else {
+          console.error("Error updating comment:", error);
+        }
       } finally {
         setLoading(false);
       }
     }
   };
-
+  
   return (
     <div className="mt-6 space-y-6">
       <form onSubmit={handleCommentSubmit} className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
@@ -144,7 +161,11 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
           className="bg-blue-500 text-white px-4 py-2 rounded-lg disabled:opacity-50 flex items-center justify-center sm:w-auto w-full"
           disabled={loading}
         >
-          {loading ? <div className="text-sm">Commenting...</div> : "Comment"}
+          {loading ? (
+            <div className="text-sm">commenting...</div>
+          ) : (
+            "Comment"
+          )}
         </button>
       </form>
 
@@ -153,7 +174,10 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
           <p className="text-gray-500">No comments yet</p>
         ) : (
           comments.map((comment) => (
-            <div key={comment.id} className="flex flex-col sm:flex-row items-start space-y-2 sm:space-y-0 sm:space-x-4 bg-gray-50 p-4 rounded-lg">
+            <div
+              key={comment.id}
+              className="flex flex-col sm:flex-row items-start space-y-2 sm:space-y-0 sm:space-x-4 bg-gray-50 p-4 rounded-lg"
+            >
               <Image
                 src={comment.user?.profilePicture || "/no-user.png"}
                 width={32}
@@ -162,7 +186,9 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                 alt={comment.user?.name}
               />
               <div className="flex-1 w-full sm:w-auto">
-                <p className="text-sm font-semibold text-gray-800">{comment.user?.name}</p>
+                <p className="text-sm font-semibold text-gray-800">
+                  {comment.user?.name}
+                </p>
 
                 {editingComment === comment.id ? (
                   <form
@@ -180,13 +206,19 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                       className="bg-green-500 text-white px-3 py-1 rounded-md flex items-center justify-center w-full sm:w-auto"
                       disabled={loading}
                     >
-                      {loading ? <span className="text-sm">Updating...</span> : "Update"}
+                      {loading ? (
+                        <span className="text-sm">Updating...</span>
+                      ) : (
+                        "Update"
+                      )}
                     </button>
                   </form>
                 ) : (
                   <div>
                     <p className="mt-1 text-gray-600">{comment.content}</p>
-                    <p className="text-xs text-gray-400 mt-1">{new Date(comment.createdAt).toLocaleString()}</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {new Date(comment.createdAt).toLocaleString()}
+                    </p>
                     <div className="flex space-x-2 mt-2">
                       {comment.userId === userId && (
                         <>
@@ -201,7 +233,9 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                             className="text-red-500 text-xs"
                             disabled={deletingCommentId === comment.id}
                           >
-                            {deletingCommentId === comment.id ? "Deleting..." : "Delete"}
+                            {deletingCommentId === comment.id
+                              ? "Deleting..."
+                              : "Delete"}
                           </button>
                         </>
                       )}
