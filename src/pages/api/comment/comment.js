@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     case "GET":
       return handleGetComments(req, res)
     case "POST":
-    case "PUT":
+    case "PATCH":
     case "DELETE":
       const session = await getServerSession(req, res, authOptions)
       
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
         return handleDeleteComment(req, res, userId)
       }
     default:
-      res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"])
+      res.setHeader("Allow", ["GET", "POST", "PATCH", "DELETE"])
       res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }
