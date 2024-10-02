@@ -2,25 +2,20 @@
 
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { io } from "socket.io-client"; 
 import MainHeader from "../MainHeader";
 import PageHead from "@/components/PageHead";
 import { FeedUserCard } from "@/components/UserFeedCard";
-
-const socket = io("/api/socket"); 
 
 export default function Index() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [commentLikes, setCommentLikes] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get("/api/post/feed");
         setPosts(response.data.posts);
-        setCommentLikes(setCommentLikes);
       } catch (error) {
         console.error("Error fetching posts:", error);
         setError("Failed to load posts.");
@@ -30,36 +25,6 @@ export default function Index() {
     };
 
     fetchPosts();
-
-    socket.on("newComment", (newComment) => {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === newComment.postId
-            ? { ...post, comments: [...post.comments, newComment] }
-            : post
-        )
-      );
-    });
-
-    socket.on("deletedComment", (removedComment) => {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === removedComment.postId
-            ? {
-                ...post,
-                comments: post.comments.filter(
-                  (comment) => comment.id !== removedComment.id
-                ),
-              }
-            : post
-        )
-      );
-    });
-
-    return () => {
-      socket.off("newComment");
-      socket.off("deletedComment");
-    };
   }, []);
 
   if (loading) {
@@ -86,7 +51,6 @@ export default function Index() {
             <FeedUserCard
               key={post.id}
               post={post}
-              commentLikes={commentLikes}
               comments={post.comments} 
             />
           ))}

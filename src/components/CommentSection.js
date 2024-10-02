@@ -1,11 +1,6 @@
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { io } from "socket.io-client";
-
-const socket = io("/api/socket"); 
 
 function CommentSection({ postId, userId, comments: initialComments, updateCommentCount }) {
   const [newComment, setNewComment] = useState("");
@@ -15,75 +10,37 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   const [updatedComment, setUpdatedComment] = useState("");
   const [deletingCommentId, setDeletingCommentId] = useState(null);
 
-  useEffect(() => {
-    socket.on("newComment", (newComment) => {
-      setComments((prevComments) => [...prevComments, newComment]);
-      updateCommentCount((prevCount) => prevCount + 1); 
-    });
-  
-    socket.on("updatedComment", (updatedComment) => {
-      setComments((prevComments) =>
-        prevComments.map((comment) =>
-          comment.id === updatedComment.id ? updatedComment : comment
-        )
-      );
-    });
-
-    socket.on("deletedComment", (commentId) => {
-      setComments((prevComments) =>
-        prevComments.filter((comment) => comment.id !== commentId)
-      );
-      updateCommentCount((prevCount) => prevCount - 1); 
-    });
-  
-    return () => {
-      socket.off("newComment");
-      socket.off("updatedComment");
-      socket.off("deletedComment");
-    };
-  }, [socket, updateCommentCount]); 
-  
-
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim()) {
-        setLoading(true);
-        try {
-            const response = await axios.post("/api/comment/comment", {
-                content: newComment,
-                postId,
-                userId,
-            });
+      setLoading(true);
+      try {
+        const response = await axios.post("/api/comment/comment", {
+          content: newComment,
+          postId,
+          userId,
+        });
 
-            if (response.status === 201) {
-                const newCommentObj = response.data; 
-                setComments((prevComments) => [...prevComments, newCommentObj]);
-                socket.emit("createComment", newCommentObj);
-                setNewComment("");
-                updateCommentCount((prevCount) => prevCount + 1); 
-            } else {
-                console.error("Failed to submit comment");
-            }
-        } catch (error) {
-            console.error("Error submitting comment:", error);
-        } finally {
-            setLoading(false);
+        if (response.status === 201) {
+          const newCommentObj = response.data;
+          setComments((prevComments) => [...prevComments, newCommentObj]);
+          setNewComment("");
+          updateCommentCount((prevCount) => prevCount + 1);
+        } else {
+          console.error("Failed to submit comment");
         }
+      } catch (error) {
+        console.error("Error submitting comment:", error);
+      } finally {
+        setLoading(false);
+      }
     }
-};
-
-
-
-
-
+  };
 
   const handleEditComment = (comment) => {
     setEditingComment(comment.id);
     setUpdatedComment(comment.content);
   };
-
-
-
 
   const handleDeleteComment = async (commentId) => {
     if (confirm("Are you sure you want to delete this comment?")) {
@@ -91,11 +48,10 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
       try {
         const response = await axios.delete(`/api/comment/comment?commentid=${commentId}`);
         if (response.status === 204) {
-          socket.emit("deleteComment", commentId); 
-          setComments((prevComments) => 
+          setComments((prevComments) =>
             prevComments.filter((comment) => comment.id !== commentId)
           );
-          updateCommentCount(comments.length - 1);
+          updateCommentCount((prevCount) => prevCount - 1);
         } else {
           console.error("Failed to delete comment");
         }
@@ -110,7 +66,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
       }
     }
   };
-  
+
   const handleUpdateComment = async (e, commentId) => {
     e.preventDefault();
     if (updatedComment.trim()) {
@@ -119,16 +75,15 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
         const response = await axios.patch(`/api/comment/comment?commentid=${commentId}`, {
           content: updatedComment,
         });
-  
+
         if (response.status === 200) {
           const updatedCommentObj = { ...response.data, id: commentId };
-          socket.emit("updateComment", updatedCommentObj); 
-          setComments((prevComments) => 
-            prevComments.map((comment) => 
+          setComments((prevComments) =>
+            prevComments.map((comment) =>
               comment.id === commentId ? updatedCommentObj : comment
             )
           );
-          
+
           setEditingComment(null);
           setUpdatedComment("");
         } else {
@@ -145,10 +100,13 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
       }
     }
   };
-  
+
   return (
     <div className="mt-6 space-y-6">
-      <form onSubmit={handleCommentSubmit} className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+      <form
+        onSubmit={handleCommentSubmit}
+        className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
+      >
         <input
           type="text"
           value={newComment}
