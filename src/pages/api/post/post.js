@@ -1,33 +1,32 @@
 
-import { authOptions } from "@/lib/authOptions"
-import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
-
+import { authOptions } from "@/lib/authOptions";
+import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { content } = req.body
-    const session = await getServerSession(req, res, authOptions)
+    const { content } = req.body;
+    const session = await getServerSession(req, res, authOptions);
 
     if (!session || !session.user || !session.user.id) {
-      return res.status(401).json({ message: "Unauthorized" })
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const userId = session.user.id
+    const userId = session.user.id;
 
     if (!content) {
-      return res.status(400).json({ message: "Check-in message is required" })
+      return res.status(400).json({ message: "Check-in message is required" });
     }
 
     try {
-      const currentDate = new Date()
+      const currentDate = new Date();
 
       let streak = await prisma.streak.findFirst({
         where: { userId },
-      })
+      });
 
-      let streakUpdated = false
-      let newStreak = null
+      let streakUpdated = false;
+      let newStreak = null;
 
       if (!streak) {
         newStreak = await prisma.streak.create({
@@ -37,8 +36,8 @@ export default async function handler(req, res) {
             currentStreak: 1,
             lastCheckIn: currentDate,
           },
-        })
-        streakUpdated = true
+        });
+        streakUpdated = true;
       } else {
         if (isConsecutiveDay(streak.lastCheckIn, currentDate)) {
           newStreak = await prisma.streak.update({
@@ -47,45 +46,47 @@ export default async function handler(req, res) {
               currentStreak: streak.currentStreak + 1,
               lastCheckIn: currentDate,
             },
-          })
-          streakUpdated = true
+          });
+          streakUpdated = true;
         } else if (isSameDay(streak.lastCheckIn, currentDate)) {
-          newStreak = streak
+          newStreak = streak;
         } else {
-          await prisma.streak.delete({
+          newStreak = await prisma.streak.update({
             where: { id: streak.id },
-          })
-          newStreak = null
+            data: {
+              lastCheckIn: currentDate,
+              currentStreak: 1,
+            },
+          });
+          streakUpdated = true;
         }
       }
-
       const checkIn = await prisma.post.create({
         data: {
           content,
           userId,
         },
-      })
+      });
 
       return res.status(201).json({
         message: "Check-in posted successfully",
         checkIn,
         updatedStreak: newStreak ? newStreak.currentStreak : 0,
         streakUpdated,
-      })
+      });
     } catch (error) {
-      console.error("Error creating check-in:", error)
-      res.status(500).json({ message: "Server error", error: error.message })
+      console.error("Error creating check-in:", error);
+      res.status(500).json({ message: "Server error", error: error.message });
     }
   } else {
-    res.status(405).json({ message: "Method not allowed" })
+    res.status(405).json({ message: "Method not allowed" });
   }
 }
 
-// Helper functions to check if days are consecutive or the same
 function isConsecutiveDay(date1, date2) {
-  const oneDayInMilliseconds = 24 * 60 * 60 * 1000
-  const differenceInDays = Math.round((date2 - date1) / oneDayInMilliseconds)
-  return differenceInDays === 1
+  const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+  const differenceInDays = Math.round((date2 - date1) / oneDayInMilliseconds);
+  return differenceInDays === 1;
 }
 
 function isSameDay(date1, date2) {
@@ -93,5 +94,8 @@ function isSameDay(date1, date2) {
     date1.getFullYear() === date2.getFullYear() &&
     date1.getMonth() === date2.getMonth() &&
     date1.getDate() === date2.getDate()
-  )
+  );
 }
+
+
+

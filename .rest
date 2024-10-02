@@ -1,6 +1,6 @@
-GET   http://localhost:3000/api/comment/comment
+GET   http://localhost:3000/api/post/getpost
 Content-Type: application/json
 
-{
-  "postId": "66f917eda12d967d2b4126cb",
-}
+# {
+#   "postId": "66f917eda12d967d2b4126cb",
+# }

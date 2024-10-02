@@ -8,14 +8,17 @@ import { FeedUserCard } from "@/components/UserFeedCard";
 
 export default function Index() {
   const [posts, setPosts] = useState([])
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-
+const [commentLikes,setCommentLikes]=useState(null)
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get("/api/post/feed")
         setPosts(response.data.posts)
+        setCommentLikes(setCommentLikes)
+        
       } catch (error) {
         console.error("Error fetching posts:", error)
         setError("Failed to load posts.")
@@ -49,7 +52,7 @@ export default function Index() {
         <h1>Posts</h1>
         <ul className="nav-wrapper mt-28">
           {posts.map((post) => (
-            <FeedUserCard key={post.id} post={post} />
+            <FeedUserCard key={post.id} commentLikes={commentLikes}  post={post} />
           ))}
         </ul>
       </div>

@@ -8,13 +8,15 @@ import { useSession } from "next-auth/react";
 
 export function FeedUserCard({ post }) {
   const user = post.user || {};
-  const { data: session } = useSession()
+  const likes = post.likeCount || {};
+  
+  const { data: session } = useSession();
   const { isLiked, count, toggleLike, loading } = useLikeStatus(
     user.id,
     post.id
   );
   const [showComments, setShowComments] = useState(false);
-  const [commentCount, setCommentCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(post.commentCount || 0); 
 
   const handleToggleLike = async (e) => {
     e.preventDefault();
@@ -81,11 +83,19 @@ export function FeedUserCard({ post }) {
           className="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-blue-600"
         >
           <MessageCircle size={24} />
-          <span>{commentCount} {commentCount === 1 ? "Comment" : "Comments"}</span> 
+          <span>
+            {commentCount} {commentCount === 1 ? "Comment" : "Comments"}
+          </span>
         </button>
       </div>
 
-      {showComments && <CommentSection userId={session?.user?.id} postId={post.id} updateCommentCount={setCommentCount} />}
+      {showComments && (
+        <CommentSection
+          userId={session?.user?.id}
+          postId={post.id}
+          comments={post.comments} 
+          updateCommentCount={setCommentCount}
+        />
+      )}
     </div>
-  );
-}
+  )}

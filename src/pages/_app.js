@@ -9,6 +9,7 @@ import MainHeader from "./MainHeader"
 import SessionWrapper from "@/sessionWrapper/SessionWrapper"
 import { useEffect } from "react"
 import Scheduler from "@/sessionWrapper/Scheduler.js"
+import { SocketProvider } from "@/context/SocketProvider"
 
 const poppin = Poppins({
   weight: ["200", "300", "400", "600", "700", "800"],
@@ -19,22 +20,24 @@ function App({ Component, pageProps }) {
   Scheduler()
   return (
     <div className={`${poppin.className}`}>
-      <SessionWrapper>
-        <AuthProvider>
-          <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            closeOnClick
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-          <CheckInProvider>
-            <Component {...pageProps} />
-          </CheckInProvider>
-        </AuthProvider>
-      </SessionWrapper>
+      <SocketProvider>
+        <SessionWrapper>
+          <AuthProvider>
+            <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              closeOnClick
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+            <CheckInProvider>
+              <Component {...pageProps} />
+            </CheckInProvider>
+          </AuthProvider>
+        </SessionWrapper>
+      </SocketProvider>
     </div>
   )
 }

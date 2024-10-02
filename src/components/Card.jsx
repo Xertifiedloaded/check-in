@@ -6,18 +6,19 @@ import { Heart } from "lucide-react"
 import useLikeStatus from "@/utils/actions"
 
 export default function Card({ post, streak }) {
-  const user = post.user || {}
+  const user = post.user || {};
+  const comment = post.comments || {};
+  const likes = post.likeCount || 0; 
 
-  const { isLiked, count, toggleLike, loading } = useLikeStatus(
-    user.id,
-    post.id
-  )
+  const { isLiked, toggleLike, loading } = useLikeStatus(user.id, post.id);
+  const [likeCount, setLikeCount] = useState(likes); 
 
   const handleToggleLike = async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    toggleLike()
-  }
+    e.preventDefault();
+    e.stopPropagation();
+    setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
+    await toggleLike();
+  };
 
   return (
     <div className="relative shadow-md border rounded-md bg-white my-3 flex flex-col justify-center items-center p-6">
@@ -53,7 +54,7 @@ export default function Card({ post, streak }) {
       <button
         onClick={handleToggleLike}
         disabled={loading}
-        className="absolute  gap-1 items-center flex justify-between  right-0 top-0 p-1 z-20"
+        className="absolute gap-1 items-center flex justify-between right-0 top-0 p-1 z-20"
       >
         <Heart
           size={20}
@@ -62,12 +63,13 @@ export default function Card({ post, streak }) {
           stroke={isLiked ? "red" : "currentColor"}
         />
         <small className="text-xs">
-          {count || 0} {count === 1 ? "Like" : "Likes"}
+          {likeCount} {likeCount === 1 ? "Like" : "Likes"}
         </small>
       </button>
     </div>
-  )
+  );
 }
+
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (

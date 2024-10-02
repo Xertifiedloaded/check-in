@@ -1,4 +1,3 @@
-
 import { prisma } from "@/lib/prisma"
 import { startOfToday, startOfYesterday } from "date-fns"
 
@@ -6,19 +5,20 @@ export default async function handler(req, res) {
   try {
     const today = startOfToday();
     const yesterday = startOfYesterday();
+
     const posts = await prisma.post.findMany({
       where: {
         OR: [
           {
             createdAt: {
-              gte: today, 
-              lt: new Date(today.getTime() + 24 * 60 * 60 * 1000), 
+              gte: today,
+              lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
             },
           },
           {
             createdAt: {
-              gte: yesterday, 
-              lt: today, 
+              gte: yesterday,
+              lt: today,
             },
           },
         ],
@@ -32,20 +32,41 @@ export default async function handler(req, res) {
             profilePicture: true,
           },
         },
+        comments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                profilePicture: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
-        createdAt: 'desc', 
+        createdAt: 'desc',
       },
     });
+
     const recentPostsMap = new Map();
+
     for (const post of posts) {
       const userId = post.userId;
       if (!recentPostsMap.has(userId)) {
-        recentPostsMap.set(userId, post);
+        recentPostsMap.set(userId, {
+          ...post,
+          likeCount: post.likes.length,
+          commentCount: post.comments.length,
+        });
       } else {
         const existingPost = recentPostsMap.get(userId);
         if (post.createdAt > existingPost.createdAt) {
-          recentPostsMap.set(userId, post);
+          recentPostsMap.set(userId, {
+            ...post,
+            likeCount: post.likes.length,
+            commentCount: post.comments.length,
+          });
         }
       }
     }

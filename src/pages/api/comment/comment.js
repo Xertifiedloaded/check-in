@@ -1,8 +1,10 @@
 import handleGetComments, { handleCreateComment, handleDeleteComment, handleUpdateComment } from "@/controller/commentController"
 import { authOptions } from "@/lib/authOptions"
+import { socketHandler } from "@/lib/socket"
 import { getServerSession } from "next-auth"
 
 export default async function handler(req, res) {
+  // socketHandler(req,res)
   switch (req.method) {
     case "GET":
       return handleGetComments(req, res)

@@ -18,6 +18,8 @@ export const CheckInProvider = ({ children }) => {
     setLoading(true)
     try {
       const response = await fetch("/api/post/today-yesterday")
+      console.log(response);
+      
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`)
       }

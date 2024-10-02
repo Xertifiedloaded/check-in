@@ -12,6 +12,17 @@ export default async function handler(req, res) {
             profilePicture: true,
           },
         },
+        comments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                profilePicture: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
@@ -21,6 +32,13 @@ export default async function handler(req, res) {
     const serializedPosts = posts.map((post) => ({
       ...post,
       createdAt: post.createdAt.toISOString(),
+      likeCount: post.likes.length,
+      commentCount: post.comments.length,
+      comments: post.comments.map(comment => ({
+        ...comment,
+        createdAt: comment.createdAt.toISOString(),
+        updatedAt: comment.updatedAt.toISOString(),
+      })),
     }));
 
     res.status(200).json({ posts: serializedPosts });

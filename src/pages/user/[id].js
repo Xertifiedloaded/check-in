@@ -1,9 +1,9 @@
-"use client";
+"use client"
 import { useCheckIn } from "@/context/CheckInContext"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import MainHeader from "../MainHeader"
-import { FeedUserCard } from "@/components/UserFeedCard";
+import { FeedUserCard } from "@/components/UserFeedCard"
 
 const CheckInList = () => {
   const router = useRouter()
@@ -11,8 +11,6 @@ const CheckInList = () => {
   const [checkIn, setCheckIns] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-
-
 
   const fetchCheckIns = async () => {
     if (!id) return
@@ -24,10 +22,10 @@ const CheckInList = () => {
         throw new Error("Failed to fetch check-ins")
       }
       const data = await response.json()
-
+      console.log(data.posts)
       console.log("Check-ins data:", data)
 
-      setCheckIns(data)
+      setCheckIns(data.posts)
     } catch (err) {
       console.error("Error fetching check-ins:", err)
       setError(err.message)

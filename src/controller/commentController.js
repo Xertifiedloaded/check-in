@@ -1,4 +1,11 @@
 import { prisma } from "@/lib/prisma";
+
+
+
+
+
+
+
 export default async function handleGetComments(req, res) {
     const { postId } = req.query
 
