@@ -1,22 +1,31 @@
+import { Server } from 'socket.io';
 
-import { Server } from "socket.io";
-
-let io; 
-
-export const socketHandler = (req, res) => {
-  if (!res.socket.server.io) {
-    io = new Server(res.socket.server); 
-    res.socket.server.io = io;
-
-    io.on("connection", (socket) => {
-      console.log("A user connected to the socket");
-
-      socket.on("disconnect", () => {
-        console.log("User disconnected from the socket");
-      });
-    });
-  } else {
-    io = res.socket.server.io; 
+const SocketHandler = (req, res) => {
+  if (res.socket.server.io) {
+    console.log('Socket is already running');
+    res.end();
+    return;
   }
+
+  console.log('Socket is initializing');
+  const io = new Server(res.socket.server);
+  res.socket.server.io = io;
+
+  io.on('connection', socket => {
+    console.log(`New client connected: ${socket.id}`);
+
+    socket.on('createComment', (newComment) => {
+      console.log('New comment created:', newComment);
+      io.emit('newComment', newComment);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Client disconnected');
+    });
+  });
+
+  console.log('Socket is initialized');
+  res.end();
 };
 
+export default SocketHandler;
