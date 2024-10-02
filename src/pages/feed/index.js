@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { io } from "socket.io-client"; // Import Socket.IO client
+import { io } from "socket.io-client"; 
 import MainHeader from "../MainHeader";
 import PageHead from "@/components/PageHead";
 import { FeedUserCard } from "@/components/UserFeedCard";
@@ -87,7 +87,7 @@ export default function Index() {
               key={post.id}
               post={post}
               commentLikes={commentLikes}
-              comments={post.comments} // Pass comments
+              comments={post.comments} 
             />
           ))}
         </ul>
