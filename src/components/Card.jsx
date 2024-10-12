@@ -1,31 +1,26 @@
-"use client"
-import React, { useEffect, useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Heart } from "lucide-react"
-import useLikeStatus from "@/utils/actions"
+"use client";
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Heart } from "lucide-react";
+import useLikeStatus from "@/utils/actions";
 
 export default function Card({ post, streak }) {
   const user = post.user || {};
-  const comment = post.comments || {};
-  const likes = post.likeCount || 0; 
+  const likes = post.likeCount || 0;
 
-  const { isLiked, toggleLike, loading } = useLikeStatus(user.id, post.id);
-  const [likeCount, setLikeCount] = useState(likes); 
+
+  const { isLiked, toggleLike, loading, count } = useLikeStatus(user.id, post.id);
 
   const handleToggleLike = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
-    await toggleLike();
+    await toggleLike(); 
   };
 
   return (
     <div className="relative shadow-md border rounded-md bg-white my-3 flex flex-col justify-center items-center p-6">
-      <Link
-        href={`/user/${user.id}`}
-        className="w-full h-full absolute top-0 left-0 z-10"
-      >
+      <Link href={`/user/${user.id}`} className="w-full h-full absolute top-0 left-0 z-10">
         <span className="sr-only">View user profile</span>
       </Link>
       <Image
@@ -39,7 +34,7 @@ export default function Card({ post, streak }) {
       <h1 className="mt-3 text-sm font-medium">
         {user.name || "Unknown User"}
       </h1>
-      {streak > 1 && (
+      {user.currentStreak > 1 && (
         <div className="text-xs justify-center absolute w-[20px] h-[20px] right-1 top-1 rounded-full bg-[#FFCE51] text-white flex items-center space-x-1 z-20">
           <Image
             src="/flame.svg"
@@ -58,17 +53,18 @@ export default function Card({ post, streak }) {
       >
         <Heart
           size={20}
-          fontSize={10}
-          fill={isLiked ? "red" : "none"}
-          stroke={isLiked ? "red" : "currentColor"}
+          fill={isLiked ? "red" : "none"} 
+          stroke={isLiked ? "red" : "currentColor"} 
         />
         <small className="text-xs">
-          {likeCount} {likeCount === 1 ? "Like" : "Likes"}
+          {count} {count === 1 ? "Like" : "Likes"}
         </small>
       </button>
     </div>
   );
 }
+
+
 
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
@@ -9,6 +10,36 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   const [editingComment, setEditingComment] = useState(null);
   const [updatedComment, setUpdatedComment] = useState("");
   const [deletingCommentId, setDeletingCommentId] = useState(null);
+
+
+  const fetchNewComments = async () => {
+    if (comments.length === 0) return; 
+    const latestComment = comments[0]; 
+    try {
+      const response = await axios.get(`/api/comment/comment`, {
+        params: {
+          postId,
+          after: latestComment.createdAt, 
+        },
+      });
+      if (response.status === 200) {
+        const newComments = response.data.comments;
+        if (newComments.length > 0) {
+          setComments((prevComments) => [...newComments, ...prevComments]); 
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching new comments:", error);
+    }
+  };
+
+  useEffect(() => {
+// fetch comment every 10sec
+    const intervalId = setInterval(() => {
+      fetchNewComments();
+    }, 10000); 
+    return () => clearInterval(intervalId);
+  }, [comments]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +54,8 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
 
         if (response.status === 201) {
           const newCommentObj = response.data;
-          setComments((prevComments) => [...prevComments, newCommentObj]);
+          // Add the new comment to the top
+          setComments((prevComments) => [newCommentObj, ...prevComments]); 
           setNewComment("");
           updateCommentCount((prevCount) => prevCount + 1);
         } else {
@@ -119,11 +151,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
           className="bg-blue-500 text-white px-4 py-2 rounded-lg disabled:opacity-50 flex items-center justify-center sm:w-auto w-full"
           disabled={loading}
         >
-          {loading ? (
-            <div className="text-sm">commenting...</div>
-          ) : (
-            "Comment"
-          )}
+          {loading ? <div className="text-sm">Commenting...</div> : "Comment"}
         </button>
       </form>
 
@@ -164,11 +192,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                       className="bg-green-500 text-white px-3 py-1 rounded-md flex items-center justify-center w-full sm:w-auto"
                       disabled={loading}
                     >
-                      {loading ? (
-                        <span className="text-sm">Updating...</span>
-                      ) : (
-                        "Update"
-                      )}
+                      {loading ? <span className="text-sm">Updating...</span> : "Update"}
                     </button>
                   </form>
                 ) : (
@@ -191,9 +215,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                             className="text-red-500 text-xs"
                             disabled={deletingCommentId === comment.id}
                           >
-                            {deletingCommentId === comment.id
-                              ? "Deleting..."
-                              : "Delete"}
+                            {deletingCommentId === comment.id ? "Deleting..." : "Delete"}
                           </button>
                         </>
                       )}

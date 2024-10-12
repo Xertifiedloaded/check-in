@@ -1,4 +1,3 @@
-
 import { authOptions } from "@/lib/authOptions";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
@@ -20,6 +19,27 @@ export default async function handler(req, res) {
 
     try {
       const currentDate = new Date();
+      
+      const todayStart = new Date(currentDate.setHours(0, 0, 0, 0));
+      const todayEnd = new Date(currentDate.setHours(23, 59, 59, 999));
+      
+      const existingCheckIn = await prisma.post.findFirst({
+        where: {
+          userId,
+          createdAt: {
+            gte: todayStart,
+            lte: todayEnd
+          }
+        }
+      });
+
+      if (existingCheckIn) {
+        return res.status(200).json({ 
+          message: "You have already checked in today",
+          alreadyCheckedIn: true,
+          checkIn: existingCheckIn
+        });
+      }
 
       let streak = await prisma.streak.findFirst({
         where: { userId },
@@ -61,6 +81,7 @@ export default async function handler(req, res) {
           streakUpdated = true;
         }
       }
+
       const checkIn = await prisma.post.create({
         data: {
           content,
@@ -73,6 +94,7 @@ export default async function handler(req, res) {
         checkIn,
         updatedStreak: newStreak ? newStreak.currentStreak : 0,
         streakUpdated,
+        alreadyCheckedIn: false
       });
     } catch (error) {
       console.error("Error creating check-in:", error);
@@ -96,6 +118,3 @@ function isSameDay(date1, date2) {
     date1.getDate() === date2.getDate()
   );
 }
-
-
-

@@ -15,44 +15,33 @@ export const CheckInProvider = ({ children }) => {
   const [streaks, setStreaks] = useState([])
 
   const fetchCheckIns = async () => {
-    setLoading(true)
+    // setLoading(true);
     try {
-      const response = await fetch("/api/post/today-yesterday")
+      const response = await fetch("/api/post/today-yesterday");
       console.log(response);
-      
+  
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
-      const data = await response.json()
-
-      if (!Array.isArray(data)) {
-        console.error("Expected an array but got:", data)
-        setLoading(false)
-        return
+  
+      const data = await response.json();
+  
+      if (!data || !Array.isArray(data.todayPosts) || !Array.isArray(data.yesterdayPosts)) {
+        console.error("Unexpected response structure:", data);
+        setLoading(false);
+        return;
       }
-
-      const today = new Date().setHours(0, 0, 0, 0)
-      const yesterday = new Date(today).setDate(new Date(today).getDate() - 1)
-
-      const todayFiltered = data.filter((post) => {
-        const postDate = new Date(post.createdAt).setHours(0, 0, 0, 0)
-        return postDate === today
-      })
-
-      const yesterdayFiltered = data.filter((post) => {
-        const postDate = new Date(post.createdAt).setHours(0, 0, 0, 0)
-        return postDate === yesterday
-      })
-
-      setTodayPosts(todayFiltered)
-      setYesterdayPosts(yesterdayFiltered)
+  
+      setTodayPosts(data.todayPosts);
+      setYesterdayPosts(data.yesterdayPosts);
     } catch (error) {
-      console.error("Error fetching data:", error)
+      console.error("Error fetching data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+  
+
 
   const fetchStreaks = async () => {
     setLoading(true)
@@ -72,9 +61,7 @@ export const CheckInProvider = ({ children }) => {
   }
 
   const postCheckIn = async (content, userId) => {
-    // setCheckInLoading(true)
     const toastId = toast.loading("Posting check-in...")
-
     try {
       const response = await fetch("/api/post/post", {
         method: "POST",
@@ -126,6 +113,7 @@ export const CheckInProvider = ({ children }) => {
     fetchStreaks()
   }, [])
 
+  
   return (
     <CheckInContext.Provider
       value={{

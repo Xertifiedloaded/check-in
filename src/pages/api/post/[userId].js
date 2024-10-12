@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   try {
     const posts = await prisma.post.findMany({
       where: {
-        userId: userId, 
+        userId: userId,
       },
       include: {
         user: {
@@ -31,26 +31,26 @@ export default async function handler(req, res) {
               },
             },
           },
-          orderBy: {
-            createdAt: 'desc', 
-          },
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: 'desc', 
       },
     });
+
 
     const serializedPosts = posts.map((post) => ({
       ...post,
       createdAt: post.createdAt.toISOString(),
       likeCount: post.likes.length,
       commentCount: post.comments.length,
-      comments: post.comments.map(comment => ({
-        ...comment,
-        createdAt: comment.createdAt.toISOString(),
-        updatedAt: comment.updatedAt.toISOString(),
-      })),
+      comments: post.comments
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) 
+        .map(comment => ({
+          ...comment,
+          createdAt: comment.createdAt.toISOString(),
+          updatedAt: comment.updatedAt.toISOString(),
+        })),
     }));
 
     res.status(200).json({ posts: serializedPosts });

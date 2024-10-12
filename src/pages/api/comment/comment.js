@@ -1,9 +1,6 @@
 import handleGetComments, { handleCreateComment, handleDeleteComment, handleUpdateComment } from "@/controller/commentController"
 import { authOptions } from "@/lib/authOptions"
-
-
 import { getServerSession } from "next-auth"
-import SocketHandler from "../../../lib/socket"
 
 export default async function handler(req, res) {
 
@@ -14,7 +11,6 @@ export default async function handler(req, res) {
     case "PATCH":
     case "DELETE":
       const session = await getServerSession(req, res, authOptions)
-      
       if (!session || !session.user || !session.user.id) {
         return res
           .status(401)

@@ -1,6 +1,3 @@
-
-
-
 'use client';
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -23,7 +20,7 @@ export default function useLikeStatus(userId, postId) {
         });
         
         setIsLiked(response.data.liked || false); 
-        setCount(response.data.likeCount);
+        setCount(response.data.likeCount); 
       } catch (error) {
         console.error("Error fetching like status:", error);
         setError("Failed to fetch like status");
@@ -33,7 +30,7 @@ export default function useLikeStatus(userId, postId) {
     };
 
     if (postId) {
-      fetchLikeStatus();
+      fetchLikeStatus(); 
     }
   }, [postId]);
 
@@ -46,16 +43,14 @@ export default function useLikeStatus(userId, postId) {
 
       const response = await axios.post("/api/post/like-unlike", { postId });
 
-      setIsLiked((prevLiked) => !prevLiked); 
+      setIsLiked(response.data.liked); 
       setCount(response.data.likeCount); 
     } catch (error) {
       console.error("Error toggling like:", error);
       setError("Failed to toggle like");
+      toast.error("Failed to update like status");
     }
   };
 
   return { isLiked, toggleLike, loading, count, error };
 }
-
-
-
