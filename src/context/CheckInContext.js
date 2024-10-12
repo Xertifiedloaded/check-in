@@ -8,14 +8,15 @@ export const CheckInProvider = ({ children }) => {
   const [todayPosts, setTodayPosts] = useState([])
   const [yesterdayPosts, setYesterdayPosts] = useState([])
 
-  const [loading, setLoading] = useState(true)
+  const [loadingCheckIns, setLoadingCheckIns] = useState(true) 
+  const [loadingStreaks, setLoadingStreaks] = useState(true) 
   const [checkInLoading, setCheckInLoading] = useState(false)
   const [error, setError] = useState(null)
   const [feed, setFeed] = useState([])
   const [streaks, setStreaks] = useState([])
 
   const fetchCheckIns = async () => {
-    // setLoading(true);
+    setLoadingCheckIns(true); 
     try {
       const response = await fetch("/api/post/today-yesterday");
   
@@ -27,7 +28,6 @@ export const CheckInProvider = ({ children }) => {
   
       if (!data || !Array.isArray(data.todayPosts) || !Array.isArray(data.yesterdayPosts)) {
         console.error("Unexpected response structure:", data);
-        setLoading(false);
         return;
       }
   
@@ -36,14 +36,12 @@ export const CheckInProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setLoading(false);
+      setLoadingCheckIns(false); 
     }
   };
-  
-
 
   const fetchStreaks = async () => {
-    setLoading(true)
+    setLoadingStreaks(true);
     try {
       const response = await fetch("/api/post/streak")
       if (!response.ok) {
@@ -55,7 +53,7 @@ export const CheckInProvider = ({ children }) => {
     } catch (err) {
       console.error("Error fetching streaks:", err)
     } finally {
-      setLoading(false)
+      setLoadingStreaks(false); 
     }
   }
 
@@ -71,10 +69,8 @@ export const CheckInProvider = ({ children }) => {
       })
 
       const data = await response.json()
-      console.log(data)
 
       if (!response.ok) {
-        setCheckInLoading(false)
         toast.update(toastId, {
           render: "Error: error posting",
           type: "error",
@@ -91,10 +87,9 @@ export const CheckInProvider = ({ children }) => {
         autoClose: 3000,
       })
 
-      fetchCheckIns()
-      fetchStreaks()
+      await fetchCheckIns() 
+      await fetchStreaks() 
     } catch (error) {
-      setCheckInLoading(false)
       toast.update(toastId, {
         render: "Network error: " + error.message,
         type: "error",
@@ -118,7 +113,8 @@ export const CheckInProvider = ({ children }) => {
       value={{
         todayPosts,
         yesterdayPosts,
-        loading,
+        loadingCheckIns, 
+        loadingStreaks, 
         error,
         feed,
         streaks,
