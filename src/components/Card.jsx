@@ -1,70 +1,83 @@
-"use client";
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Heart } from "lucide-react";
-import useLikeStatus from "@/utils/actions";
+"use client"
+import React from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { Heart } from "lucide-react"
+import useLikeStatus from "@/utils/actions"
 
-export default function Card({ post, streak }) {
-  const user = post.user || {};
-  const likes = post.likeCount || 0;
-
-
-  const { isLiked, toggleLike, loading, count } = useLikeStatus(user.id, post.id);
+export default function Card({ post }) {
+  const user = post.user || {}
+  const likes = post.likeCount || 0
+  const streak = post.currentStreak
+  const { isLiked, toggleLike, loading, count } = useLikeStatus(
+    user.id,
+    post.id
+  )
+  console.log(post.currentStreak)
 
   const handleToggleLike = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await toggleLike(); 
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    await toggleLike()
+  }
 
   return (
-    <div className="relative shadow-md border rounded-md bg-white my-3 flex flex-col justify-center items-center p-6">
-      <Link href={`/user/${user.id}`} className="w-full h-full absolute top-0 left-0 z-10">
+    <div className="relative shadow-lg border rounded-xl bg-white my-4 flex flex-col items-center p-6 transition-transform duration-300 hover:shadow-2xl hover:border-gray-200 hover:-translate-y-1">
+      <Link href={`/user/${user.id}`} className="absolute inset-0 z-10">
         <span className="sr-only">View user profile</span>
       </Link>
-      <Image
-        src={user.profilePicture || "/no-user-pic.png"}
-        width={50}
-        className="w-[50px] h-[50px] rounded-full"
-        height={50}
-        alt={user.name || "User"}
-      />
-
-      <h1 className="mt-3 text-sm font-medium">
-        {user.name || "Unknown User"}
-      </h1>
-      {user.currentStreak > 1 && (
-        <div className="text-xs justify-center absolute w-[20px] h-[20px] right-1 top-1 rounded-full bg-[#FFCE51] text-white flex items-center space-x-1 z-20">
-          <Image
-            src="/flame.svg"
-            width={15}
-            className="w-[15px] h-[15px]"
-            height={15}
-            alt="Flame icon"
-          />
-        </div>
-      )}
+  
+      <div className="relative z-20 flex flex-col items-center">
+        <Image
+          src={user.profilePicture || "/no-user-pic.png"}
+          width={60}
+          height={60}
+          className="w-[60px] h-[60px] rounded-full border border-gray-200 transition-all hover:border-gray-400"
+          alt={user.name || "User"}
+        />
+  
+        <h1 className="mt-3 text-base font-semibold text-gray-800 hover:text-gray-900 transition-colors">
+          {user.name || "Unknown User"}
+        </h1>
+  
+        {streak && (
+          <div className="absolute top-[-10px] left-[-50px] flex items-center">
+            <div className="relative w-[28px] h-[28px] bg-[#FFCE51] rounded-full flex items-center justify-center animate-bounce">
+              <Image
+                src="/flame.svg"
+                width={18}
+                height={18}
+                alt="Flame icon"
+                className="w-[18px] h-[18px]"
+              />
+            </div>
+    
+          </div>
+        )}
+      </div>
 
       <button
         onClick={handleToggleLike}
         disabled={loading}
-        className="absolute gap-1 items-center flex justify-between right-0 top-0 p-1 z-20"
+        className={`absolute top-3 right-3 flex items-center gap-1 text-gray-600 z-20 
+          transition-transform duration-200 ease-in-out hover:scale-110 
+          ${isLiked ? "text-red-500" : "hover:text-red-500"} 
+          focus:outline-none`}
       >
         <Heart
-          size={20}
-          fill={isLiked ? "red" : "none"} 
-          stroke={isLiked ? "red" : "currentColor"} 
+          size={22}
+          fill={isLiked ? "red" : "none"}
+          stroke={isLiked ? "red" : "currentColor"}
+          className="transition-all duration-300 ease-in-out"
         />
-        <small className="text-xs">
+        <small className="text-xs font-medium">
           {count} {count === 1 ? "Like" : "Likes"}
         </small>
       </button>
     </div>
   );
+  
 }
-
-
 
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {

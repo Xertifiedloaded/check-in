@@ -43,18 +43,21 @@ export function YesterDayCheckIn() {
   )
 }
 
-export function UsersStreak() {
-  const { loading, checkIns, streaks, error } = useCheckIn()
+export  function UsersStreak() {
+  const { loading, streaks, error } = useCheckIn();
+
+
+
   return (
     <div className="w-full lg:w-[30%]">
-      <h1 className="text-xl font-bold mb-4 border-b pb-3">Streak</h1>
+      <h2 className="text-xl font-bold mb-4 border-b pb-3">Streak</h2>
       {streaks.length > 0 ? (
-        streaks.map((items) => <StreakCard key={items.id} {...items} />)
+        streaks.map((streak) => <StreakCard key={streak.id} {...streak} />)
       ) : (
-        <div className="col-span-2 text-center">
+        <div className="text-center">
           <p className="text-gray-500">No user streaks available.</p>
         </div>
       )}
     </div>
-  )
+  );
 }

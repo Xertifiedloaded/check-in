@@ -1,5 +1,4 @@
-import Head from "next/head"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Heading from "@/components/Heading"
 import CheckIn from "@/components/CheckIn"
 import { useCheckIn } from "@/context/CheckInContext"
@@ -7,14 +6,26 @@ import MainHeader from "./MainHeader"
 import PageHead from "@/components/PageHead"
 
 export default function Home() {
-  const { loading, checkIns, error } = useCheckIn()
-  if (loading) {
+  const { todayPosts, yesterdayPosts, error } = useCheckIn()
+
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    if (todayPosts ) {
+      setIsLoading(false) 
+    }
+  }, [todayPosts, yesterdayPosts])
+
+
+  if (isLoading) {
     return (
-      <section className="flex justify-center items-center lg:h-screen h-[90vh] ">
+      <section className="flex justify-center items-center lg:h-screen h-[90vh]">
         <div className="loader"></div>
       </section>
     )
   }
+
+
 
   return (
     <>
