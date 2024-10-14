@@ -19,9 +19,9 @@ export default function UpdateProfile() {
           <ProfileInfo />
         </div>
 
-        {/* <div className="nav-wrapper my-6 ">
+        <div className="nav-wrapper my-6 ">
           <UpdatePassword />
-        </div> */}
+        </div>
         <div className="nav-wrapper my-6 ">
           <DeleteAccount />
         </div>
