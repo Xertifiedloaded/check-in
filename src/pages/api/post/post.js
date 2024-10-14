@@ -12,34 +12,14 @@ export default async function handler(req, res) {
     }
 
     const userId = session.user.id;
-
     if (!content) {
       return res.status(400).json({ message: "Check-in message is required" });
     }
 
     try {
       const currentDate = new Date();
-      
       const todayStart = new Date(currentDate.setHours(0, 0, 0, 0));
       const todayEnd = new Date(currentDate.setHours(23, 59, 59, 999));
-      
-      const existingCheckIn = await prisma.post.findFirst({
-        where: {
-          userId,
-          createdAt: {
-            gte: todayStart,
-            lte: todayEnd
-          }
-        }
-      });
-
-      if (existingCheckIn) {
-        return res.status(200).json({ 
-          message: "You have already checked in today",
-          alreadyCheckedIn: true,
-          checkIn: existingCheckIn
-        });
-      }
 
       let streak = await prisma.streak.findFirst({
         where: { userId },
@@ -89,12 +69,22 @@ export default async function handler(req, res) {
         },
       });
 
+      const todayCheckIns = await prisma.post.count({
+        where: {
+          userId,
+          createdAt: {
+            gte: todayStart,
+            lte: todayEnd
+          }
+        }
+      });
+
       return res.status(201).json({
         message: "Check-in posted successfully",
         checkIn,
         updatedStreak: newStreak ? newStreak.currentStreak : 0,
         streakUpdated,
-        alreadyCheckedIn: false
+        todayCheckInsCount: todayCheckIns
       });
     } catch (error) {
       console.error("Error creating check-in:", error);

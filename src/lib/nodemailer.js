@@ -1,13 +1,15 @@
 import nodemailer from 'nodemailer';
 import { createEmailContent } from './emailContent';
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
   service: 'gmail', 
   auth: {
     user: process.env.EMAIL_USER, 
     pass: process.env.EMAIL_PASS, 
   },
 });
+
+
 
 export const sendNotification = async (user, type) => {
   const { subject, body } = createEmailContent(user.name, type);

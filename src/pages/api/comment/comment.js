@@ -3,7 +3,6 @@ import { authOptions } from "@/lib/authOptions"
 import { getServerSession } from "next-auth"
 
 export default async function handler(req, res) {
-
   switch (req.method) {
     case "GET":
       return handleGetComments(req, res)

@@ -11,7 +11,6 @@ export default function CheckIn() {
         <TodayCheckIn />
         <YesterDayCheckIn />
       </div>
-
       <UsersStreak />
     </section>
   )

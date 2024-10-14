@@ -1,3 +1,4 @@
+import { transporter } from "./nodemailer";
 
 export const sendNotification = async (user, type) => {
   const { subject, body } = createEmailContent(user.name, type);
@@ -16,6 +17,21 @@ export const sendNotification = async (user, type) => {
     console.error(`Error sending email to ${user.email}:`, error);
   }
 };
+
+export async function sendEmailCommentNotification({ to, subject, html }) {
+  try {
+    const info = await transporter.sendMail({
+      from: 'Daily-CheckIn <noreply@checkin.com.ng>',
+      to: to,
+      subject: subject,
+      html: html, 
+    });
+    return true;
+  } catch (error) {
+
+    return false;
+  }
+}
 
 
 
