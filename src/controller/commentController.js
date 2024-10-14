@@ -3,6 +3,33 @@ import { generateEmailHTML } from "@/lib/CommentHtml"
 import { sendEmailCommentNotification } from "@/lib/emailContent"
 import { prisma } from "@/lib/prisma"
 
+
+export const getUserCurrentStreak = async (userId) => {
+  try {
+    const streak = await prisma.streak.findFirst({
+      where: {
+        userId: userId,
+      },
+      select: {
+        currentStreak: true,
+      },
+    });
+
+    if (!streak) {
+      return null; 
+    }
+
+    return streak.currentStreak;
+  } catch (error) {
+    throw new Error('Error fetching streak');
+  }
+};
+
+
+
+
+
+
 export default async function handleGetComments(req, res) {
   const { postId } = req.query
 

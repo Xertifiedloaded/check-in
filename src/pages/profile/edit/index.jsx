@@ -1,4 +1,4 @@
-import { ShareStreak, StreakProgress } from "@/components/Card"
+
 import DeleteAccount from "./DeleteAccount"
 import ProfileHeader from "./ProfileHeader"
 import ProfileInfo from "./ProfileInfo"
