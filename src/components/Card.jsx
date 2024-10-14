@@ -5,8 +5,8 @@ import Link from "next/link"
 import { Heart } from "lucide-react"
 import useLikeStatus from "@/utils/actions"
 import { useEffect, useState } from "react"
-import { AiOutlineStar, AiOutlineTrophy } from 'react-icons/ai';
-import { BsFire } from 'react-icons/bs';
+import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai"
+import { BsFire } from "react-icons/bs"
 export default function Card({ post }) {
   const user = post.user || {}
   const likes = post.likeCount || 0
@@ -15,7 +15,6 @@ export default function Card({ post }) {
     user.id,
     post.id
   )
-  console.log(post.currentStreak)
 
   const handleToggleLike = async (e) => {
     e.preventDefault()
@@ -108,31 +107,31 @@ export function StreakBadge({ currentStreak }) {
       case currentStreak >= 30:
         return (
           <div className="badge">
-            <span>🌟 {currentStreak} Days</span>
+            <span className="animate-pulse duration-300">🌟 {currentStreak} Days</span>
           </div>
         )
       case currentStreak >= 20:
         return (
           <div className="badge">
-            <span>🎖️ {currentStreak} Days</span>
+            <span className="animate-pulse">🎖️ {currentStreak} Days</span>
           </div>
         )
       case currentStreak >= 10:
         return (
           <div className="badge">
-            <span>⚡ {currentStreak} Days</span>
+            <span className="animate-pulse">⚡ {currentStreak} Days</span>
           </div>
         )
       case currentStreak >= 3:
         return (
           <div className="badge">
-            <span>🏅 {currentStreak} Days</span>
+            <span className="animate-pulse ">🏅 {currentStreak} Days</span>
           </div>
         )
       default:
         return (
           <div className="badge">
-            <span>🔥 {currentStreak} Days</span>
+            <span className="animate-pulse ">🔥 {currentStreak} Days</span>
           </div>
         )
     }
@@ -140,46 +139,45 @@ export function StreakBadge({ currentStreak }) {
   return <div className="flex items-center justify-center">{renderBadge()}</div>
 }
 
-
-
 export function Reward({ currentStreak }) {
   const renderReward = () => {
     if (currentStreak >= 30) {
       return {
         message: "🎉 You've unlocked a Gold Badge!",
-        icon: <AiOutlineTrophy className="text-yellow-500 text-4xl" />
-      };
+        icon: <AiOutlineTrophy className="text-yellow-500 animate-pulse text-4xl" />,
+      }
     }
     if (currentStreak >= 10) {
       return {
         message: "🔥 You've unlocked a Streak Booster!",
-        icon: <BsFire className="text-red-500 text-4xl" />
-      };
+        icon: <BsFire className="text-red-500 animate-pulse text-4xl" />,
+      }
     }
     if (currentStreak >= 5) {
       return {
         message: "🏅 You're on a roll! Keep it up!",
-        icon: <AiOutlineStar className="text-blue-500 text-4xl" />
-      };
+        icon: <AiOutlineStar className="text-blue-500 duration-300 animate-pulse text-4xl" />,
+      }
     }
     return {
       message: "🌟 Keep checking in to earn rewards!",
-      icon: <AiOutlineStar className="text-gray-400 text-4xl" />
-    };
-  };
+      icon: <AiOutlineStar  className=" duration-300 text-yellow-500 animate-pulse text-4xl" />,
+    }
+  }
 
-  const { message, icon } = renderReward();
+  const { message, icon } = renderReward()
 
   return (
-    <div className="reward bg-white shadow-lg rounded-lg p-6 mt-4 text-center">
-      <div className="flex flex-col items-center">
+    <div className="reward  text-xs bg-white shadow-lg rounded-lg p-6  text-center">
+      <div className="flex flex-col  lg:text-lg text-xs  items-center">
         {icon}
-        <p className="mt-2 text-lg font-semibold text-gray-800">{message}</p>
+        <p className=" lg:text-lg text-sm   font-semibold text-gray-800">
+          {message}
+        </p>
       </div>
     </div>
-  );
+  )
 }
-
 
 export function ShareStreak({ currentStreak }) {
   const share = () => {
@@ -208,34 +206,33 @@ export function ShareStreak({ currentStreak }) {
   )
 }
 
-
-
-
 export function StreakProgress({ currentStreak }) {
-  const goalDays = 30;
-  const goalMonths = 12 * goalDays;
-  const goalYears = 1 * goalMonths;
+  const goalDays = 30
+  const goalMonths = 12 * goalDays
+  const goalYears = 1 * goalMonths
 
   const goals = {
     days: goalDays,
     months: goalMonths,
     years: goalYears,
-  };
+  }
 
-  const [currentGoal, setCurrentGoal] = useState(goals.days);
-  const [progressPercentage, setProgressPercentage] = useState(0);
+  const [currentGoal, setCurrentGoal] = useState(goals.days)
+  const [progressPercentage, setProgressPercentage] = useState(0)
 
   useEffect(() => {
-    const percentage = Math.min((currentStreak / currentGoal) * 100, 100);
-    setProgressPercentage(percentage);
-  }, [currentStreak, currentGoal]);
+    const percentage = Math.min((currentStreak / currentGoal) * 100, 100)
+    setProgressPercentage(percentage)
+  }, [currentStreak, currentGoal])
 
   return (
     <div className="streak-progress mt-6 p-4 border border-gray-300 rounded-lg shadow-lg bg-white">
       <h2 className="text-lg font-semibold mb-2">Streak Progress</h2>
       <div className="flex justify-between mb-2">
         <span className="text-sm text-gray-500">Goal: {currentGoal} Days</span>
-        <span className="text-sm font-bold text-green-600">{currentStreak} Days</span>
+        <span className="text-sm font-bold text-green-600">
+          {currentStreak} Days
+        </span>
       </div>
       <div className="relative w-full bg-gray-200 rounded-full h-4 overflow-hidden">
         <div
@@ -261,5 +258,5 @@ export function StreakProgress({ currentStreak }) {
         </select>
       </div>
     </div>
-  );
+  )
 }

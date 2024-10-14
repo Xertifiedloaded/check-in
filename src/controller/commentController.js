@@ -1,5 +1,5 @@
 
-import { generateEmailHTML } from "@/lib/CommentHtml"
+import { generateCommentHtml, generateEmailHTML } from "@/lib/CommentHtml"
 import { sendEmailCommentNotification } from "@/lib/emailContent"
 import { prisma } from "@/lib/prisma"
 
@@ -114,7 +114,7 @@ export async function handleCreateComment(req, res, userId) {
       return sendEmailCommentNotification({
         to: commenterEmail,
         subject: "A New Comment Has Been Added",
-        html: generateEmailHTML(postOwner, commentAuthor, content),
+        html: generateCommentHtml(postOwner, commentAuthor, content),
       });
     });
 

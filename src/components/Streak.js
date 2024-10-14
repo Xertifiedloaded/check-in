@@ -27,7 +27,7 @@ export default function StreakPage() {
 
   return (
     <div className="streak-page">
-      <h1 className="text-2xl font-bold text-center">Your Current Streak</h1>
+      <h1 className="md:text-2xl text-lg font-bold text-center">Your Current Streak</h1>
       <p className="text-center text-gray-600 mt-2">
         {currentStreak} Day{currentStreak > 1 && "s"}
       </p>

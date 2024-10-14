@@ -58,3 +58,71 @@ export function generateEmailHTML(postOwner, commentAuthor, content) {
       </html>
     `
 }
+export function generateCommentHtml(postOwner, commentAuthor, content) {
+  return `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Comment on Post</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          }
+          h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            font-size: 24px;
+          }
+          p {
+            font-size: 16px;
+            margin-bottom: 15px;
+          }
+          .comment {
+            background-color: #ffffff;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-style: italic;
+          }
+          .cta-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: #ffffff !important;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>New Comment on a Post You Engaged With</h1>
+          <p>Dear ${postOwner.name},</p>
+          <p>We wanted to inform you that <strong>${commentAuthor}</strong> has posted a new comment on a discussion you were part of:</p>
+          <div class="comment">
+            "${content}"
+          </div>
+          <p>To view the full conversation, click the button below:</p>
+          <a href="www.daily-check-in.com.ng" class="cta-button">View Comment</a>
+        </div>
+      </body>
+      </html>
+    `
+}
