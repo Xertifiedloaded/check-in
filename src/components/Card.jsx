@@ -5,6 +5,8 @@ import Link from "next/link"
 import { Heart } from "lucide-react"
 import useLikeStatus from "@/utils/actions"
 import { useEffect, useState } from "react"
+import { AiOutlineStar, AiOutlineTrophy } from 'react-icons/ai';
+import { BsFire } from 'react-icons/bs';
 export default function Card({ post }) {
   const user = post.user || {}
   const likes = post.likeCount || 0
@@ -138,15 +140,46 @@ export function StreakBadge({ currentStreak }) {
   return <div className="flex items-center justify-center">{renderBadge()}</div>
 }
 
+
+
 export function Reward({ currentStreak }) {
   const renderReward = () => {
-    if (currentStreak >= 30) return "🎉 You've unlocked a Gold Badge!"
-    if (currentStreak >= 10) return "🔥 You've unlocked a Streak Booster!"
-    if (currentStreak >= 5) return "🏅 You're on a roll! Keep it up!"
-    return "🌟 Keep checking in to earn rewards!"
-  }
-  return <div className="reward text-center mt-4">{renderReward()}</div>
+    if (currentStreak >= 30) {
+      return {
+        message: "🎉 You've unlocked a Gold Badge!",
+        icon: <AiOutlineTrophy className="text-yellow-500 text-4xl" />
+      };
+    }
+    if (currentStreak >= 10) {
+      return {
+        message: "🔥 You've unlocked a Streak Booster!",
+        icon: <BsFire className="text-red-500 text-4xl" />
+      };
+    }
+    if (currentStreak >= 5) {
+      return {
+        message: "🏅 You're on a roll! Keep it up!",
+        icon: <AiOutlineStar className="text-blue-500 text-4xl" />
+      };
+    }
+    return {
+      message: "🌟 Keep checking in to earn rewards!",
+      icon: <AiOutlineStar className="text-gray-400 text-4xl" />
+    };
+  };
+
+  const { message, icon } = renderReward();
+
+  return (
+    <div className="reward bg-white shadow-lg rounded-lg p-6 mt-4 text-center">
+      <div className="flex flex-col items-center">
+        {icon}
+        <p className="mt-2 text-lg font-semibold text-gray-800">{message}</p>
+      </div>
+    </div>
+  );
 }
+
 
 export function ShareStreak({ currentStreak }) {
   const share = () => {
@@ -167,7 +200,7 @@ export function ShareStreak({ currentStreak }) {
 
   return (
     <button
-      className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out hover:from-purple-600 hover:to-blue-600"
+      className="bg-gradient-to-r mt-4 from-purple-500 to-blue-500 text-white font-semibold px-3 text-xs py-3 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out hover:from-purple-600 hover:to-blue-600"
       onClick={share}
     >
       Share Streak
@@ -175,37 +208,58 @@ export function ShareStreak({ currentStreak }) {
   )
 }
 
+
+
+
 export function StreakProgress({ currentStreak }) {
-  const goalDays = 30
-  const goalMonths = 12
-  const goalYears = 1
+  const goalDays = 30;
+  const goalMonths = 12 * goalDays;
+  const goalYears = 1 * goalMonths;
 
   const goals = {
     days: goalDays,
-    months: goalMonths * goalDays,
-    years: goalYears * goalMonths * goalDays,
-  }
+    months: goalMonths,
+    years: goalYears,
+  };
 
-  const [currentGoal, setCurrentGoal] = useState(goals.days)
-  const [progressPercentage, setProgressPercentage] = useState(0)
+  const [currentGoal, setCurrentGoal] = useState(goals.days);
+  const [progressPercentage, setProgressPercentage] = useState(0);
 
   useEffect(() => {
-    setCurrentGoal(goals.days)
-    const percentage = Math.min((currentStreak / currentGoal) * 100, 100)
-    setProgressPercentage(percentage)
-  }, [currentStreak, currentGoal])
+    const percentage = Math.min((currentStreak / currentGoal) * 100, 100);
+    setProgressPercentage(percentage);
+  }, [currentStreak, currentGoal]);
 
   return (
-    <div className="streak-progress mt-4">
-      <div className="w-full bg-gray-200 rounded-full h-2.5">
-        <div
-          className="bg-green-500 h-2.5 rounded-full"
-          style={{ width: `${progressPercentage}%` }}
-        ></div>
+    <div className="streak-progress mt-6 p-4 border border-gray-300 rounded-lg shadow-lg bg-white">
+      <h2 className="text-lg font-semibold mb-2">Streak Progress</h2>
+      <div className="flex justify-between mb-2">
+        <span className="text-sm text-gray-500">Goal: {currentGoal} Days</span>
+        <span className="text-sm font-bold text-green-600">{currentStreak} Days</span>
       </div>
-      <p className="text-sm text-gray-600 mt-2">
-        {currentStreak}/{currentGoal} Days to your next reward!
-      </p>
+      <div className="relative w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+        <div
+          className="bg-green-500 h-full rounded-full transition-all duration-300 ease-in-out"
+          style={{ width: `${progressPercentage}%` }}
+        />
+        <span
+          className="absolute top-0 left-0 px-2 text-xs text-white font-semibold transition-transform duration-300"
+          style={{ transform: `translateX(${progressPercentage - 10}%)` }}
+        >
+          {Math.round(progressPercentage)}%
+        </span>
+      </div>
+      <div className="flex justify-center mt-4">
+        <select
+          value={currentGoal}
+          onChange={(e) => setCurrentGoal(Number(e.target.value))}
+          className="border border-gray-300 rounded-md px-2 py-1"
+        >
+          <option value={goals.days}>30 Days</option>
+          <option value={goals.months}>12 Months</option>
+          <option value={goals.years}>1 Year</option>
+        </select>
+      </div>
     </div>
-  )
+  );
 }
