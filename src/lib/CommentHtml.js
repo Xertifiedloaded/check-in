@@ -1,5 +1,5 @@
 export function generateEmailHTML(postOwner, commentAuthor, content) {
-    return `
+  return `
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -52,10 +52,9 @@ export function generateEmailHTML(postOwner, commentAuthor, content) {
           <div class="comment">
             "${content}"
           </div>
-          <a href="#" class="cta-button">View Comment</a>
+          <a href="www.daily-check-in.com.ng" class="cta-button">View Comment</a>
         </div>
       </body>
       </html>
-    `;
-  }
-  
+    `
+}
