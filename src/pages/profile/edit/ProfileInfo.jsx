@@ -11,7 +11,7 @@ export default function ProfileInfo() {
         heading="Profile Information"
         paragraph="Update your account's profile information and email address."
       />
-      {/* <ImageUpload /> */}
+      <ImageUpload />
       <UpdateProfileNameAndEmail />
     </div>
   )
