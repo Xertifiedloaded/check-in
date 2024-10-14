@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import axios from 'axios';
 import { Reward, ShareStreak, StreakProgress } from './Card';
 
@@ -19,7 +18,6 @@ export default function StreakPage() {
         setLoading(false);
       }
     };
-
     fetchStreak();
   }, []);
 
