@@ -109,7 +109,7 @@ export function FeedUserCard({ post }) {
               {user.name ? user.name.split(" ")[0] : "Unknown User"}
             </span>
             <span className="ml-2 text-gray-500 text-xs">
-              @{user.name ? user.name.split(" ")[0] : "Unknown User"}
+              @{user.name?.split(" ")[0] ?? "Unknown User"}
             </span>
             <span className="mx-1 text-gray-500">·</span>
             <span className="text-gray-500 text-xs">

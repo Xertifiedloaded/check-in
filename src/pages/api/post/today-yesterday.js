@@ -64,7 +64,7 @@ export default async function handler(req, res) {
       const postDay = post.createdAt >= today ? "today" : "yesterday";
 
       // Retrieve the current streak for the user
-      const currentStreak = post.user.streaks.length > 0 ? post.user.streaks[0].currentStreak : 0; // Assuming the latest streak is the first element
+      const currentStreak = post.user.streaks.length > 0 ? post.user.streaks[0].currentStreak : 0; 
 
       const postData = {
         ...post,
