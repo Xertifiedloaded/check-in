@@ -27,9 +27,6 @@ export const getUserCurrentStreak = async (userId) => {
 
 
 
-
-
-
 export default async function handleGetComments(req, res) {
   const { postId } = req.query
 

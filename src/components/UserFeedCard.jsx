@@ -127,7 +127,7 @@ export function FeedUserCard({ post }) {
               onChange={(e) => setEditedContent(e.target.value)}
             />
           ) : (
-            <p className="mt-2 md:text-sm text-xs text-gray-900">
+            <p className="mt-2 md:text-base text-sm text-gray-900">
               {localPost.content}
             </p>
           )}

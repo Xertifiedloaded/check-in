@@ -12,7 +12,6 @@ export default function Card({ post }) {
   const user = post.user || {}
   const likes = post.likeCount || 0
   const streak = post.currentStreak
-
   const { isLiked, toggleLike, loading, count } = useLikeStatus(
     user.id,
     post.id
@@ -198,7 +197,6 @@ export function StreakProgress({ currentStreak }) {
     const now = new Date()
     return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
   }
-
   const getDaysInCurrentYear = () => {
     const now = new Date()
     return (now.getFullYear() % 4 === 0 && now.getFullYear() % 100 > 0) ||

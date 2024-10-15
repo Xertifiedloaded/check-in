@@ -1,59 +1,81 @@
 datasource db {
-    provider = "mongodb"
-    url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 model User {
-    id                      String    @id @default(auto()) @map("_id") @db.ObjectId
-    name                    String
-    email                   String    @unique
-    password                String?
-    profilePicture          String?
-    otp                     String?
-    otpExpiry               DateTime?
-    isGoogleAuth            Boolean   @default(false)
-    permissions             String[]
-    verificationToken       String?
-    verificationTokenExpiry DateTime?
-    googleId                String?
-    createdAt               DateTime  @default(now())
-    updatedAt               DateTime  @updatedAt
-    posts                   Post[] @relation()
-    streaks                 Streak[]
-    comments                Comment[] @relation("UserComments")
+  id                      String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                    String
+  email                   String    @unique
+  password                String?
+  profilePicture          String?
+  otp                     String?
+  otpExpiry               DateTime?
+  isGoogleAuth            Boolean   @default(false)
+  permissions             String[]
+  verificationToken       String?
+  verificationTokenExpiry DateTime?
+  googleId                String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  posts                   Post[]    @relation()
+  streaks                 Streak[]
+  comments                Comment[] @relation("UserComments")
+  replies                 Reply[]   @relation("UserReplies")
 }
 
 model Post {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    content   String
-    createdAt DateTime @default(now())
-    user      User?    @relation(fields: [userId], references: [id],onDelete: Cascade)
-    userId    String   @db.ObjectId
-   likes     String[] @db.ObjectId
-   comments  Comment[] @relation("PostComments")
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime  @default(now())
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String    @db.ObjectId
+  likes     String[]  @db.ObjectId
+  comments  Comment[] @relation("PostComments")
 }
 
 model Streak {
-    id            String    @id @default(auto()) @map("_id") @db.ObjectId
-    startDate     DateTime
-    currentStreak Int?
-    lastCheckIn   DateTime?
-    user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId        String    @db.ObjectId
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  startDate     DateTime
+  currentStreak Int?
+  lastCheckIn   DateTime?
+  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String    @db.ObjectId
 }
 
 model Comment {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    content   String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    user      User     @relation("UserComments", fields: [userId], references: [id], onDelete: Cascade)
-    userId    String   @db.ObjectId
-    post      Post     @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
-    postId    String   @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation("UserComments", fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  post      Post     @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
+  postId    String   @db.ObjectId
+  replies   Reply[]  @relation("CommentReplies")
 }
+
+model Reply {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation("UserReplies", fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  comment   Comment  @relation("CommentReplies", fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String   @db.ObjectId
+}
+
+
+
+
+
+
+
+
+
 
