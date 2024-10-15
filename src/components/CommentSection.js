@@ -13,7 +13,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   const [editingComment, setEditingComment] = useState(null);
   const [updatedComment, setUpdatedComment] = useState("");
   const [deletingCommentId, setDeletingCommentId] = useState(null);
-  const [replyContent, setReplyContent] = useState({}); // Store reply content per comment
+  const [replyContent, setReplyContent] = useState({}); 
   const [replyingToCommentId, setReplyingToCommentId] = useState(null);
 
   useEffect(() => {
@@ -143,7 +143,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
           content: replyContent[commentId],
           postId,
           userId,
-          commentId, // Include the parent comment ID for the reply
+          commentId, 
         });
 
         if (response.status === 201) {
@@ -155,8 +155,8 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                 : comment
             )
           );
-          setReplyContent((prev) => ({ ...prev, [commentId]: "" })); // Reset the reply content
-          setReplyingToCommentId(null); // Close the reply input
+          setReplyContent((prev) => ({ ...prev, [commentId]: "" })); 
+          setReplyingToCommentId(null); 
         } else {
           console.error("Failed to submit reply");
         }
@@ -184,7 +184,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
-            className="w-full bg-gray-100 rounded-full py-2 px-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full  bg-gray-100 rounded-full py-2 px-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -243,7 +243,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                         type="text"
                         value={updatedComment}
                         onChange={(e) => setUpdatedComment(e.target.value)}
-                        className="w-full bg-gray-200 rounded-full py-2 px-4"
+                        className="w-full text-base bg-gray-200 rounded-full py-2 px-4"
                       />
                     </form>
                   ) : (
@@ -252,7 +252,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                   <button
                     onClick={() => {
                       setReplyingToCommentId(replyingToCommentId === comment.id ? null : comment.id);
-                      setReplyContent((prev) => ({ ...prev, [comment.id]: "" })); // Reset reply content when toggling
+                      setReplyContent((prev) => ({ ...prev, [comment.id]: "" })); 
                     }}
                     className="text-blue-500 mt-2"
                   >
@@ -265,7 +265,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                         value={replyContent[comment.id] || ""}
                         onChange={(e) => setReplyContent((prev) => ({ ...prev, [comment.id]: e.target.value }))}
                         placeholder="Write a reply..."
-                        className="flex-grow bg-gray-100 rounded-full py-2 px-4"
+                        className="flex-grow text-base bg-gray-100 rounded-full py-2 px-4"
                       />
                       <button type="submit" className="ml-2 bg-blue-500 text-white rounded-full px-4 py-2">
                         Post
