@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
+import { Heart, MoreHorizontal } from "lucide-react";
 
 function CommentSection({ postId, userId, comments: initialComments, updateCommentCount }) {
   const [newComment, setNewComment] = useState("");
@@ -11,35 +11,33 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   const [updatedComment, setUpdatedComment] = useState("");
   const [deletingCommentId, setDeletingCommentId] = useState(null);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchNewComments();
+    }, 10000);
+    return () => clearInterval(intervalId);
+  }, [comments]);
 
   const fetchNewComments = async () => {
-    if (comments.length === 0) return; 
-    const latestComment = comments[0]; 
+    if (comments.length === 0) return;
+    const latestComment = comments[0];
     try {
       const response = await axios.get(`/api/comment/comment`, {
         params: {
           postId,
-          after: latestComment.createdAt, 
+          after: latestComment.createdAt,
         },
       });
       if (response.status === 200) {
         const newComments = response.data.comments;
         if (newComments.length > 0) {
-          setComments((prevComments) => [...newComments, ...prevComments]); 
+          setComments((prevComments) => [...newComments, ...prevComments]);
         }
       }
     } catch (error) {
       console.error("Error fetching new comments:", error);
     }
   };
-
-  useEffect(() => {
-// fetch comment every 10sec
-    const intervalId = setInterval(() => {
-      fetchNewComments();
-    }, 10000); 
-    return () => clearInterval(intervalId);
-  }, [comments]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -54,8 +52,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
 
         if (response.status === 201) {
           const newCommentObj = response.data;
-          // Add the new comment to the top
-          setComments((prevComments) => [newCommentObj, ...prevComments]); 
+          setComments((prevComments) => [newCommentObj, ...prevComments]);
           setNewComment("");
           updateCommentCount((prevCount) => prevCount + 1);
         } else {
@@ -75,7 +72,7 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   };
 
   const handleDeleteComment = async (commentId) => {
-    if (confirm("Are you sure you want to delete this comment?")) {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
       setDeletingCommentId(commentId);
       try {
         const response = await axios.delete(`/api/comment/comment?commentid=${commentId}`);
@@ -115,7 +112,6 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
               comment.id === commentId ? updatedCommentObj : comment
             )
           );
-
           setEditingComment(null);
           setUpdatedComment("");
         } else {
@@ -134,36 +130,37 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   };
 
   return (
-    <div className="mt-6 space-y-6">
-      <form
-        onSubmit={handleCommentSubmit}
-        className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
-      >
+    <div className="mt-4 space-y-4">
+      <form onSubmit={handleCommentSubmit} className="flex  items-center space-x-2">
+        <Image
+          src="/no-user.png"
+          width={32}
+          height={32}
+          className="w-8 h-8 rounded-full"
+          alt="User Avatar"
+        />
         <input
           type="text"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Add a comment..."
-          className="flex-grow border p-3 rounded-lg focus:outline-none focus:border-blue-500"
+          className="flex-grow bg-gray-100 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg disabled:opacity-50 flex items-center justify-center sm:w-auto w-full"
-          disabled={loading}
+          className="text-blue-500 font-semibold disabled:opacity-50"
+          disabled={loading || !newComment.trim()}
         >
-          {loading ? <div className="text-sm">Commenting...</div> : "Comment"}
+          {loading ? "Posting..." : "Post"}
         </button>
       </form>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {comments.length === 0 ? (
-          <p className="text-gray-500">No comments yet</p>
+          <p className="text-gray-500 text-center">No comments yet</p>
         ) : (
           comments.map((comment) => (
-            <div
-              key={comment.id}
-              className="flex flex-col sm:flex-row items-start space-y-2 sm:space-y-0 sm:space-x-4 bg-gray-50 p-4 rounded-lg"
-            >
+            <div key={comment.id} className="flex space-x-2">
               <Image
                 src={comment.user?.profilePicture || "/no-user.png"}
                 width={32}
@@ -171,57 +168,70 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                 className="w-8 h-8 rounded-full"
                 alt={comment.user?.name}
               />
-              <div className="flex-1 w-full sm:w-auto">
-                <p className="text-sm font-semibold text-gray-800">
-                  {comment.user?.name}
-                </p>
-
-                {editingComment === comment.id ? (
-                  <form
-                    onSubmit={(e) => handleUpdateComment(e, comment.id)}
-                    className="mt-2 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2"
-                  >
-                    <input
-                      type="text"
-                      value={updatedComment}
-                      onChange={(e) => setUpdatedComment(e.target.value)}
-                      className="flex-grow border p-2 rounded-md focus:outline-none focus:border-blue-500 w-full sm:w-auto"
-                    />
-                    <button
-                      type="submit"
-                      className="bg-green-500 text-white px-3 py-1 rounded-md flex items-center justify-center w-full sm:w-auto"
-                      disabled={loading}
-                    >
-                      {loading ? <span className="text-sm">Updating...</span> : "Update"}
-                    </button>
-                  </form>
-                ) : (
-                  <div>
-                    <p className="mt-1 text-gray-600">{comment.content}</p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {new Date(comment.createdAt).toLocaleString()}
-                    </p>
-                    <div className="flex space-x-2 mt-2">
-                      {comment.userId === userId && (
-                        <>
+              <div className="flex-grow">
+                <div className="bg-gray-100 rounded-lg p-3">
+                  <div className="flex justify-between items-start">
+                    <span className="font-semibold text-sm">{comment.user?.name}</span>
+                    {comment.userId === userId && (
+                      <div className="relative group">
+                        <button className="text-gray-500 hover:text-gray-700">
+                          <MoreHorizontal size={16} />
+                        </button>
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden group-hover:block">
                           <button
                             onClick={() => handleEditComment(comment)}
-                            className="text-blue-500 text-xs"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteComment(comment.id)}
-                            className="text-red-500 text-xs"
+                            className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
                             disabled={deletingCommentId === comment.id}
                           >
                             {deletingCommentId === comment.id ? "Deleting..." : "Delete"}
                           </button>
-                        </>
-                      )}
-                    </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
+                  {editingComment === comment.id ? (
+                    <form onSubmit={(e) => handleUpdateComment(e, comment.id)} className="mt-2">
+                      <input
+                        type="text"
+                        value={updatedComment}
+                        onChange={(e) => setUpdatedComment(e.target.value)}
+                        className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <div className="flex justify-end mt-2 space-x-2">
+                        <button
+                          type="button"
+                          onClick={() => setEditingComment(null)}
+                          className="text-gray-500 text-sm"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="text-blue-500 font-semibold text-sm"
+                          disabled={loading}
+                        >
+                          {loading ? "Updating..." : "Update"}
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <p className="text-sm mt-1">{comment.content}</p>
+                  )}
+                </div>
+                <div className="flex items-center mt-1 text-xs text-gray-500 space-x-4">
+                  <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                  {/* <button className="flex items-center space-x-1">
+                    <Heart size={12} />
+                    <span>Like</span>
+                  </button>
+                  <button>Reply</button> */}
+                </div>
               </div>
             </div>
           ))

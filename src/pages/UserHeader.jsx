@@ -1,10 +1,11 @@
-'use client'
+"use client"
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import Button from "@/components/Buttons"
 import Link from "next/link"
 import MobileHamburger from "@/components/MobileHamburger"
 import { useSession } from "next-auth/react"
+import { MdFeed } from "react-icons/md"
 export default function UserHeader() {
   const { data: session } = useSession()
   const [isOpen, setIsOpen] = useState(false)
@@ -54,7 +55,7 @@ export default function UserHeader() {
             className="bg-[#e2e8f099] hidden lg:block  text-lightGray text-sm py-2 px-6 rounded-[25px]"
             value="Home"
           />
-
+      
           <MobileHamburger isOpen={isOpen} toggleMenu={toggleMenu} />
           {session && (
             <Link href="/feed">

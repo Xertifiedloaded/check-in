@@ -2,7 +2,8 @@ import React from "react"
 import Image from "next/image"
 import Button from "@/components/Buttons"
 import Link from "next/link"
-import { MdNavigation } from "react-icons/md"
+import { MdFeed, MdNavigation, MdRssFeed } from "react-icons/md"
+import { HomeIcon } from "lucide-react"
 export default function Header() {
   return (
     <section>
@@ -21,10 +22,13 @@ export default function Header() {
             className="bg-[#e2e8f099] hidden lg:block  text-lightGray text-sm py-2 px-6 rounded-[25px]"
             value="Home"
           />
+          <Link href="/feed">
           <Button
-            className="bg-[#e2e8f099] block lg:hidden  text-lightGray text-sm py-2 px-4 rounded-[25px]"
-            value={<MdNavigation />}
+            className="bg-[#e2e8f099]  text-lightGray text-sm py-2 px-4 rounded-[25px]"
+            value={<MdRssFeed />}
           />
+          </Link>
+    
         </div>
         <div className="flex items-center gap-6">
           <Link href="/auth/login">

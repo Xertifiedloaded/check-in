@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import axios from "axios"
-import { Reward, ShareStreak, StreakProgress } from "./Card"
+import { Reward, StreakProgress } from "./Card"
 
 export default function StreakPage() {
   const [currentStreak, setCurrentStreak] = useState(null)
@@ -33,7 +33,6 @@ export default function StreakPage() {
       </p>
       <Reward currentStreak={currentStreak} />
       <StreakProgress currentStreak={currentStreak} />
-      <ShareStreak currentStreak={currentStreak} />
     </div>
   )
 }

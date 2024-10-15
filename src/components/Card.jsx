@@ -5,12 +5,14 @@ import Link from "next/link"
 import { Heart } from "lucide-react"
 import useLikeStatus from "@/utils/actions"
 import { useEffect, useState } from "react"
+import { Share } from 'lucide-react';
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai"
 import { BsFire } from "react-icons/bs"
 export default function Card({ post }) {
   const user = post.user || {}
   const likes = post.likeCount || 0
   const streak = post.currentStreak
+  
   const { isLiked, toggleLike, loading, count } = useLikeStatus(
     user.id,
     post.id
@@ -76,6 +78,9 @@ export default function Card({ post }) {
     </Link>
   )
 }
+
+
+
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
@@ -179,9 +184,57 @@ export function Reward({ currentStreak }) {
   )
 }
 
-export function ShareStreak({ currentStreak }) {
+
+export function StreakProgress({ currentStreak }) {
+  const getDaysInCurrentMonth = () => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  };
+
+  const getDaysInCurrentYear = () => {
+    const now = new Date();
+    return ((now.getFullYear() % 4 === 0 && now.getFullYear() % 100 > 0) || now.getFullYear() % 400 == 0) ? 366 : 365;
+  };
+
+  const goals = {
+    days: 30,
+    months: getDaysInCurrentMonth(),
+    years: getDaysInCurrentYear(),
+  };
+
+  const [currentGoal, setCurrentGoal] = useState(goals.days);
+  const [progressPercentage, setProgressPercentage] = useState(0);
+
+  useEffect(() => {
+    const percentage = Math.min((currentStreak / currentGoal) * 100, 100);
+    setProgressPercentage(percentage);
+  }, [currentStreak, currentGoal]);
+
+  useEffect(() => {
+    const updateGoals = () => {
+      setCurrentGoal((prevGoal) => {
+        if (prevGoal === goals.months) return getDaysInCurrentMonth();
+        if (prevGoal === goals.years) return getDaysInCurrentYear();
+        return prevGoal;
+      });
+    };
+
+    updateGoals();
+    const now = new Date();
+    const timeToMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
+    const timerId = setTimeout(() => {
+      updateGoals();
+      setInterval(updateGoals, 24 * 60 * 60 * 1000); 
+    }, timeToMidnight);
+
+    return () => {
+      clearTimeout(timerId);
+      clearInterval(timerId);
+    };
+  }, []);
+
   const share = () => {
-    const shareText = `I've maintained a ${currentStreak}-day streak! Check it out!`
+    const shareText = `I've maintained a ${currentStreak}-day streak! Check it out!`;
     if (navigator.share) {
       navigator
         .share({
@@ -190,40 +243,11 @@ export function ShareStreak({ currentStreak }) {
           url: window.location.href,
         })
         .then(() => console.log("Shared successfully!"))
-        .catch((error) => console.error("Error sharing:", error))
+        .catch((error) => console.error("Error sharing:", error));
     } else {
-      alert("Sharing is not supported in this browser.")
+      alert("Sharing is not supported in this browser.");
     }
-  }
-
-  return (
-    <button
-      className="bg-gradient-to-r mt-4 from-purple-500 to-blue-500 text-white font-semibold px-3 text-xs py-3 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out hover:from-purple-600 hover:to-blue-600"
-      onClick={share}
-    >
-      Share Streak
-    </button>
-  )
-}
-
-export function StreakProgress({ currentStreak }) {
-  const goalDays = 30
-  const goalMonths = 12 * goalDays
-  const goalYears = 1 * goalMonths
-
-  const goals = {
-    days: goalDays,
-    months: goalMonths,
-    years: goalYears,
-  }
-
-  const [currentGoal, setCurrentGoal] = useState(goals.days)
-  const [progressPercentage, setProgressPercentage] = useState(0)
-
-  useEffect(() => {
-    const percentage = Math.min((currentStreak / currentGoal) * 100, 100)
-    setProgressPercentage(percentage)
-  }, [currentStreak, currentGoal])
+  };
 
   return (
     <div className="streak-progress mt-6 p-4 border border-gray-300 rounded-lg shadow-lg bg-white">
@@ -246,17 +270,24 @@ export function StreakProgress({ currentStreak }) {
           {Math.round(progressPercentage)}%
         </span>
       </div>
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-between items-center mt-4">
         <select
           value={currentGoal}
           onChange={(e) => setCurrentGoal(Number(e.target.value))}
           className="border border-gray-300 rounded-md px-2 py-1"
         >
           <option value={goals.days}>30 Days</option>
-          <option value={goals.months}>12 Months</option>
-          <option value={goals.years}>1 Year</option>
+          <option value={goals.months}>{goals.months} Days (This Month)</option>
+          <option value={goals.years}>{goals.years} Days (This Year)</option>
         </select>
+        <button
+          className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold px-4 py-2 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out hover:from-purple-600 hover:to-blue-600"
+          onClick={share}
+        >
+          <span>Share Streak</span>
+          <Share size={18} />
+        </button>
       </div>
     </div>
-  )
+  );
 }

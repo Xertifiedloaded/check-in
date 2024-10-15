@@ -50,8 +50,8 @@ export default function useLikeStatus(userId, postId) {
       return { liked: response.data.liked, likeCount: response.data.likeCount };
     } catch (error) {
       console.error("Error toggling like:", error);
-      setError("Failed to toggle like");
-      toast.error("Failed to update like status");
+      setError("You need to log in before you can like the post");
+      toast.error("You need to log in before you can like the post");
       return { liked: isLiked, likeCount: count };
     }
   };

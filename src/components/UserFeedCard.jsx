@@ -1,101 +1,207 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import { Heart, LucideCalendarCheck, MessageCircle } from "lucide-react";
-import useLikeStatus from "@/utils/actions";
-import CommentSection from "./CommentSection";
-import { useSession } from "next-auth/react";
-
+import React, { useState } from "react"
+import { Heart, MessageCircle, Edit, Trash, Save } from "lucide-react"
+import Image from "next/image"
+import { useSession } from "next-auth/react"
+import useLikeStatus from "@/utils/actions"
+import CommentSection from "./CommentSection"
+import axios from "axios"
 
 export function FeedUserCard({ post }) {
-  const user = post.user || {};
-  const likes = post.likeCount || {};
-  
-  const { data: session } = useSession();
-  const { isLiked, count, toggleLike, loading } = useLikeStatus(
-    user.id,
-    post.id
-  );
-  const [showComments, setShowComments] = useState(false);
-  const [commentCount, setCommentCount] = useState(post.commentCount || 0); 
+  const { data: session } = useSession()
+  const user = post.user || {}
+  const {
+    isLiked,
+    count: likeCount,
+    toggleLike,
+    loading,
+  } = useLikeStatus(user.id, post.id)
+  const [showComments, setShowComments] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("")
+  const [commentCount, setCommentCount] = useState(post.commentCount || 0)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedContent, setEditedContent] = useState(post.content)
+  const [localPost, setLocalPost] = useState(post)
+  const [error, setError] = useState(null)
+  const [isDeleted, setIsDeleted] = useState(false)
 
   const handleToggleLike = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleLike();
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    toggleLike()
+  }
+  const showSuccessMessage = (message) => {
+    setSuccessMessage(message)
+    setTimeout(() => {
+      setSuccessMessage("")
+    }, 60000)
+  }
 
   const handleToggleComments = () => {
-    setShowComments(!showComments);
-  };
+    setShowComments(!showComments)
+  }
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing)
+  }
+
+  const handleEditSave = async () => {
+    try {
+      const response = await axios.patch(`/api/post/edit-delete`, {
+        postId: localPost.id,
+        content: editedContent,
+      })
+
+      if (response.status === 200) {
+        const { updatedPost } = response.data
+        setLocalPost((prev) => ({
+          ...prev,
+          content: updatedPost.content,
+        }))
+        setIsEditing(false)
+        showSuccessMessage("Post saved successfully!")
+      } else {
+        setError("Failed to save post.")
+      }
+    } catch (err) {
+      console.error("Error saving post:", err)
+      setError("Failed to save post.")
+    }
+  }
+
+  const handleDelete = async (postId) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      try {
+        const response = await axios.delete(`/api/post/edit-delete`, {
+          data: { userId: session?.user?.id, postId },
+        })
+
+        if (response.status === 200) {
+          setIsDeleted(true)
+          console.log("Post deleted successfully")
+          showSuccessMessage("Post deleted successfully!")
+        } else {
+          setError("Failed to delete post.")
+        }
+      } catch (err) {
+        console.error("Error deleting post:", err)
+        setError("Failed to delete post.")
+      }
+    }
+  }
+
+  if (isDeleted) {
+    return null
+  }
 
   return (
-    <div
-      key={post.id}
-      className="relative border rounded-lg shadow-md py-8 px-5 bg-white hover:shadow-lg transition-shadow duration-300 flex flex-col space-y-4"
-    >
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <Image
-            src={user.profilePicture || "/no-user.png"}
-            width={30}
-            height={30}
-            className="w-[30px] h-[30px] rounded-full"
-            alt={post.user.name}
-          />
-          <p className="capitalize text-base font-semibold text-gray-800">
-            {post.user.name || "Unknown User"}
-          </p>
-        </div>
-        <div className="hidden md:flex items-center space-x-2 text-gray-500 dark:text-gray-400">
-          <LucideCalendarCheck className="text-xs" />
-          <span className="text-sm">
-            {new Date(post.createdAt).toLocaleString("en-US", {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
-          </span>
-        </div>
-      </div>
+    <div className="bg-white border-b border-gray-200 p-4">
+      <div className="flex items-start space-x-3">
+        <Image
+          src={user.profilePicture || "/no-user.png"}
+          width={40}
+          height={40}
+          className="rounded-full object-cover"
+          alt={user.name}
+        />
+        <div className="flex-1">
+          <div className="flex items-center">
+            <span className="font-bold  max-w-[120px] text-gray-900">
+              {user.name ? user.name.split(" ")[0] : "Unknown User"}
+            </span>
+            <span className="ml-2 text-gray-500 text-xs">
+              @{user.name ? user.name.split(" ")[0] : "Unknown User"}
+            </span>
+            <span className="mx-1 text-gray-500">·</span>
+            <span className="text-gray-500 text-xs">
+              {new Date(localPost.createdAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
+          </div>
 
-      <p className="text-gray-800 text-sm md:text-base">{post.content}</p>
-
-      <div className="flex items-center justify-between mt-4">
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={handleToggleLike}
-            className="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-red-600"
-            disabled={loading}
-          >
-            <Heart
-              size={24}
-              fill={isLiked ? "red" : "none"}
-              stroke={isLiked ? "red" : "currentColor"}
+          {isEditing ? (
+            <textarea
+              className="mt-2 border border-gray-300 rounded p-2 w-full"
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
             />
-            <span>{isLiked ? "Liked" : "Like"}</span>
-          </button>
-          <span className="text-sm text-gray-500">
-            {count || 0} {count === 1 ? "Like" : "Likes"}
-          </span>
-        </div>
+          ) : (
+            <p className="mt-2 md:text-sm text-xs text-gray-900">
+              {localPost.content}
+            </p>
+          )}
 
-        <button
-          onClick={handleToggleComments}
-          className="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-blue-600"
-        >
-          <MessageCircle size={24} />
-          <span>
-            {commentCount} {commentCount === 1 ? "Comment" : "Comments"}
-          </span>
-        </button>
+          <div className="mt-3 flex items-center justify-start space-x-4">
+            <button
+              onClick={handleToggleComments}
+              className="flex items-center space-x-1 text-gray-500 hover:text-blue-500"
+            >
+              <MessageCircle size={18} />
+              <span>{commentCount}</span>
+            </button>
+            <button
+              onClick={handleToggleLike}
+              className={`flex items-center space-x-1 ${
+                isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
+              }`}
+              disabled={loading}
+            >
+              <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
+              <span>{likeCount}</span>
+            </button>
+
+            {session?.user?.id === user.id && (
+              <div className="flex text-xs space-x-4">
+                {isEditing ? (
+                  <button
+                    onClick={handleEditSave}
+                    className="flex items-center space-x-1 text-gray-500 hover:text-green-500"
+                  >
+                    <Save size={15} />
+                    <span>Save</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleEditToggle}
+                    className="flex items-center space-x-1 text-gray-500 hover:text-yellow-500"
+                  >
+                    <Edit size={15} />
+                    <span>Edit</span>
+                  </button>
+                )}
+                <button
+                  onClick={() => handleDelete(localPost.id)}
+                  className="flex items-center space-x-1 text-gray-500 hover:text-red-500"
+                >
+                  <Trash size={15} />
+                  <span>Delete</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {showComments && (
-        <CommentSection
-          userId={session?.user?.id}
-          postId={post.id}
-          comments={post.comments} 
-          updateCommentCount={setCommentCount}
-        />
+        <div className="mt-4 border-t border-gray-200 pt-4">
+          <CommentSection
+            userId={session?.user?.id}
+            postId={localPost.id}
+            comments={localPost.comments}
+            updateCommentCount={setCommentCount}
+          />
+        </div>
       )}
+      {successMessage && (
+        <div
+          className="bg-green-100 fixed left-0 text-0 top-0 border-l-4 border-green-500 text-green-700 p-4 mb-4"
+          role="alert"
+        >
+          <p>{successMessage}</p>
+        </div>
+      )}
+      {error && <p className="text-red-500">{error}</p>}
     </div>
-  )}
+  )
+}
