@@ -1,10 +1,7 @@
-
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { MoreHorizontal } from "lucide-react";
+import { Heart, MoreHorizontal } from "lucide-react";
 
 function CommentSection({ postId, userId, comments: initialComments, updateCommentCount }) {
   const [newComment, setNewComment] = useState("");
@@ -13,8 +10,6 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   const [editingComment, setEditingComment] = useState(null);
   const [updatedComment, setUpdatedComment] = useState("");
   const [deletingCommentId, setDeletingCommentId] = useState(null);
-  const [replyContent, setReplyContent] = useState({}); 
-  const [replyingToCommentId, setReplyingToCommentId] = useState(null);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -134,63 +129,26 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
     }
   };
 
-  const handleReplySubmit = async (e, commentId) => {
-    e.preventDefault();
-    if (replyContent[commentId]?.trim()) {
-      setLoading(true);
-      try {
-        const response = await axios.post("/api/comment/reply", {
-          content: replyContent[commentId],
-          postId,
-          userId,
-          commentId, 
-        });
-
-        if (response.status === 201) {
-          const newReply = response.data;
-          setComments((prevComments) =>
-            prevComments.map((comment) =>
-              comment.id === commentId
-                ? { ...comment, replies: [...(comment.replies || []), newReply] }
-                : comment
-            )
-          );
-          setReplyContent((prev) => ({ ...prev, [commentId]: "" })); 
-          setReplyingToCommentId(null); 
-        } else {
-          console.error("Failed to submit reply");
-        }
-      } catch (error) {
-        console.error("Error submitting reply:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
   return (
     <div className="mt-4 space-y-4">
-      <form onSubmit={handleCommentSubmit} className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full">
-        <div className="flex w-full sm:w-auto sm:flex-grow items-center space-x-2">
-          <Image
-            src="/no-user.png"
-            width={32}
-            height={32}
-            className="w-8 h-8 rounded-full"
-            alt="User Avatar"
-          />
-          <input
-            type="text"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
-            className="w-full  bg-gray-100 rounded-full py-2 px-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
+      <form onSubmit={handleCommentSubmit} className="flex  items-center space-x-2">
+        <Image
+          src="/no-user.png"
+          width={32}
+          height={32}
+          className="w-8 h-8 rounded-full"
+          alt="User Avatar"
+        />
+        <input
+          type="text"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="Add a comment..."
+          className="flex-grow bg-gray-100 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
         <button
           type="submit"
-          className="w-full sm:w-auto bg-blue-500 text-white font-semibold py-2 px-4 rounded-full sm:rounded-md disabled:opacity-50"
+          className="text-blue-500 font-semibold disabled:opacity-50"
           disabled={loading || !newComment.trim()}
         >
           {loading ? "Posting..." : "Post"}
@@ -243,57 +201,36 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                         type="text"
                         value={updatedComment}
                         onChange={(e) => setUpdatedComment(e.target.value)}
-                        className="w-full text-base bg-gray-200 rounded-full py-2 px-4"
+                        className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
+                      <div className="flex justify-end mt-2 space-x-2">
+                        <button
+                          type="button"
+                          onClick={() => setEditingComment(null)}
+                          className="text-gray-500 text-sm"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="text-blue-500 font-semibold text-sm"
+                          disabled={loading}
+                        >
+                          {loading ? "Updating..." : "Update"}
+                        </button>
+                      </div>
                     </form>
                   ) : (
-                    <p className="mt-2">{comment.content}</p>
+                    <p className="text-sm mt-1">{comment.content}</p>
                   )}
-                  <button
-                    onClick={() => {
-                      setReplyingToCommentId(replyingToCommentId === comment.id ? null : comment.id);
-                      setReplyContent((prev) => ({ ...prev, [comment.id]: "" })); 
-                    }}
-                    className="text-blue-500 mt-2"
-                  >
-                    Reply
+                </div>
+                <div className="flex items-center mt-1 text-xs text-gray-500 space-x-4">
+                  <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                  <button className="flex items-center space-x-1">
+                    <Heart size={12} />
+                    <span>Like</span>
                   </button>
-                  {replyingToCommentId === comment.id && (
-                    <form onSubmit={(e) => handleReplySubmit(e, comment.id)} className="mt-2 flex">
-                      <input
-                        type="text"
-                        value={replyContent[comment.id] || ""}
-                        onChange={(e) => setReplyContent((prev) => ({ ...prev, [comment.id]: e.target.value }))}
-                        placeholder="Write a reply..."
-                        className="flex-grow text-base bg-gray-100 rounded-full py-2 px-4"
-                      />
-                      <button type="submit" className="ml-2 bg-blue-500 text-white rounded-full px-4 py-2">
-                        Post
-                      </button>
-                    </form>
-                  )}
-
-                  {comment.replies && comment.replies.length > 0 && (
-                    <div className="mt-2 pl-8">
-                      {comment.replies.map((reply) => (
-                        <div key={reply.id} className="flex space-x-2">
-                          <Image
-                            src={reply.user?.profilePicture || "/no-user.png"}
-                            width={32}
-                            height={32}
-                            className="w-6 h-6 rounded-full"
-                            alt={reply.user?.name}
-                          />
-                          <div className="flex-grow">
-                            <div className="bg-gray-100 rounded-lg p-2">
-                              <span className="font-semibold text-sm">{reply.user?.name}</span>
-                              <p className="mt-1">{reply.content}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <button>Reply</button>
                 </div>
               </div>
             </div>
