@@ -281,7 +281,7 @@ export function StreakProgress({ currentStreak }) {
           <option value={goals.years}>{goals.years} Days (This Year)</option>
         </select>
         <button
-          className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold px-4 py-2 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out hover:from-purple-600 hover:to-blue-600"
+          className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-blue-500 text-xs text-white font-semibold px-4 py-2 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out hover:from-purple-600 hover:to-blue-600"
           onClick={share}
         >
           <span>Share Streak</span>
