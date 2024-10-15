@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { Heart, MoreHorizontal } from "lucide-react";
+import { Heart, MoreHorizontal, Send } from "lucide-react";
 
 function CommentSection({ postId, userId, comments: initialComments, updateCommentCount }) {
   const [newComment, setNewComment] = useState("");
@@ -130,42 +130,44 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
   };
 
   return (
-    <div className="mt-4 space-y-4">
-      <form onSubmit={handleCommentSubmit} className="flex  items-center space-x-2">
+    <div className="mt-6 space-y-6">
+      <form onSubmit={handleCommentSubmit} className="flex items-center space-x-3">
         <Image
           src="/no-user.png"
-          width={32}
-          height={32}
-          className="w-8 h-8 rounded-full"
+          width={40}
+          height={40}
+          className="w-10 h-10 rounded-full"
           alt="User Avatar"
         />
-        <input
-          type="text"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Add a comment..."
-          className="flex-grow bg-gray-100 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          type="submit"
-          className="text-blue-500 font-semibold disabled:opacity-50"
-          disabled={loading || !newComment.trim()}
-        >
-          {loading ? "Posting..." : "Post"}
-        </button>
+        <div className="flex-grow relative">
+          <input
+            type="text"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Add a comment..."
+            className="w-full bg-gray-100 rounded-full py-2 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+          />
+          <button
+            type="submit"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading || !newComment.trim()}
+          >
+            <Send size={20} />
+          </button>
+        </div>
       </form>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {comments.length === 0 ? (
-          <p className="text-gray-500 text-center">No comments yet</p>
+          <p className="text-gray-500 text-center py-4">No comments yet</p>
         ) : (
           comments.map((comment) => (
-            <div key={comment.id} className="flex space-x-2">
+            <div key={comment.id} className="flex space-x-3">
               <Image
                 src={comment.user?.profilePicture || "/no-user.png"}
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-full"
+                width={40}
+                height={40}
+                className="w-10 h-10 rounded-full"
                 alt={comment.user?.name}
               />
               <div className="flex-grow">
@@ -174,19 +176,19 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                     <span className="font-semibold text-sm">{comment.user?.name}</span>
                     {comment.userId === userId && (
                       <div className="relative group">
-                        <button className="text-gray-500 hover:text-gray-700">
+                        <button className="text-gray-500 hover:text-gray-700 transition-colors duration-300">
                           <MoreHorizontal size={16} />
                         </button>
                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden group-hover:block">
                           <button
                             onClick={() => handleEditComment(comment)}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left transition-colors duration-300"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteComment(comment.id)}
-                            className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
+                            className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left transition-colors duration-300"
                             disabled={deletingCommentId === comment.id}
                           >
                             {deletingCommentId === comment.id ? "Deleting..." : "Delete"}
@@ -201,19 +203,19 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                         type="text"
                         value={updatedComment}
                         onChange={(e) => setUpdatedComment(e.target.value)}
-                        className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
                       />
                       <div className="flex justify-end mt-2 space-x-2">
                         <button
                           type="button"
                           onClick={() => setEditingComment(null)}
-                          className="text-gray-500 text-sm"
+                          className="text-gray-500 text-sm hover:text-gray-700 transition-colors duration-300"
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
-                          className="text-blue-500 font-semibold text-sm"
+                          className="text-blue-500 font-semibold text-sm hover:text-blue-600 transition-colors duration-300"
                           disabled={loading}
                         >
                           {loading ? "Updating..." : "Update"}
@@ -224,13 +226,13 @@ function CommentSection({ postId, userId, comments: initialComments, updateComme
                     <p className="text-sm mt-1">{comment.content}</p>
                   )}
                 </div>
-                <div className="flex items-center mt-1 text-xs text-gray-500 space-x-4">
+                <div className="flex items-center mt-2 text-xs text-gray-500 space-x-4">
                   <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
-                  <button className="flex items-center space-x-1">
+                  <button className="flex items-center space-x-1 hover:text-blue-500 transition-colors duration-300">
                     <Heart size={12} />
                     <span>Like</span>
                   </button>
-                  <button>Reply</button>
+                  <button className="hover:text-blue-500 transition-colors duration-300">Reply</button>
                 </div>
               </div>
             </div>
