@@ -337,7 +337,7 @@ function CommentSection({
                     ? setUpdatedReply(e.target.value)
                     : setUpdatedComment(e.target.value)
                 }
-                className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                className="w-full border text-base rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               />
               <div className="flex justify-end mt-2 space-x-2">
                 <button
@@ -415,7 +415,7 @@ function CommentSection({
                 value={newReply}
                 onChange={(e) => setNewReply(e.target.value)}
                 placeholder="Write a reply..."
-                className="w-full bg-gray-100 rounded-full py-1 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                className="w-full bg-gray-100 text-base rounded-full py-1 pl-3 pr-10  focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               />
               <button
                 type="submit"
@@ -455,7 +455,7 @@ function CommentSection({
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
-            className="w-full bg-gray-100 rounded-full py-2 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+            className="w-full bg-gray-100 rounded-full py-2 pl-4 pr-12 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
           />
           <button
             type="submit"
