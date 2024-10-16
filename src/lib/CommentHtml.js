@@ -114,7 +114,6 @@ export function generateCommentHtml(postOwner, commentAuthor, content) {
       <body>
         <div class="container">
           <h1>New Comment on a Post You Engaged With</h1>
-          <p>Dear ${postOwner.name},</p>
           <p>We wanted to inform you that <strong>${commentAuthor}</strong> has posted a new comment on a discussion you were part of:</p>
           <div class="comment">
             "${content}"

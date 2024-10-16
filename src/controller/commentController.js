@@ -126,7 +126,6 @@ export async function handleCreateComment(req, res, userId) {
       });
     });
 
-    // Wait for all notification promises to resolve
     await Promise.all(notificationPromises);
     res.status(201).json(comment);
   } catch (error) {
@@ -134,6 +133,10 @@ export async function handleCreateComment(req, res, userId) {
     res.status(400).json({ error: "Unable to create comment" });
   }
 }
+
+
+
+
 
 
 export async function handleUpdateComment(req, res, userId) {
