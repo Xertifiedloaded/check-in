@@ -1,3 +1,4 @@
+
 import { prisma } from "@/lib/prisma";
 
 export default async function handler(req, res) {
@@ -30,6 +31,17 @@ export default async function handler(req, res) {
                 profilePicture: true,
               },
             },
+            replies: {  // Include replies for each comment
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    profilePicture: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -37,7 +49,6 @@ export default async function handler(req, res) {
         createdAt: 'desc', 
       },
     });
-
 
     const serializedPosts = posts.map((post) => ({
       ...post,
@@ -50,6 +61,11 @@ export default async function handler(req, res) {
           ...comment,
           createdAt: comment.createdAt.toISOString(),
           updatedAt: comment.updatedAt.toISOString(),
+          replies: comment.replies.map(reply => ({
+            ...reply,
+            createdAt: reply.createdAt.toISOString(),
+            updatedAt: reply.updatedAt.toISOString(),
+          })),
         })),
     }));
 

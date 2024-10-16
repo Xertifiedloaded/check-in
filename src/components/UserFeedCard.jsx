@@ -7,6 +7,8 @@ import CommentSection from "./CommentSection"
 import axios from "axios"
 
 export function FeedUserCard({ post }) {
+  console.log(post);
+  
   const { data: session } = useSession()
   const user = post.user || {}
   const {
@@ -94,12 +96,12 @@ export function FeedUserCard({ post }) {
   }
 
   return (
-    <div className="bg-white border-b border-gray-200 p-4">
+    <div className="bg-white border-b border-gray-200">
       <div className="flex items-start space-x-3">
         <Image
           src={user.profilePicture || "/no-user.png"}
-          width={40}
-          height={40}
+          width={30}
+          height={30}
           className="rounded-full object-cover"
           alt={user.name}
         />
@@ -137,7 +139,7 @@ export function FeedUserCard({ post }) {
               onClick={handleToggleComments}
               className="flex items-center space-x-1 text-gray-500 hover:text-blue-500"
             >
-              <MessageCircle size={18} />
+              <MessageCircle size={15} />
               <span>{commentCount}</span>
             </button>
             <button
@@ -147,7 +149,7 @@ export function FeedUserCard({ post }) {
               }`}
               disabled={loading}
             >
-              <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
+              <Heart size={15} fill={isLiked ? "currentColor" : "none"} />
               <span>{likeCount}</span>
             </button>
 
