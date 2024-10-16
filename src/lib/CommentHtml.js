@@ -126,3 +126,24 @@ export function generateCommentHtml(postOwner, commentAuthor, content) {
       </html>
     `
 }
+
+export function generateReplyEmailHTML(commentAuthor, replyContent) {
+  return `
+    <div style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px; border-radius: 8px;">
+      <h1 style="color: #333;">Hello ${commentAuthor},</h1>
+      <p style="font-size: 16px; color: #555;">
+        Your comment has received a new reply:
+      </p>
+      <blockquote style="margin: 15px 0; padding: 10px 15px; border-left: 4px solid #007BFF; background-color: #fff; color: #444; border-radius: 4px;">
+        ${replyContent}
+      </blockquote>
+      <p style="font-size: 16px; color: #555;">
+        Thank you for participating!
+      </p>
+      <footer style="margin-top: 20px; font-size: 14px; color: #888;">
+        Best regards,<br />
+Makinde Olaitan
+      </footer>
+    </div>
+  `
+}

@@ -1,5 +1,5 @@
 
-import { generateCommentHtml, generateEmailHTML } from "@/lib/CommentHtml"
+import { generateCommentHtml, generateEmailHTML, generateReplyEmailHTML } from "@/lib/CommentHtml"
 import { sendEmailCommentNotification } from "@/lib/emailContent"
 import { prisma } from "@/lib/prisma"
 
@@ -68,7 +68,6 @@ export async function handleCreateComment(req, res, userId) {
   const { content, postId } = req.body;
 
   try {
-
     const comment = await prisma.comment.create({
       data: { content, userId, postId },
       include: {
@@ -100,14 +99,14 @@ export async function handleCreateComment(req, res, userId) {
       html: generateEmailHTML(postOwner, commentAuthor, content),
     });
 
-
     const previousCommenters = await prisma.comment.findMany({
       where: {
         postId: postId,
         NOT: {
-          userId: userId, 
+          userId: userId,
         },
       },
+      distinct: ['userId'], 
       select: {
         user: {
           select: {
@@ -118,8 +117,8 @@ export async function handleCreateComment(req, res, userId) {
       },
     });
 
-    const notificationPromises = previousCommenters.map(async (comment) => {
-      const commenterEmail = comment.user.email;
+    const notificationPromises = previousCommenters.map(async (commenter) => {
+      const commenterEmail = commenter.user.email;
       return sendEmailCommentNotification({
         to: commenterEmail,
         subject: "A New Comment Has Been Added",
@@ -127,6 +126,7 @@ export async function handleCreateComment(req, res, userId) {
       });
     });
 
+    // Wait for all notification promises to resolve
     await Promise.all(notificationPromises);
     res.status(201).json(comment);
   } catch (error) {
@@ -206,7 +206,9 @@ export async function handleDeleteComment(req, res, userId) {
 
 export async function handleCreateReply(req, res) {
   const { content, userId, commentId } = req.body;
+
   try {
+
     const newReply = await prisma.reply.create({
       data: {
         content,
@@ -223,11 +225,42 @@ export async function handleCreateReply(req, res) {
         },
       },
     });
+
+    const comment = await prisma.comment.findUnique({
+      where: {
+        id: commentId,
+      },
+      select: {
+        user: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+
+    if (comment?.user?.email) {
+      const commentAuthor = comment.user.name;
+      const commentAuthorEmail = comment.user.email;
+
+
+      await sendEmailCommentNotification({
+        to: commentAuthorEmail,
+        subject: "New Reply to Your Comment",
+        html: generateReplyEmailHTML(commentAuthor, newReply.content),
+      });
+    }
+
     return res.status(201).json(newReply);
   } catch (error) {
+    console.error("Error creating reply:", error);
     return res.status(500).json({ error: 'Error creating reply' });
   }
 }
+
+
 
 
 export async function handleGetReplies(req, res) {

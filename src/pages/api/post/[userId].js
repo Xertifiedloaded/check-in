@@ -31,7 +31,7 @@ export default async function handler(req, res) {
                 profilePicture: true,
               },
             },
-            replies: {  // Include replies for each comment
+            replies: {  
               include: {
                 user: {
                   select: {
