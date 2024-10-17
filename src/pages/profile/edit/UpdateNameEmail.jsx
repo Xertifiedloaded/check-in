@@ -18,7 +18,7 @@ export default function UpdateProfileNameAndEmail() {
       if (!userId) return;
       try {
         const response = await axios.get(`/api/user/${userId}`);
-        console.log(response.data);
+        // console.log(response.data);
         const { name = "", email = "" } = response.data;
         setPayload({ name, email });
       } catch (error) {
