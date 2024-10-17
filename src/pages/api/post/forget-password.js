@@ -1,5 +1,5 @@
 import databaseConnection from "@/lib/database";
-import { generateResetPasswordEmail } from "@/lib/generateOtpAndResetPasswordNotification";
+
 import transporter from "@/lib/nodemailer";
 import { prisma } from "@/lib/prisma"; 
 import { v4 as uuidv4 } from "uuid";
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: "Email is required" });
     }
     try {
-      // Find the user by email 
+
       const user = await prisma.user.findUnique({
         where: { email },
       });
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
       const mailOptions = {
         to: email,
         subject: "Password Reset Request",
-        html: generateResetPasswordEmail(email, resetLink),
+        // html: generateResetPasswordEmail(email, resetLink),
       };
 
       await transporter.sendMail(mailOptions);

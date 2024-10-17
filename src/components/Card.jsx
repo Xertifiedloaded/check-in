@@ -38,9 +38,8 @@ export default function Card({ post }) {
         />
 
         <h1 className="">
-          <h1 className="mt-3 text-base font-semibold text-gray-800 hover:text-gray-900 transition-colors">
-            {user.name?.split(" ")[0] ?? "Unknown User"}
-          </h1>
+          <h1 className="mt-3 text-base font-semibold text-gray-800 hover:text-gray-900 transition-colors"> 
+            {user.name?.split(" ")[0] ?? "Unknown User"}</h1>
           <p className="block text-center text-xs ">
             @{user.name?.split(" ")[0] ?? "Unknown User"}
           </p>
@@ -75,11 +74,9 @@ export default function Card({ post }) {
           stroke={isLiked ? "red" : "currentColor"}
           className="transition-all duration-300 ease-in-out"
         />
-        {count && (
-          <small className="text-xs font-medium">
-            {count} {count === 1 ? "Like" : "Likes"}
-          </small>
-        )}
+        <small className="text-xs font-medium">
+          {count} {count === 1 ? "Like" : "Likes"}
+        </small>
       </button>
     </Link>
   )
