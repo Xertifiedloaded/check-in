@@ -4,7 +4,7 @@ import { signOut, useSession } from "next-auth/react"
 export default function DropDown() {
   return (
     <>
-      <div class="p-4 absolute w-full pt-0 mt-1 space-y-3 text-gray-600 bg-whitesm:p-2 sm:space-y-0.5 sm:border sm:shadow-md sm:rounded-lg border-gray-200/70 ">
+      <div class="p-4 absolute w-[300px] right-0 pt-0 mt-1 space-y-3 text-gray-600 bg-white sm:p-2 sm:space-y-0.5 sm:border sm:shadow-md sm:rounded-lg border-gray-200/70 ">
         <a
           href="/profile/edit"
           class="relative flex cursor-pointer  select-none  items-center rounded-full py-2 px-4 sm:px-2.5 sm:py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
