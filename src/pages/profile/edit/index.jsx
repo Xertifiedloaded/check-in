@@ -14,13 +14,13 @@ export default function UpdateProfile() {
         <StreakPage />
       </div>
       <section className=" ">
-        {/* <div className="nav-wrapper my-6 ">
+        <div className="nav-wrapper my-6 ">
           <ProfileInfo />
-        </div> */}
+        </div>
 
-        {/* <div className="nav-wrapper my-6 ">
+        <div className="nav-wrapper my-6 ">
           <UpdatePassword />
-        </div> */}
+        </div>
         <div className="nav-wrapper my-6 ">
           <DeleteAccount />
         </div>

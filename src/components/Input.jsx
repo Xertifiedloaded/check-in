@@ -74,7 +74,7 @@ export function ImageUpload() {
       try {
         const response = await axios.post(CLOUDINARY_UPLOAD_URL, data)
         setFormData((prev) => ({ ...prev, img: response.data.secure_url }))
-        setPreview(response.data.secure_url)
+        setPreview(response.data.secure_url ?? '/user.svg')
         fetchCheckIns()
         FetchFeed()
       } catch (error) {
@@ -204,7 +204,7 @@ export function ImageUpload() {
           {preview && (
             <div>
               <Image
-                src={preview}
+                src={preview ?? '/user.svg'}
                 width={100}
                 height={100}
                 alt="Preview"
