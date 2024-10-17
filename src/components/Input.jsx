@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import Button from "./Buttons"
@@ -50,11 +50,11 @@ export function ImageUpload() {
     const fetchProfilePicture = async () => {
       if (userId) {
         try {
-          const response = await axios.get(`/api/user/${userId}`);
+          const response = await axios.get(`/api/user/${userId}`)
           console.log(response)
-          const userProfile = response.data.profilePicture
+          const userProfile = response.data?.profilePicture ?? "/user.svg"
           setPreview(userProfile)
-          setFormData((prev) => ({ ...prev, img: userProfile.profilePicture }))
+          setFormData((prev) => ({ ...prev, img: userProfile?.profilePicture }))
         } catch (error) {
           console.error("Failed to fetch user profile:", error)
         }
@@ -74,7 +74,7 @@ export function ImageUpload() {
       try {
         const response = await axios.post(CLOUDINARY_UPLOAD_URL, data)
         setFormData((prev) => ({ ...prev, img: response.data.secure_url }))
-        setPreview(response.data.secure_url ?? '/user.svg')
+        setPreview(response.data.secure_url ?? "/user.svg")
         fetchCheckIns()
         FetchFeed()
       } catch (error) {
@@ -204,7 +204,7 @@ export function ImageUpload() {
           {preview && (
             <div>
               <Image
-                src={preview ?? '/user.svg'}
+                src={preview ?? "/user.svg"}
                 width={100}
                 height={100}
                 alt="Preview"
