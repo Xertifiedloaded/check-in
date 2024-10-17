@@ -442,7 +442,7 @@ function CommentSection({
   )
 
   return (
-    <div className="mt-6 space-y-6">
+    <div className="mt space-y-6">
       <form
         onSubmit={handleCommentSubmit}
         className="flex items-center space-x-3"
@@ -484,3 +484,7 @@ function CommentSection({
 }
 
 export default CommentSection
+
+
+
+
