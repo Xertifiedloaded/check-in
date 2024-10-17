@@ -2,7 +2,6 @@
 import Button from "@/components/Buttons"
 import Input from "@/components/Input"
 import PageHead from "@/components/PageHead"
-import { useAuth } from "@/context/AuthContext"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
@@ -20,10 +19,7 @@ export default function Signup() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setPayload((prevPayload) => ({
-      ...prevPayload,
-      [name]: value,
-    }))
+    setPayload((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e) => {
@@ -45,12 +41,10 @@ export default function Signup() {
         const errorData = await res.json()
         throw new Error(errorData.message || "Failed to create account")
       }
-      console.log(res)
 
       await res.json()
       router.push("/auth/login")
     } catch (err) {
-      console.error("Error during signup:", err)
       setError(err.message || "An unexpected error occurred.")
     } finally {
       setLoading(false)
@@ -60,58 +54,37 @@ export default function Signup() {
   return (
     <>
       <PageHead title="Sign Up" description="description" content="" />
-      <section className="grid h-screen place-items-center w-full">
-        <div className="max-w-lg w-full mx-auto">
-          <div className="text-center my-5">
-            <h2 className="my-4 text-2xl font-extrabold leading-9 text-center text-gray-800">
-              Create a new account
-            </h2>
-            <p className="flex justify-center gap-3 items-center">
-              <span>or</span>
-              <Link
-                className="text-gray-500 underline cursor-pointer text-sm hover:text-gray-800"
-                href="/auth/login"
-              >
-                sign in to your account
-              </Link>
-            </p>
-          </div>
-
+      <section className="flex h-screen items-center justify-center">
+        <div className="max-w-md w-full p-8 space-y-6 border border-gray-300 rounded-md shadow-lg">
+          <h2 className="text-2xl font-extrabold text-center text-gray-800">Create a new account</h2>
           {error && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <strong className="font-bold">Error: </strong>
-              <span className="block sm:inline">{error}</span>
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+              <strong>Error: </strong>
+              <span>{error}</span>
             </div>
           )}
-
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-4 shadow-sm border p-6 rounded-md"
-          >
-            <fieldset className="border-t my-4 text-center text-xs">
-              <legend>or</legend>
-            </fieldset>
+          <form onSubmit={handleSubmit} className="space-y-4">
             {Object.keys(payload).map((fieldName) => (
               <Input
                 key={fieldName}
                 payload={payload}
                 fieldName={fieldName}
                 handleChange={handleChange}
-                className="appearance-none flex w-full h-10 px-3 py-2 text-sm bg-white border rounded-md border-gray-300 ring-offset-background placeholder:text-gray-500 focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200/60 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full h-10 text-base px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
               />
             ))}
-
             <button
               type="submit"
-              className="bg-black text-white py-2 px-4 rounded w-full"
+              className="w-full bg-black text-white py-2 rounded-md transition duration-200 hover:bg-gray-800"
               disabled={loading}
             >
               {loading ? "Submitting..." : "Submit"}
             </button>
           </form>
+          <p className="text-center text-gray-500">
+            Already have an account?{" "}
+            <Link href="/auth/login" className="underline text-gray-700">Sign in</Link>
+          </p>
         </div>
       </section>
     </>
