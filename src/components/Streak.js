@@ -16,7 +16,7 @@ export default function StreakPage() {
         const response = await axios.get(`/api/user/currentstreak`, {
           params: userId,
         })
-        setCurrentStreak(response.data.currentStreak)
+        setCurrentStreak(response?.data?.currentStreak)
         setLoading(false)
       } catch (err) {
         setError("Failed to fetch streak")
