@@ -9,19 +9,18 @@ import StreakPage from "@/components/Streak"
 export default function UpdateProfile() {
   return (
     <>
-      <PageHead title="Profile" description="description" content="" />
       <ProfileHeader />
       <div className="nav-wrapper mt-28 my-6 ">
         <StreakPage />
       </div>
       <section className=" ">
-        <div className="nav-wrapper my-6 ">
+        {/* <div className="nav-wrapper my-6 ">
           <ProfileInfo />
-        </div>
+        </div> */}
 
-        <div className="nav-wrapper my-6 ">
+        {/* <div className="nav-wrapper my-6 ">
           <UpdatePassword />
-        </div>
+        </div> */}
         <div className="nav-wrapper my-6 ">
           <DeleteAccount />
         </div>

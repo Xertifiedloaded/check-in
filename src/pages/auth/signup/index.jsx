@@ -70,7 +70,7 @@ export default function Signup() {
             </div>
           )}
 
-          {/* Google Signup Button */}
+
           <Button
             onClick={handleGoogleSignIn}
             type="button"
