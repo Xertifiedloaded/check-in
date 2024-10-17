@@ -11,19 +11,24 @@ export const authOptions = {
       async authorize(credentials) {
         const { email, password } = credentials
         try {
+          if (!email || !password) {
+            throw new Error("Email and password are required.")
+          }
           const user = await prisma.user.findUnique({
             where: { email },
           })
 
           if (!user) {
-            return null
+            throw new Error("User not found. Please check the email.")
           }
 
           const isMatch = await comparePassword(password, user.password)
           if (!isMatch) {
-            return null
+            throw new Error("Incorrect password. Please try again.")
           }
-
+          if (user.isGoogleAuth) {
+            throw new Error("This user is registered with Google authentication. Please log in with Google.");
+          }
           return user
         } catch (error) {
           console.log(error)
