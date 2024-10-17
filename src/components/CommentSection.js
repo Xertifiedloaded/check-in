@@ -362,21 +362,30 @@ function CommentSection({
             <p className="text-sm mt-1">{comment.content}</p>
           )}
         </div>
-
+  
+        {/* Only show "Like" for top-level comments */}
+        {!isReply && (
+          <div className="flex items-center mt-2 text-xs text-gray-500 space-x-4">
+            <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+            <button className="flex items-center space-x-1 hover:text-blue-500 transition-colors duration-300">
+              <Heart size={12} />
+              <span>Like</span>
+            </button>
+          </div>
+        )}
+  
+        {/* Allow replying to comments but hide the Reply button for replies */}
         <div className="flex items-center mt-2 text-xs text-gray-500 space-x-4">
-          <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
-          <button className="flex items-center space-x-1 hover:text-blue-500 transition-colors duration-300">
-            <Heart size={12} />
-            <span>Like</span>
-          </button>
-          <button
-            onClick={() =>
-              setReplyingTo(replyingTo === comment.id ? null : comment.id)
-            }
-            className="hover:text-blue-500 transition-colors duration-300"
-          >
-            Reply
-          </button>
+          {!isReply && (
+            <button
+              onClick={() =>
+                setReplyingTo(replyingTo === comment.id ? null : comment.id)
+              }
+              className="hover:text-blue-500 transition-colors duration-300"
+            >
+              Reply
+            </button>
+          )}
           {!isReply && comment.replies && comment.replies.length > 0 && (
             <button
               onClick={() => toggleReplies(comment.id)}
@@ -396,6 +405,8 @@ function CommentSection({
             </button>
           )}
         </div>
+  
+        {/* Render reply input form when replying to a comment */}
         {replyingTo === comment.id && (
           <form
             onSubmit={(e) => handleReplySubmit(e, comment.id)}
@@ -408,7 +419,7 @@ function CommentSection({
               className="w-5 h-5 rounded-full"
               alt="User Avatar"
             />
-
+  
             <div className="flex-grow relative">
               <input
                 type="text"
@@ -427,6 +438,8 @@ function CommentSection({
             </div>
           </form>
         )}
+  
+        {/* Render replies */}
         {!isReply && expandedReplies[comment.id] && comment.replies && (
           <div className="mt-4 space-y-4">
             {comment.replies.map((reply) => renderComment(reply, true))}
@@ -435,7 +448,7 @@ function CommentSection({
       </div>
     </div>
   )
-
+  
   return (
     <div className="mt-6 space-y-6">
       <form
