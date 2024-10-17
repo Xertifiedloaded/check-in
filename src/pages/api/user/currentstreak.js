@@ -1,9 +1,19 @@
 import { getUserCurrentStreak } from "@/controller/commentController";
+import { authOptions } from "@/lib/authOptions";
+
+import { getServerSession } from "next-auth";
+
 
 
 export default async function handler(req, res) {
+  const session = await getServerSession(req, res, authOptions);
+  
+  if (!session || !session.user || !session.user.id) {
+    return res.status(401).json({ message: "You must be logged in to perform this action." });
+  }
 
-  const { userId } = req.query;
+  const userId = session.user.id;
+
   if (req.method === 'GET') {
     try {
       const currentStreak = await getUserCurrentStreak(userId);
