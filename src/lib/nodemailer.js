@@ -37,6 +37,7 @@ export const sendNotification = async (user, type) => {
 
   try {
     await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully at:', new Date().toLocaleString());
     console.log(`Notification sent to ${user.email}`);
   } catch (error) {
     console.error(`Error sending email to ${user.email}:`, error);
