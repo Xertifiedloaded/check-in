@@ -3,10 +3,13 @@ import { createEmailContent } from './emailContent';
 
 export const transporter = nodemailer.createTransport({
   service: 'gmail', 
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER, 
     pass: process.env.EMAIL_PASS, 
   },
+  connectionTimeout: 10000, 
+  socketTimeout: 10000,
 });
 
 
@@ -18,14 +21,6 @@ export const  NotificationOption = {
   text: 'This is your automated email update.',
   html: '<h1>Automated Update</h1><p>This is your automated email update.</p>'
 };
-
-
-
-
-
-
-
-
 
 
 
