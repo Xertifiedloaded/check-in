@@ -2,8 +2,7 @@ import React from "react"
 import Image from "next/image"
 import Button from "@/components/Buttons"
 import Link from "next/link"
-import { MdFeed, MdNavigation, MdRssFeed } from "react-icons/md"
-import { HomeIcon } from "lucide-react"
+import { MdRssFeed } from "react-icons/md"
 export default function Header() {
   return (
     <section>
