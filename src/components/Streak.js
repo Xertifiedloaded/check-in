@@ -5,6 +5,7 @@ import { Reward, StreakProgress } from "./Card"
 
 export default function StreakPage() {
   const [currentStreak, setCurrentStreak] = useState(null)
+  const [streakEnded, setStreakEnded] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -12,7 +13,10 @@ export default function StreakPage() {
     const fetchStreak = async () => {
       try {
         const response = await axios.get("/api/user/currentstreak")
+        console.log(response);
+        
         setCurrentStreak(response.data.currentStreak)
+        setStreakEnded(response.data.streakEnded)
         setLoading(false)
       } catch (err) {
         setError("Failed to fetch streak")
@@ -29,10 +33,20 @@ export default function StreakPage() {
     <div className="streak-page">
       <h1 className="md:text-2xl text-lg font-bold text-center">Your Current Streak</h1>
       <p className="text-center text-gray-600 mt-2">
-        {currentStreak} Day{currentStreak > 1 && "s"}
+        {streakEnded ? (
+          "Your streak has ended. Start a new streak!"
+        ) : currentStreak === 0 ? (
+          "No streak yet, start your first check-in!"
+        ) : (
+          `${currentStreak} Day${currentStreak > 1 ? "s" : ""}`
+        )}
       </p>
-      <Reward currentStreak={currentStreak} />
-      <StreakProgress currentStreak={currentStreak} />
+      {currentStreak > 0 && !streakEnded && (
+        <>
+          <Reward currentStreak={currentStreak} />
+          <StreakProgress currentStreak={currentStreak} />
+        </>
+      )}
     </div>
   )
 }

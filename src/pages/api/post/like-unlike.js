@@ -40,7 +40,6 @@ export default async function handler(req, res) {
     }
   }
 
-  // Restrict liking/unliking to logged-in users
   const session = await getServerSession(req, res, authOptions);
 
   if (!session || !session.user || !session.user.id) {

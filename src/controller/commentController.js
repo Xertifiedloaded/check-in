@@ -2,7 +2,7 @@
 import { generateCommentHtml, generateEmailHTML, generateReplyEmailHTML } from "@/lib/CommentHtml"
 import { sendEmailCommentNotification } from "@/lib/emailContent"
 import { prisma } from "@/lib/prisma"
-
+import { differenceInDays } from 'date-fns'; 
 
 export const getUserCurrentStreak = async (userId) => {
   try {
@@ -12,14 +12,17 @@ export const getUserCurrentStreak = async (userId) => {
       },
       select: {
         currentStreak: true,
+        lastCheckIn: true, 
       },
     });
-
     if (!streak) {
-      return null; 
+      return { currentStreak: 0, streakEnded: false };
     }
-
-    return streak.currentStreak;
+    const daysSinceLastCheckIn = differenceInDays(new Date(), new Date(streak.lastCheckIn));
+    if (daysSinceLastCheckIn > 1) {
+      return { currentStreak: 0, streakEnded: true };
+    }
+    return { currentStreak: streak.currentStreak, streakEnded: false };
   } catch (error) {
     throw new Error('Error fetching streak');
   }

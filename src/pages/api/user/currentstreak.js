@@ -16,13 +16,12 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const currentStreak = await getUserCurrentStreak(userId);
+      const { currentStreak, streakEnded } = await getUserCurrentStreak(userId);
 
       if (currentStreak === null) {
         return res.status(404).json({ message: 'Streak not found' });
       }
-
-      return res.status(200).json({ currentStreak });
+      return res.status(200).json({ currentStreak,streakEnded });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
