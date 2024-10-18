@@ -32,7 +32,7 @@ export const authOptions = {
           return user
         } catch (error) {
           console.log(error)
-          return null
+          throw new Error(error.message || "Authentication failed.");
         }
       },
     }),

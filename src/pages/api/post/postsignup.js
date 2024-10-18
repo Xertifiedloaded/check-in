@@ -8,7 +8,19 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const { name, email, password, passwordConfirm } = req.body;
     if (password !== passwordConfirm) {
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res.status(400).json({ message: "Password do not match" });
+    }
+    if (!password) {
+      return res.status(400).json({ message: "Password must be Provided" });
+    }
+    if (!passwordConfirm) {
+      return res.status(400).json({ message: "Password must be Provided" });
+    }
+    if (!name) {
+      return res.status(400).json({ message: "Name must be provided" });
+    }
+    if (!email) {
+      return res.status(400).json({ message: "Email must be provided" });
     }
     try {
       const existingUser = await prisma.user.findUnique({

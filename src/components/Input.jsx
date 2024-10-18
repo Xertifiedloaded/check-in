@@ -8,10 +8,10 @@ import { toast } from "react-toastify"
 import { useCheckIn } from "@/context/CheckInContext"
 export default function Input({ payload, fieldName, handleChange, className }) {
   return (
-    <div className="my-6">
+    <div className="my-3">
       <label
         htmlFor={fieldName}
-        className="block text-sm text-gray-700 font-medium"
+        className="block md:text-sm text-xs text-gray-700 font-medium"
       >
         {fieldName?.charAt(0)?.toUpperCase() + fieldName?.slice(1)}
       </label>

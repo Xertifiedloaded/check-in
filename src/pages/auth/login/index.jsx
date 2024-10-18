@@ -1,139 +1,129 @@
-'use client'
-import Button from "@/components/Buttons"
-import Input from "@/components/Input"
-import PageHead from "@/components/PageHead"
-import { signIn } from "next-auth/react"
-import Link from "next/link"
-import { useRouter } from "next/router"
-import React, { useState } from "react"
-import { FaGoogle, FaGithub } from "react-icons/fa"
+import React, { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { FaGoogle, FaGithub } from 'react-icons/fa';
 
-export default function Login() {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const router = useRouter()
-  const [payload, setPayload] = useState({
-    email: "",
-    password: "",
-  })
-
-  const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/' })
-  }
+const Login = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setPayload((prevPayload) => ({
-      ...prevPayload,
-      [name]: value,
-    }))
-  }
+    const { name, value } = e.target;
+    setCredentials((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
     try {
-      if (!payload.email || !payload.password) {
-        throw new Error("Please fill in all fields.")
-      }
-
-      const res = await signIn("credentials", {
-        ...payload,
+      const result = await signIn('credentials', {
+        ...credentials,
         redirect: false,
-      })
+      });
 
-      setLoading(false)
-      if (res?.error) {
-        setError("Invalid email or password.")
+      if (result.error) {
+        setError(result.error);
       } else {
-        router.push("/")
+        router.push('/');
       }
     } catch (error) {
-      setLoading(false)
-      setError(error.message)
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
+  const handleProviderSignIn = (provider) => {
+    signIn(provider, { callbackUrl: '/' });
+  };
 
   return (
-    <>
-      <PageHead title="Login" description="Login to your account" content="" />
-      <section className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-        <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-800">Sign In</h2>
-            <p className="text-sm text-gray-600 mt-2">
-              Don't have an account?{" "}
-              <Link href="/auth/signup" className="text-blue-600 hover:underline">
-                Create one
-              </Link>
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <Button
-              onClick={handleGoogleSignIn}
-              type="button"
-              className="flex items-center justify-center w-full p-3 bg-white border rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm"
-              value={
-                <div className="flex items-center">
-                  <FaGoogle className="mr-2 text-lg" />
-                  Sign in with Google
-                </div>
-              }
-            />
-
-            <Button
-              type="button"
-              className="flex items-center justify-center w-full p-3 bg-white border rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm"
-              value={
-                <div className="flex items-center">
-                  <FaGithub className="mr-2 text-lg" />
-                  Sign in with GitHub
-                </div>
-              }
-            />
-          </div>
-
-          <div className="flex items-center my-6">
-            <span className="w-full border-t border-gray-300"></span>
-            <span className="px-2 text-sm text-gray-400">OR</span>
-            <span className="w-full border-t border-gray-300"></span>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              payload={payload}
-              fieldName="email"
-              handleChange={handleChange}
-              className="w-full h-12 text-base px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-              placeholder="Email address"
-            />
-
-            <Input
-              payload={payload}
-              fieldName="password"
-              handleChange={handleChange}
-              className="w-full h-12 text-base px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-              placeholder="Password"
-              type="password"
-            />
-
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
+        <div className="p-8">
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Welcome Back</h2>
+          <p className="text-sm text-center text-gray-600 mb-8">
+            Sign in to your account to continue
+          </p>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <input
+                name="email"
+                type="email"
+                placeholder="Email address"
+                value={credentials.email}
+                onChange={handleChange}
+                className="w-full px-3 placeholder:text-xs py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                required
+              />
+            </div>
+            <div>
+              <input
+                name="password"
+                type="password"
+                placeholder="Password"
+                value={credentials.password}
+                onChange={handleChange}
+                className="w-full px-3 placeholder:text-xs py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                required
+              />
+            </div>
             <button
               type="submit"
-              className={`w-full h-12 bg-black text-white rounded-md font-semibold transition-all duration-200 ${
-                loading ? 'bg-gray-700 cursor-not-allowed opacity-75' : 'hover:bg-gray-800'
+              className={`w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg ${
+                loading ? 'opacity-75 cursor-not-allowed' : 'hover:from-purple-700 hover:to-pink-700'
               }`}
               disabled={loading}
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
-
-            {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
           </form>
+
+          {error && (
+            <div className="mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+              <p>{error}</p>
+            </div>
+          )}
+
+          <div className="mt-6 flex items-center justify-between">
+            <span className="border-b w-1/5 lg:w-1/4"></span>
+            <span className="text-xs text-center text-gray-500 uppercase">or login with</span>
+            <span className="border-b w-1/5 lg:w-1/4"></span>
+          </div>
+
+          <div className="mt-4 flex flex-col space-y-4">
+            <button
+              onClick={() => handleProviderSignIn('google')}
+              className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+            >
+              <FaGoogle className="w-5 h-5 mr-2 text-red-500" />
+              <span>Sign in with Google</span>
+            </button>
+            <button
+              onClick={() => handleProviderSignIn('github')}
+              className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+            >
+              <FaGithub className="w-5 h-5 mr-2 text-gray-800" />
+              <span>Sign in with GitHub</span>
+            </button>
+          </div>
         </div>
-      </section>
-    </>
-  )
-}
+        <div className="px-8 py-4 bg-gray-50 border-t border-gray-100">
+          <p className="text-xs text-gray-600 text-center">
+            Don't have an account?{' '}
+            <Link href="/auth/signup" className="text-purple-600 hover:underline font-semibold">
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
