@@ -11,6 +11,25 @@ export const transporter = nodemailer.createTransport({
 
 
 
+export const  NotificationOption = {
+  // from: process.env.EMAIL_USER,
+  to: 'horllypizzy@gmail.com',  
+  subject: 'Automated Email Update',
+  text: 'This is your automated email update.',
+  html: '<h1>Automated Update</h1><p>This is your automated email update.</p>'
+};
+
+
+
+
+
+
+
+
+
+
+
+
 export const sendNotification = async (user, type) => {
   const { subject, body } = createEmailContent(user.name, type);
   
