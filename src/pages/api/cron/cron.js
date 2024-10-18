@@ -1,16 +1,14 @@
+import Reminder from '@/lib/Reminder';
 import   { NotificationOption, transporter } from '../../../lib/nodemailer'
 
 export default async function handler(req, res) {
-  const authHeader = req.headers.authorization;
-  if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return res.status(401).json({ success: false });
-  }
-
   if (req.method === 'POST' || req.method === 'GET') {
     try {
       await transporter.sendMail(NotificationOption);
+      await Reminder()
       console.log('Email sent successfully at:', new Date().toLocaleString());
       return res.status(200).json({ message: 'Email sent successfully' });
+
     } catch (error) {
       console.error('Error sending email:', error);
       return res.status(500).json({ error: 'Failed to send email' });
@@ -19,3 +17,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 }
+
+
+
