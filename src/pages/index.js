@@ -5,14 +5,35 @@ import CheckIn from "@/components/CheckIn"
 import { useCheckIn } from "@/context/CheckInContext"
 import MainHeader from "./MainHeader"
 import PageHead from "@/components/PageHead"
-
+import { MessageCircle, RefreshCw, Filter } from "lucide-react"
 export default function Home() {
   const { loadingCheckIns, error } = useCheckIn()
+
+
   if (loadingCheckIns) {
     return (
-      <section className="flex justify-center items-center lg:h-screen h-[90vh] ">
-        <div className="loader"></div>
-      </section>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+        <RefreshCw className="w-12 h-12 text-blue-500 animate-spin" />
+        <p className="mt-4 text-gray-600">Loading Page...</p>
+      </div>
+    )
+  }
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="p-6 max-w-sm mx-auto bg-white rounded-lg shadow-md">
+          <div className="text-red-500 text-center">
+            <MessageCircle className="w-12 h-12 mx-auto mb-4" />
+            <p className="text-lg font-semibold">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-red-50 text-red-500 rounded-md hover:bg-red-100 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
     )
   }
 

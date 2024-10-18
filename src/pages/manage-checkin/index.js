@@ -1,9 +1,11 @@
 "use client"
+
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 import EditPostModal from "@/components/Modal"
 import PageHead from "@/components/PageHead"
 import ProfileHeader from "../profile/edit/ProfileHeader"
+import { Pencil, Trash2, MessageSquare, Calendar } from "lucide-react"
 
 export default function UserPosts({ userId }) {
   const [posts, setPosts] = useState([])
@@ -18,8 +20,6 @@ export default function UserPosts({ userId }) {
         const response = await axios.get("/api/post/edit-delete", {
           params: { userId },
         })
-        console.log(response)
-
         setPosts(response.data)
       } catch (err) {
         console.error("Error fetching posts:", err)
@@ -34,7 +34,7 @@ export default function UserPosts({ userId }) {
   const handleEdit = (post) => {
     setCurrentPost(post)
     setModalOpen(true)
-  };
+  }
 
   const handleDelete = async (postId) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
@@ -57,56 +57,92 @@ export default function UserPosts({ userId }) {
 
   if (loading) {
     return (
-      <section className="flex justify-center items-center lg:h-screen h-[90vh] ">
-        <div className="loader"></div>
-      </section>
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
     )
   }
 
-  if (error) return <div>{error}</div>
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="bg-red-50 text-red-500 p-4 rounded-lg">
+          {error}
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <section>
+    <section className="min-h-screen bg-gray-50">
       <PageHead
         content="Stay on track, achieve your goals, and beat procrastination together!"
         title="Manage Your Feed"
       />
       <ProfileHeader />
-      <div className="nav-wrapper">
-        <h2 className="text-2xl mt-32 font-bold mb-4">Your Checkin</h2>
+      
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900">Your Check-ins</h2>
+          <div className="bg-blue-50 px-4 py-2 rounded-full text-blue-600 text-sm font-medium">
+            {posts.length} Posts
+          </div>
+        </div>
+
         {posts.length === 0 ? (
-          <p>No posts found for this user.</p>
+          <div className="bg-white rounded-lg shadow-sm text-center py-12">
+            <MessageSquare className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+            <p className="text-gray-600">No posts found. Start sharing your progress!</p>
+          </div>
         ) : (
-          <ul>
+          <div className="grid gap-6">
             {posts?.map((post) => (
-              <li key={post.id} className="mb-4">
-                <div className="p-4 border border-gray-200 rounded">
-                  <p>{post.content}</p>
-                  <p className="text-sm text-gray-500">
-                    Posted by: {post?.user?.name}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Date: {new Date(post.createdAt).toLocaleString()}
-                  </p>
-                  <div className="flex space-x-2 mt-2">
+              <div 
+                key={post.id} 
+                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+              >
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
+                      {post?.user?.name?.[0]?.toUpperCase()}
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-gray-900">{post?.user?.name}</h3>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Calendar className="h-4 w-4" />
+                        {new Date(post.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <p className="text-gray-700 leading-relaxed">{post.content}</p>
+                  </div>
+                  <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
                     <button
                       onClick={() => handleEdit(post)}
-                      className="text-blue-600 hover:underline"
+                      className="inline-flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors duration-200"
                     >
+                      <Pencil className="h-4 w-4" />
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(post.id)}
-                      className="text-red-600 hover:underline"
+                      className="inline-flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-200"
                     >
+                      <Trash2 className="h-4 w-4" />
                       Delete
                     </button>
                   </div>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
+
         {isModalOpen && (
           <EditPostModal
             post={currentPost}

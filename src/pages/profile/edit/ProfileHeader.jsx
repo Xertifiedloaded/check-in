@@ -1,48 +1,47 @@
-import React, { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { signOut, useSession } from 'next-auth/react';
-import { Menu, X, ChevronDown, User, LogOut, Home } from 'lucide-react';
-import Button from '@/components/Buttons';
+import React, { useState } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { signOut, useSession } from "next-auth/react"
+import { Menu, X, ChevronDown, User, LogOut, Home } from "lucide-react"
+import Button from "@/components/Buttons"
 import { MdRssFeed } from "react-icons/md"
 export default function ProfileHeader() {
-  const { data: session } = useSession();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: session } = useSession()
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
+    setIsDropdownOpen((prev) => !prev)
+  }
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen((prev) => !prev);
-  };
+    setIsMobileMenuOpen((prev) => !prev)
+  }
 
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-          <Link href="/">
-            <Image
-              width={200}
-              className="w-6 h-6 object-cover"
-              height={200}
-              alt="check"
-              src="/check.svg"
-            />
-          </Link>
+            <Link href="/">
+              <Image
+                width={200}
+                className="w-6 h-6 object-cover"
+                height={200}
+                alt="check"
+                src="/check.svg"
+              />
+            </Link>
           </div>
-
           <div className="hidden md:flex items-center space-x-4">
             {session && (
               <>
-          <Link href="/feed">
-          <Button
-            className="bg-[#e2e8f099]  text-lightGray text-sm py-2 px-4 rounded-[25px]"
-            value={<MdRssFeed />}
-          />
-          </Link>
+                <Link href="/feed">
+                  <Button
+                    className="bg-[#e2e8f099]  text-lightGray text-sm py-2 px-4 rounded-[25px]"
+                    value={<MdRssFeed />}
+                  />
+                </Link>
                 <div className="relative">
                   <button
                     onClick={toggleDropdown}
@@ -122,5 +121,5 @@ export default function ProfileHeader() {
         </div>
       )}
     </nav>
-  );
+  )
 }
