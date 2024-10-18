@@ -260,7 +260,7 @@ export function StreakProgress({ currentStreak }) {
   }
 
   return (
-    <div className="streak-progress mt-6 p-4 border border-gray-300 rounded-lg shadow-lg bg-white">
+    <div className="streak-progress mt-6 p-4   rounded-lg ">
       <h2 className="text-lg font-semibold mb-2">Streak Progress</h2>
       <div className="flex justify-between mb-2">
         <span className="text-sm text-gray-500">Goal: {currentGoal} Days</span>
