@@ -56,7 +56,6 @@ const AnalyticsDashboard = () => {
     <div className="container mx-auto p-4 md:p-8">
       <h1 className="text-2xl md:text-4xl font-bold mb-8 text-center text-gray-800">Visitor Analytics Dashboard</h1>
 
-      {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
         <StatCard title="Total Visitors" value={data.totalVisitors} />
         <StatCard title="Daily Visitors" value={data.dailyVisitors} />
@@ -64,7 +63,6 @@ const AnalyticsDashboard = () => {
         <StatCard title="Active Visitors" value={data.activeVisitors} />
       </div>
 
-      {/* Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <ChartCard title="Hourly Visitor Breakdown">
           <LineChart data={data.hourlyBreakdown}>
@@ -85,7 +83,6 @@ const AnalyticsDashboard = () => {
         </ChartCard>
       </div>
 
-      {/* Device Types */}
       <div className="grid grid-cols-1">
         <ChartCard title="Device Types">
           <PieChart>
@@ -113,14 +110,14 @@ const AnalyticsDashboard = () => {
 
 const StatCard = ({ title, value }) => (
   <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out text-center">
-    <h2 className="text-lg md:text-xl font-semibold text-gray-700 mb-2">{title}</h2>
-    <p className="text-2xl md:text-3xl font-bold text-blue-600">{value}</p>
+    <h2 className="text-sm md:text-xl font-semibold text-gray-700 mb-2">{title}</h2>
+    <p className="text-xl md:text-3xl font-bold text-blue-600">{value}</p>
   </div>
 );
 
 const ChartCard = ({ title, children }) => (
   <div className="bg-white p-6 rounded-lg shadow-md">
-    <h2 className="text-lg md:text-xl font-semibold text-gray-700 mb-4">{title}</h2>
+    <h2 className="text-md md:text-xl font-semibold text-gray-700 mb-4">{title}</h2>
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
         {children}
