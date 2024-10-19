@@ -1,11 +1,8 @@
-
 import Head from "next/head"
-import React, { useEffect } from "react"
 import Heading from "@/components/Heading"
 import CheckIn from "@/components/CheckIn"
 import { useCheckIn } from "@/context/CheckInContext"
 import MainHeader from "./MainHeader"
-import PageHead from "@/components/PageHead"
 import { MessageCircle } from "lucide-react"
 
 export default function Home() {
@@ -40,25 +37,19 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Daily Checkin</title>
-        <meta name="description" content={description} />
+        <title>DailyCheck-In</title>
         <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+          name="description"
+          content="Stay on track, achieve your goals, and beat procrastination together!, track activities of others and what they are upto daily"
         />
-        <meta property="og:title" content="Daily Checkin" />
+        <meta property="og:title" content="DailyCheck-In" />
         <meta
           property="og:description"
-          content="Stay on track, achieve your goals, and beat procrastination together!"
+          content="Stay on track and achieve your goals!"
         />
-        <meta property="og:image" content="" />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:url"
-          content={typeof window !== "undefined" ? window.location.href : ""}
-        />
+        <meta property="og:image" content="/check.svg" />
+        <link rel="canonical" href="https://www.daily-check-in.com.ng" />
         <link rel="icon" href="/check.svg" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
       </Head>
       <main className="mt-28">
         <MainHeader />
