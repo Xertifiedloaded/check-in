@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const response = await axios.post(
-        "https://www.daily-check-in.com.ng//api/cron/cron",
+        "https://www.daily-check-in.com.ng/api/cron/cron",
         {},
         {
           headers: {
