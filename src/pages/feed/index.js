@@ -30,10 +30,9 @@ export default function Index() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-        <RefreshCw className="w-12 h-12 text-blue-500 animate-spin" />
-        <p className="mt-4 text-gray-600">Loading your feed...</p>
-      </div>
+      <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
     )
   }
 
@@ -59,7 +58,7 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-gray-50">
       <PageHead
-        content="Stay on track, achieve your goals, and beat procrastination together!"
+        content="Explore user check-ins and activity updates. See what others are up to in real-time, from all corners of the globe."
         title="Feed"
       />
       <MainHeader />

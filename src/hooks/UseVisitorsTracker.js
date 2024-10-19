@@ -4,16 +4,6 @@ import { useRouter } from 'next/router';
 
 
 
-
-
-
-
-
-
-
-
-
-
 export function useVisitTracker() {
   const [visitorId, setVisitorId] = useState(null);
   const startTime = Date.now();

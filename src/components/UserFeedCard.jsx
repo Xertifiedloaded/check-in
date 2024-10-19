@@ -1,5 +1,12 @@
 import React, { useState } from "react"
-import { Heart, MessageCircle, Edit, Trash, Save } from "lucide-react"
+import {
+  Heart,
+  MessageCircle,
+  Edit,
+  Trash,
+  Save,
+  LucideVerified,
+} from "lucide-react"
 import Image from "next/image"
 import { useSession } from "next-auth/react"
 import useLikeStatus from "@/utils/actions"
@@ -7,8 +14,8 @@ import CommentSection from "./CommentSection"
 import axios from "axios"
 
 export function FeedUserCard({ post }) {
-  console.log(post);
-  
+  console.log(post)
+
   const { data: session } = useSession()
   const user = post.user || {}
   const {
@@ -97,14 +104,23 @@ export function FeedUserCard({ post }) {
 
   return (
     <div className="bg-white border-b pb-2 mt-3  border-gray-200">
-      <div className="flex items-start space-x-3">
-        <Image
-          src={user.profilePicture || "/no-user.png"}
-          width={30}
-          height={30}
-          className="rounded-full h-10 w-10 object-cover"
-          alt={user.name}
-        />
+      <div className="flex relative items-start space-x-3">
+        <div className="relative inline-block">
+          <Image
+            src={user.profilePicture || "/no-user.png"}
+            width={40}
+            height={40}
+            className="rounded-full h-10 w-10 object-cover"
+            alt={user.name}
+          />
+          <LucideVerified
+            className="absolute bottom-0 right-0  rounded-full"
+            width={15}
+            fill="white"
+            color="green"
+          />
+        </div>
+
         <div className="flex-1">
           <div className="flex items-center">
             <span className="font-bold  max-w-[160px] text-gray-900">

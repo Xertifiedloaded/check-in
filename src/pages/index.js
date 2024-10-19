@@ -5,19 +5,16 @@ import CheckIn from "@/components/CheckIn"
 import { useCheckIn } from "@/context/CheckInContext"
 import MainHeader from "./MainHeader"
 import PageHead from "@/components/PageHead"
-import { MessageCircle, RefreshCw } from "lucide-react"
-import { trackingComponent } from "@/components/TrackingComponent"
+import { MessageCircle } from "lucide-react"
+
 
 export default function Home() {
-
   const { loadingCheckIns, error } = useCheckIn()
-
 
   if (loadingCheckIns) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-        <RefreshCw className="w-12 h-12 text-blue-500 animate-spin" />
-        <p className="mt-4 text-gray-600">Loading Page...</p>
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     )
   }
