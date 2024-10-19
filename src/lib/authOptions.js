@@ -27,12 +27,14 @@ export const authOptions = {
             throw new Error("Incorrect password. Please try again.")
           }
           if (user.isGoogleAuth) {
-            throw new Error("This user is registered with Google authentication. Please log in with Google.");
+            throw new Error(
+              "This user is registered with Google authentication. Please log in with Google."
+            )
           }
           return user
         } catch (error) {
           console.log(error)
-          throw new Error(error.message || "Authentication failed.");
+          throw new Error(error.message || "Authentication failed.")
         }
       },
     }),
@@ -56,7 +58,7 @@ export const authOptions = {
       }
 
       if (account.provider === "google") {
-        const { name, email, image } = user 
+        const { name, email, image } = user
         try {
           let dbUser = await prisma.user.findUnique({
             where: { email },
@@ -69,6 +71,7 @@ export const authOptions = {
                 email,
                 profilePicture: image,
                 isGoogleAuth: true,
+                isVerified: true,
               },
             })
           } else {
@@ -77,6 +80,14 @@ export const authOptions = {
                 where: { email },
                 data: {
                   profilePicture: image,
+                },
+              })
+            }
+            if (!dbUser.isVerified) {
+              dbUser = await prisma.user.update({
+                where: { email },
+                data: {
+                  isVerified: true,
                 },
               })
             }
@@ -105,8 +116,6 @@ export const authOptions = {
           token.id = dbUser.id
         }
       }
-
-      console.log(`JWT token:`, token)
       return token
     },
     async session({ session, token }) {

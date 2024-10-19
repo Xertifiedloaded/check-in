@@ -29,6 +29,7 @@ export default async function handler(req, res) {
             name: true,
             email: true,
             profilePicture: true,
+            isVerified:true,
           },
         },
       },

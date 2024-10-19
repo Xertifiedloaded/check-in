@@ -17,6 +17,7 @@ model User {
   otpExpiry               DateTime?
   isGoogleAuth            Boolean   @default(false)
   permissions             String[]
+  isVerified              Boolean?  @default(false)
   verificationToken       String?
   verificationTokenExpiry DateTime?
   googleId                String?
@@ -24,6 +25,8 @@ model User {
   updatedAt               DateTime  @updatedAt
   posts                   Post[]    @relation()
   streaks                 Streak[]
+  isDeleted               Boolean   @default(false)
+  deletedAt               DateTime?
   comments                Comment[] @relation("UserComments")
   replies                 Reply[]   @relation("UserReplies")
 }
@@ -71,7 +74,7 @@ model Reply {
 }
 
 model Visitor {
-  id        String   @id @default(uuid()) @map("_id")
+  id           String     @id @default(uuid()) @map("_id")
   ip           String     @unique
   visitDate    DateTime   @default(now())
   lastActivity DateTime   @default(now())
@@ -87,4 +90,3 @@ model PageView {
   path      String
   timestamp DateTime @default(now())
 }
-

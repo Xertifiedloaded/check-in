@@ -39,7 +39,10 @@ export default function Card({ post }) {
 
         <h1 className="">
           <h1 className="mt-3 flex items-center text-base font-semibold text-gray-800 hover:text-gray-900 transition-colors">
-            {user.name?.split(" ")[0] ?? "Unknown User"} <LucideVerified width={20} fill="green" color="white" />
+            {user.name?.split(" ")[0] ?? "Unknown User"}
+            {user && user?.isVerified === true ? (
+              <LucideVerified width={20} fill="green" color="white" />
+            ) : null}
           </h1>
           <p className="block text-center text-xs ">
             @{user.name?.split(" ")[0] ?? "Unknown User"}

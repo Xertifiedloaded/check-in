@@ -20,6 +20,7 @@ export default async function handler(req, res) {
               select: {
                 id: true,
                 name: true,
+                isVerified: true,
                 profilePicture: true,
               },
             },
@@ -68,3 +69,5 @@ export default async function handler(req, res) {
     res.status(500).json({ message: "Error fetching posts" });
   }
 }
+
+

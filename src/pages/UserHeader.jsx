@@ -1,11 +1,11 @@
-'use client'
+"use client"
 
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
-import { Menu, X, Home, Rss, Calendar, User } from "lucide-react"
-
+import { Menu, X, Home, Rss, Calendar, User, LogOut } from "lucide-react"
+import { signOut } from "next-auth/react"
 export default function UserHeader() {
   const { data: session } = useSession()
   const [isOpen, setIsOpen] = useState(false)
@@ -37,7 +37,10 @@ export default function UserHeader() {
   }, [isOpen])
 
   const NavLink = ({ href, icon: Icon, children }) => (
-    <Link href={href} className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+    <Link
+      href={href}
+      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+    >
       <Icon className="mr-3 h-5 w-5" />
       {children}
     </Link>
@@ -60,19 +63,29 @@ export default function UserHeader() {
               </Link>
             </div>
             <div className="hidden lg:ml-6 lg:flex lg:space-x-8">
-              <NavLink href="/" icon={Home}>Home</NavLink>
+              <NavLink href="/" icon={Home}>
+                Home
+              </NavLink>
               {session && (
                 <>
-                  <NavLink href="/feed" icon={Rss}>News Feed</NavLink>
-                  <NavLink href="/manage-checkin" icon={Calendar}>Manage Check-in</NavLink>
+                  <NavLink href="/feed" icon={Rss}>
+                    News Feed
+                  </NavLink>
+                  <NavLink href="/manage-checkin" icon={Calendar}>
+                    Manage Check-in
+                  </NavLink>
                 </>
               )}
             </div>
           </div>
           <div className="hidden lg:ml-6 lg:flex lg:items-center">
-            <Link href="/profile/edit" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <Link
+              href="/profile/edit"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
               Dashboard
             </Link>
+
             <div className="ml-3 relative">
               <div>
                 <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -86,6 +99,13 @@ export default function UserHeader() {
                   />
                 </button>
               </div>
+            </div>
+            <div
+              className="text-xs ml-4 flex items-center font-medium text-gray-500"
+              onClick={() => signOut({ callbackUrl: "/" })}
+            >
+              <LogOut size={16} className="mr-2" />
+              Sign Out
             </div>
           </div>
           <div className="-mr-2 flex items-center lg:hidden">
@@ -107,11 +127,17 @@ export default function UserHeader() {
       {isOpen && (
         <div className="lg:hidden">
           <div className="pt-2 pb-3 space-y-1">
-            <NavLink href="/" icon={Home}>Home</NavLink>
+            <NavLink href="/" icon={Home}>
+              Home
+            </NavLink>
             {session && (
               <>
-                <NavLink href="/feed" icon={Rss}>News Feed</NavLink>
-                <NavLink href="/manage-checkin" icon={Calendar}>Manage Check-in</NavLink>
+                <NavLink href="/feed" icon={Rss}>
+                  News Feed
+                </NavLink>
+                <NavLink href="/manage-checkin" icon={Calendar}>
+                  Manage Check-in
+                </NavLink>
               </>
             )}
           </div>
@@ -127,12 +153,25 @@ export default function UserHeader() {
                 />
               </div>
               <div className="ml-3">
-                <div className="text-base font-medium text-gray-800">{session?.user?.name}</div>
-                <div className="text-sm font-medium text-gray-500">{session?.user?.email}</div>
+                <div className="text-base font-medium text-gray-800">
+                  {session?.user?.name}
+                </div>
+                <div className="text-sm font-medium text-gray-500">
+                  {session?.user?.email}
+                </div>
               </div>
             </div>
             <div className="mt-3 space-y-1">
-              <NavLink href="/profile/edit" icon={User}>Dashboard</NavLink>
+              <NavLink href="/profile/edit" icon={User}>
+                Dashboard
+              </NavLink>
+            </div>
+            <div
+              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              onClick={() => signOut({ callbackUrl: "/" })}
+            >
+              <LogOut size={16} className="mr-3 h-5 w-5" />
+              Sign Out
             </div>
           </div>
         </div>

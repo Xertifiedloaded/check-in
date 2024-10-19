@@ -1,43 +1,45 @@
-import nodemailer from 'nodemailer';
-import { createEmailContent } from './emailContent';
+import nodemailer from "nodemailer"
+import { createEmailContent } from "./emailContent"
 
 export const transporter = nodemailer.createTransport({
-  service: 'gmail', 
+  service: "gmail",
   secure: false,
   auth: {
-    user: process.env.EMAIL_USER, 
-    pass: process.env.EMAIL_PASS, 
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
-});
+})
 
+export const sendOtpEmail = async (userEmail, otp, verificationLink) => {
+  await transporter.sendMail({
+    to: userEmail,
+    subject: "Your OTP Verification Code",
+    html: `<p>Your OTP code is: <strong>${otp}</strong> <a href=${verificationLink}>Verification link</a></p>`,
+  })
+}
 
-
-export const  NotificationOption = {
-  // from: process.env.EMAIL_USER,
-  to: 'horllypizzy@gmail.com',  
-  subject: 'Automated Email Update',
-  text: 'This is your automated email update.',
-  html: '<h1>Automated Update</h1><p>This is your automated email update.</p>'
-};
-
-
-
+export const NotificationOption = {
+  to: "horllypizzy@gmail.com",
+  subject: "Automated Email Update",
+  text: "This is your automated email update.",
+  html: "<h1>Automated Update</h1><p>This is your automated email update.</p>",
+}
 
 export const sendNotification = async (user, type) => {
-  const { subject, body } = createEmailContent(user.name, type);
-  
+  const { subject, body } = createEmailContent(user.name, type)
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to: user.email, 
+    to: user.email,
     subject: subject,
     text: body,
-  };
+  }
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully at:', new Date().toLocaleString());
-    console.log(`Notification sent to ${user.email}`);
+    await transporter.sendMail(mailOptions)
+    console.log("Email sent successfully at:", new Date().toLocaleString())
+    console.log(`Notification sent to ${user.email}`)
   } catch (error) {
-    console.error(`Error sending email to ${user.email}:`, error);
+    console.error(`Error sending email to ${user.email}:`, error)
   }
-};
+}

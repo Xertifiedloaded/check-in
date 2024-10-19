@@ -5,6 +5,6 @@
 # #   "postId": "66f917eda12d967d2b4126cb",
 # # }
 
-GET http://localhost:3000/api/cron/status
-Authorization: Bearer 8aXVkt3RdjK+PgcrFUOTNKqRpjmY24vJ9GMu2eqFinMddss
+GET http://localhost:3000/api/post/feed
+
 

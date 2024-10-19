@@ -14,7 +14,7 @@ import CommentSection from "./CommentSection"
 import axios from "axios"
 
 export function FeedUserCard({ post }) {
-  console.log(post)
+
 
   const { data: session } = useSession()
   const user = post.user || {}
@@ -111,14 +111,11 @@ export function FeedUserCard({ post }) {
             width={40}
             height={40}
             className="rounded-full h-10 w-10 object-cover"
-            alt={user.name}
+            alt={user.name ?? "deleted user"}
           />
-          <LucideVerified
-            className="absolute bottom-0 right-0  rounded-full"
-            width={15}
-            fill="white"
-            color="green"
-          />
+          {user && user?.isVerified === true ? (
+            <LucideVerified width={20} fill="green" color="white" />
+          ) : null}
         </div>
 
         <div className="flex-1">

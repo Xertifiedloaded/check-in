@@ -16,17 +16,18 @@ export default function Index() {
     const fetchPosts = async () => {
       try {
         const response = await axios.get("/api/post/feed")
-        setPosts(response.data.posts)
+        setPosts(response.data.posts);
       } catch (error) {
-        console.error("Error fetching posts:", error)
-        setError("Failed to load posts.")
+        console.error("Error fetching posts:", error);
+        setError("Failed to load posts.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-
-    fetchPosts()
-  }, [])
+  
+    fetchPosts();
+  }, []);
+  
 
   if (loading) {
     return (

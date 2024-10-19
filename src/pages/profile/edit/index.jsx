@@ -7,18 +7,23 @@ import ProfileInfo from "./ProfileInfo"
 import UpdatePassword from "./UpdatePassword"
 import PageHead from "@/components/PageHead"
 import StreakPage from "@/components/Streak"
+import ProtectedRoute from "@/hooks/ProtectedRoute"
+import { useSession } from "next-auth/react"
 
-export default function UpdateProfile() {
+const UpdateProfile = () => {
   const [currentStreak, setCurrentStreak] = useState(null)
   const [streakEnded, setStreakEnded] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  const { data: session } = useSession()
+  const userGoogleAccount = session?.user?.isGoogleAuth
+  console.log(userGoogleAccount);
+  
   useEffect(() => {
     const fetchStreak = async () => {
       try {
         const response = await axios.get("/api/user/currentstreak")
-        console.log(response)
         setCurrentStreak(response.data.currentStreak)
         setStreakEnded(response.data.streakEnded)
         setLoading(false)
@@ -74,20 +79,22 @@ export default function UpdateProfile() {
               </div>
             </div>
 
-            <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
-              <div className="px-4 py-5 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Update Password
-                </h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                  Ensure your account is using a long, random password to stay
-                  secure.
-                </p>
+            {userGoogleAccount ? (
+              <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+                <div className="px-4 py-5 sm:px-6">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    Update Password
+                  </h3>
+                  <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                    Ensure your account is using a long, random password to stay
+                    secure.
+                  </p>
+                </div>
+                <div className="border-t border-gray-200">
+                  <UpdatePassword />
+                </div>
               </div>
-              <div className="border-t border-gray-200">
-                <UpdatePassword />
-              </div>
-            </div>
+            ) : null}
 
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
               <div className="px-4 py-5 sm:px-6">
@@ -110,3 +117,4 @@ export default function UpdateProfile() {
     </>
   )
 }
+export default ProtectedRoute(UpdateProfile)

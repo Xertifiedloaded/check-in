@@ -56,7 +56,7 @@ export function ImageUpload() {
           setPreview(userProfile)
           setFormData((prev) => ({ ...prev, img: userProfile?.profilePicture }))
         } catch (error) {
-          console.error("Failed to fetch user profile:", error)
+    
         }
       }
     }
