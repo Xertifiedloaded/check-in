@@ -103,7 +103,7 @@ export function FeedUserCard({ post }) {
   }
 
   return (
-    <div className="bg-white border-b pb-2 mt-3  border-gray-200">
+    <div className="bg-white border-b pb-2 mt-2  border-gray-200">
       <div className="flex relative items-start space-x-3">
         <div className="relative inline-block">
           <Image

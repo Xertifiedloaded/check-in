@@ -95,7 +95,7 @@ export default function Index() {
         </div>
 
         {posts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+          <div className="text-center py-7 bg-white rounded-lg shadow-sm">
             <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900">
               No Posts Yet
@@ -105,7 +105,7 @@ export default function Index() {
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {posts.map((post) => (
               <div
                 key={post.id}
