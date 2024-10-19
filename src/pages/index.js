@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <>
       <PageHead
-        content="Stay on track, achieve your goals, and beat procrastination together!"
+        description="Stay on track, achieve your goals, and beat procrastination together!"
         title="DailyCheck-In"
       />
 

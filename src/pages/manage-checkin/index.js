@@ -76,7 +76,7 @@ export default function UserPosts({ userId }) {
   return (
     <section className="min-h-screen bg-gray-50">
       <PageHead
-        content="Stay on track, achieve your goals, and beat procrastination together!"
+        description="Stay on track, achieve your goals, and beat procrastination together!"
         title="Manage Your Feed"
       />
       <ProfileHeader />

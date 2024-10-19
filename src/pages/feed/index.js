@@ -59,7 +59,7 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-gray-50">
       <PageHead
-        content="Explore user check-ins and activity updates. See what others are up to in real-time, from all corners of the globe."
+        description="Explore user check-ins and activity updates. See what others are up to in real-time, from all corners of the globe."
         title="Feed"
       />
       <MainHeader />
