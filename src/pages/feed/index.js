@@ -69,18 +69,20 @@ export default function Index() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Your Feed
+                All Checkin Feeds
               </h1>
               <p className="text-gray-600 mt-1">
-                Stay updated with your community's progress
+                Stay updated with what others are doing
               </p>
             </div>
-
-            <div className="flex gap-2 sm:gap-4 mt-4 sm:mt-0">
-              <button className="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors">
-                <Filter className="w-4 h-4 mr-2" />
-                Filter
-              </button>
+            <div className="flex items-center gap-2 sm:gap-4 mt-4 sm:mt-0">
+              {posts.length > 0 && (
+                <div className=" text-center">
+                  <div className="inline-flex items-center px-4 py-2 bg-gray-50 text-gray-600 rounded-full text-sm">
+                    {posts.length} {posts.length === 1 ? "post" : "posts"}
+                  </div>
+                </div>
+              )}
               <button
                 onClick={() => window.location.reload()}
                 className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
@@ -107,20 +109,11 @@ export default function Index() {
             {posts.map((post) => (
               <div
                 key={post.id}
-                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+                className="bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
               >
                 <FeedUserCard post={post} comments={post.comments} />
               </div>
             ))}
-          </div>
-        )}
-
-        {posts.length > 0 && (
-          <div className="mt-8 text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-gray-50 text-gray-600 rounded-full text-sm">
-              {posts.length} {posts.length === 1 ? "post" : "posts"} in your
-              feed
-            </div>
           </div>
         )}
       </main>

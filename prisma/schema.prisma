@@ -70,12 +70,21 @@ model Reply {
   commentId String   @db.ObjectId
 }
 
+model Visitor {
+  id        String   @id @default(uuid()) @map("_id")
+  ip           String     @unique
+  visitDate    DateTime   @default(now())
+  lastActivity DateTime   @default(now())
+  duration     Int
+  deviceType   String?
+  pageViews    PageView[]
+}
 
-
-
-
-
-
-
-
+model PageView {
+  id        String   @id @default(uuid()) @map("_id")
+  visitor   Visitor  @relation(fields: [visitorId], references: [id])
+  visitorId String
+  path      String
+  timestamp DateTime @default(now())
+}
 

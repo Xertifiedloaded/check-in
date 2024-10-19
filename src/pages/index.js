@@ -1,12 +1,15 @@
 import Head from "next/head"
-import React from "react"
+import React, { useEffect } from "react"
 import Heading from "@/components/Heading"
 import CheckIn from "@/components/CheckIn"
 import { useCheckIn } from "@/context/CheckInContext"
 import MainHeader from "./MainHeader"
 import PageHead from "@/components/PageHead"
-import { MessageCircle, RefreshCw, Filter } from "lucide-react"
+import { MessageCircle, RefreshCw } from "lucide-react"
+import { trackingComponent } from "@/components/TrackingComponent"
+
 export default function Home() {
+
   const { loadingCheckIns, error } = useCheckIn()
 
 

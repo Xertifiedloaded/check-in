@@ -5,8 +5,7 @@ import { AuthProvider } from "@/context/AuthContext"
 import { CheckInProvider } from "@/context/CheckInContext"
 import { ToastContainer } from "react-toastify"
 import SessionWrapper from "@/sessionWrapper/SessionWrapper"
-import Scheduler from "@/sessionWrapper/Scheduler.js"
-
+import { useVisitTracker } from "@/hooks/UseVisitorsTracker"
 
 const poppin = Poppins({
   weight: ["200", "300", "400", "600", "700", "800"],
@@ -14,7 +13,7 @@ const poppin = Poppins({
 })
 
 function App({ Component, pageProps }) {
-  Scheduler()
+  useVisitTracker()
   return (
     <div className={`${poppin.className}`}>
       <SessionWrapper>
@@ -29,9 +28,7 @@ function App({ Component, pageProps }) {
             theme="light"
           />
           <CheckInProvider>
-
-              <Component {...pageProps} />
-
+            <Component {...pageProps} />
           </CheckInProvider>
         </AuthProvider>
       </SessionWrapper>

@@ -102,7 +102,7 @@ export function FeedUserCard({ post }) {
           src={user.profilePicture || "/no-user.png"}
           width={30}
           height={30}
-          className="rounded-full object-cover"
+          className="rounded-full h-10 w-10 object-cover"
           alt={user.name}
         />
         <div className="flex-1">
