@@ -1,22 +1,5 @@
 import { transporter } from "./nodemailer"
 
-export const sendNotification = async (user, type) => {
-  const { subject, body } = createEmailContent(user.name, type)
-
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: user.email,
-    subject: subject,
-    text: body,
-  }
-
-  try {
-    await transporter.sendMail(mailOptions)
-    console.log(`Notification sent to ${user.email}`)
-  } catch (error) {
-    console.error(`Error sending email to ${user.email}:`, error)
-  }
-}
 
 export async function sendEmailCommentNotification({ to, subject, html }) {
   try {
@@ -31,6 +14,29 @@ export async function sendEmailCommentNotification({ to, subject, html }) {
     return false
   }
 }
+
+
+
+
+
+export const sendNotification = async (user, type) => {
+  const { subject, body } = createEmailContent(user.name, type)
+  
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: user.email,
+    subject: subject,
+    html: body, 
+  }
+
+  try {
+    await transporter.sendMail(mailOptions)
+    console.log(`Notification sent to ${user.email}`)
+  } catch (error) {
+    console.error(`Error sending email to ${user.email}:`, error)
+  }
+}
+
 
 export const createEmailContent = (userName, type) => {
   const baseStyle = `

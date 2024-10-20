@@ -25,21 +25,3 @@ export const NotificationOption = {
   html: "<h1>Automated Update</h1><p>This is your automated email update.</p>",
 }
 
-export const sendNotification = async (user, type) => {
-  const { subject, body } = createEmailContent(user.name, type)
-
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: user.email,
-    subject: subject,
-    html: body,
-  }
-
-  try {
-    await transporter.sendMail(mailOptions)
-    console.log("Email sent successfully at:", new Date().toLocaleString())
-    console.log(`Notification sent to ${user.email}`)
-  } catch (error) {
-    console.error(`Error sending email to ${user.email}:`, error)
-  }
-}
