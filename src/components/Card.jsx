@@ -2,22 +2,25 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Heart, LucideFlame, LucideVerified,CheckCircle } from "lucide-react"
+import { Heart, CheckCircle } from "lucide-react"
 import useLikeStatus from "@/utils/actions"
 import { useEffect, useState } from "react"
 import { Share } from "lucide-react"
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai"
 import { BsFire } from "react-icons/bs"
-
+import { Flame } from "lucide-react"
 export default function Card({ post }) {
-  const user = post.user || {};
-  const { isLiked, toggleLike, loading, count } = useLikeStatus(user.id, post.id);
+  const user = post.user || {}
+  const { isLiked, toggleLike, loading, count } = useLikeStatus(
+    user.id,
+    post.id
+  )
 
   const handleToggleLike = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await toggleLike();
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    await toggleLike()
+  }
 
   return (
     <Link
@@ -39,13 +42,15 @@ export default function Card({ post }) {
               <CheckCircle className="ml-1 text-green-500" size={14} />
             )}
           </h2>
-          <p className="text-xs text-gray-500">@{user.name?.split(" ")[0] ?? "Unknown User"}</p>
+          <p className="text-xs text-gray-500">
+            @{user.name?.split(" ")[0] ?? "Unknown User"}
+          </p>
         </div>
         <button
           onClick={handleToggleLike}
           disabled={loading}
           className={`flex items-center space-x-1 text-sm ${
-            isLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
+            isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
           }`}
         >
           <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
@@ -58,32 +63,34 @@ export default function Card({ post }) {
         </div>
       )}
     </Link>
-  );
+  )
 }
-
-
-
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
-    <div className="flex items-center justify-between p-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-2">
-      <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div className="flex items-center space-x-3">
         <Image
           src={userProfilePicture || "/no-user.png"}
           width={40}
           height={40}
-          className="w-10 h-10 rounded-full object-cover border border-gray-300"
+          className="rounded-full w-[30px] h-[30px] object-cover border border-gray-200"
           alt={userName || "User profile picture"}
         />
-        <h1 className="text-sm font-semibold text-gray-800 ">
-          {userName?.split(" ")[0] ?? "Unknown User"}
-        </h1>
+        <div>
+          <h2 className="text-sm font-medium text-gray-900">
+            {userName?.split(" ")[0] ?? "Unknown User"}
+          </h2>
+          <p className="text-xs text-gray-500">
+            {currentStreak > 0
+              ? `${currentStreak} day streak`
+              : "No current streak"}
+          </p>
+        </div>
       </div>
-      <div className="flex items-center  text-black rounded-full px-2 py-1">
-        <small className="text-xs font-semibold ml-1">
+      <div className="flex text-sm items-center space-x-1 bg-orange-100 text-orange-600 rounded-full px-3 py-1">
           <StreakBadge currentStreak={currentStreak} />
-        </small>
-      </div>
+        </div>
     </div>
   )
 }
@@ -93,39 +100,39 @@ export function StreakBadge({ currentStreak }) {
     switch (true) {
       case currentStreak >= 30:
         return (
-          <div className="badge">
-            <span className="animate-pulse duration-300">
+          <div className="badge text-xs">
+            <span className="">
               🌟 {currentStreak} Days
             </span>
           </div>
         )
       case currentStreak >= 20:
         return (
-          <div className="badge">
-            <span className="animate-pulse">🎖️ {currentStreak} Days</span>
+        <div className="badge text-xs">
+            <span className="">🎖️ {currentStreak} Days</span>
           </div>
         )
       case currentStreak >= 10:
         return (
-          <div className="badge">
-            <span className="animate-pulse">⚡ {currentStreak} Days</span>
+        <div className="badge text-xs">
+            <span className="">⚡ {currentStreak} Days</span>
           </div>
         )
       case currentStreak >= 3:
         return (
-          <div className="badge">
-            <span className="animate-pulse ">🏅 {currentStreak} Days</span>
+        <div className="badge text-xs">
+            <span className="">🏅 {currentStreak} Days</span>
           </div>
         )
       default:
         return (
-          <div className="badge">
-            <span className="animate-pulse ">🔥 {currentStreak} Days</span>
+        <div className="badge text-xs">
+            <span className="">🔥 {currentStreak} Days</span>
           </div>
         )
     }
   }
-  return <div className="flex items-center justify-center">{renderBadge()}</div>
+  return <div className="flex text-xs items-center justify-center">{renderBadge()}</div>
 }
 
 export function Reward({ currentStreak }) {
@@ -134,28 +141,28 @@ export function Reward({ currentStreak }) {
       return {
         message: "🎉 You've unlocked a Gold Badge!",
         icon: (
-          <AiOutlineTrophy className="text-yellow-500 animate-pulse text-4xl" />
+          <AiOutlineTrophy className="text-yellow-500 text-4xl" />
         ),
       }
     }
     if (currentStreak >= 10) {
       return {
         message: "🔥 You've unlocked a Streak Booster!",
-        icon: <BsFire className="text-red-500 animate-pulse text-4xl" />,
+        icon: <BsFire className="text-red-500 text-4xl" />,
       }
     }
     if (currentStreak >= 5) {
       return {
         message: "🏅 You're on a roll! Keep it up!",
         icon: (
-          <AiOutlineStar className="text-blue-500 duration-300 animate-pulse text-4xl" />
+          <AiOutlineStar className="text-blue-500 duration-300 text-4xl" />
         ),
       }
     }
     return {
       message: "🌟 Keep checking in to earn rewards!",
       icon: (
-        <AiOutlineStar className=" duration-300 text-yellow-500 animate-pulse text-4xl" />
+        <AiOutlineStar className=" duration-300 text-yellow-500 text-4xl" />
       ),
     }
   }
