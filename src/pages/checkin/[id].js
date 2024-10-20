@@ -52,14 +52,14 @@ const CheckInList = () => {
     <>
     <PageHead title='checkin' description='Catch up with user and see their latest check-ins, activities, and shared experiences from around the world.' />
       <MainHeader />
-      <main className="max-w-4xl mx-auto ">
-        <div className="mb-8 mt-20 px-4 sm:px-6 lg:px-8">
+      <main className="max-w-4xl pt-24 mx-auto ">
+        <div className="mb-4 ">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 Checkin
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-gray-600 text-xs lg:text-base mt-1">
                 Stay updated with what others are doing
               </p>
             </div>

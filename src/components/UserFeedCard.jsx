@@ -108,13 +108,13 @@ export function FeedUserCard({ post }) {
             src={user.profilePicture || "/no-user.png"}
             width={35}
             height={35}
-            className="rounded-full object-cover"
+            className="rounded-full w-10 h-10 object-cover"
             alt={user.name ?? "deleted user"}
           />
         </div>
 
         <div className="flex-1">
-          <div className="flex items-center mb-2">
+          <div className="flex items-center lg:gap-0 gap-4 mb-2">
             <span className="font-semibold flex items-center gap-2 text-gray-900 mr-2">
               {user.name ? user.name.split(" ")[0] : "Unknown User"}
               {user?.isVerified && (
@@ -124,11 +124,11 @@ export function FeedUserCard({ post }) {
                 />
               )}
             </span>
-            <span className="text-gray-500 text-sm">
-              @{user.name?.split(" ")[0] ?? "Unknown User"}
+            <span className="text-gray-500 text-xs">
+              @{user.name?.split(" ")[0] ?? "Deleted User"}
             </span>
             <span className="mx-2 text-gray-300">·</span>
-            <span className="text-gray-500 text-sm">
+            <span className="text-gray-500 text-xs">
               {new Date(localPost.createdAt).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -163,7 +163,7 @@ export function FeedUserCard({ post }) {
                 }`}
                 disabled={loading}
               >
-                <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
+                <Heart size={17} fill={isLiked ? "currentColor" : "none"} />
                 <span>{likeCount}</span>
               </button>
             </div>
@@ -175,7 +175,7 @@ export function FeedUserCard({ post }) {
                     onClick={handleEditSave}
                     className="flex items-center space-x-1 text-green-500 hover:text-green-600 transition-colors duration-200"
                   >
-                    <Save size={20} />
+                    <Save size={17} />
                     <span>Save</span>
                   </button>
                 ) : (
@@ -183,7 +183,7 @@ export function FeedUserCard({ post }) {
                     onClick={handleEditToggle}
                     className="flex items-center space-x-1 text-yellow-500 hover:text-yellow-600 transition-colors duration-200"
                   >
-                    <Edit size={20} />
+                    <Edit size={17} />
                     <span>Edit</span>
                   </button>
                 )}

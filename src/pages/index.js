@@ -37,19 +37,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>DailyCheck-In</title>
-        <meta
-          name="description"
-          content="Stay on track, achieve your goals, conquer procrastination, and follow the daily activities and progress of others."
-        />
-        <meta property="og:title" content="DailyCheck-In" />
-        <meta
-          property="og:description"
-          content="Stay on track, achieve your goals, conquer procrastination, and follow the daily activities and progress of others.!"
-        />
-        <meta property="og:image" content="/check.svg" />
-        <link rel="canonical" href="https://www.daily-check-in.com.ng" />
-        <link rel="icon" href="/check.svg" />
+        <title className=''>Daily Check-in</title>
+        <meta name="description" content="Learn about Daily Check-in, our mission, and our team." />
       </Head>
       <main className="mt-28">
         <MainHeader />

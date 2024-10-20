@@ -24,7 +24,6 @@ export default function Index() {
         setLoading(false);
       }
     }
-  
     fetchPosts();
   }, []);
   
@@ -39,7 +38,7 @@ export default function Index() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center   justify-center min-h-screen bg-gray-50">
         <div className="p-6 max-w-sm mx-auto bg-white rounded-lg shadow-md">
           <div className="text-red-500 text-center">
             <MessageCircle className="w-12 h-12 mx-auto mb-4" />
@@ -57,25 +56,25 @@ export default function Index() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 ">
       <PageHead
         description="Explore user check-ins and activity updates. See what others are up to in real-time, from all corners of the globe."
         title="Feed"
       />
       <MainHeader />
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        <div className="mb-8 mt-20 px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+      <main className="max-w-4xl  mx-auto px-4 pt-16">
+        <div className="mb-4">
+          <div className="flex flex-col py-4 sm:flex-row justify-between items-start sm:items-center">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 All Checkin Feeds
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-gray-600 text-xs lg:text-base mt-1">
                 Stay updated with what others are doing
               </p>
             </div>
-            <div className="flex items-center gap-2 sm:gap-4 mt-4 sm:mt-0">
+            <div className="flex items-center gap-2 sm:gap-4 py-3 sm:mt-0">
               {posts.length > 0 && (
                 <div className=" text-center">
                   <div className="inline-flex items-center px-4 py-2 bg-gray-50 text-gray-600 rounded-full text-sm">
@@ -100,7 +99,7 @@ export default function Index() {
             <h3 className="text-lg font-semibold text-gray-900">
               No Posts Yet
             </h3>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-2 text-xs md:text-sm">
               Be the first to share your progress!
             </p>
           </div>

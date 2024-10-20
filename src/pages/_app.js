@@ -6,6 +6,7 @@ import { CheckInProvider } from "@/context/CheckInContext"
 import { ToastContainer } from "react-toastify"
 import SessionWrapper from "@/sessionWrapper/SessionWrapper"
 import { useVisitTracker } from "@/hooks/UseVisitorsTracker"
+import Footer from "@/components/Footer"
 
 
 const poppin = Poppins({
@@ -31,6 +32,7 @@ function App({ Component, pageProps }) {
             />
             <CheckInProvider>
               <Component {...pageProps} />
+              <Footer/>
             </CheckInProvider>
           </AuthProvider>
         </SessionWrapper>
