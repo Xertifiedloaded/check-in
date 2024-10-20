@@ -2,86 +2,64 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Heart, LucideFlame, LucideVerified } from "lucide-react"
+import { Heart, LucideFlame, LucideVerified,CheckCircle } from "lucide-react"
 import useLikeStatus from "@/utils/actions"
 import { useEffect, useState } from "react"
 import { Share } from "lucide-react"
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai"
 import { BsFire } from "react-icons/bs"
+
 export default function Card({ post }) {
-  const user = post.user || {}
-  const likes = post.likeCount || 0
-  const streak = post.currentStreak
-  const { isLiked, toggleLike, loading, count } = useLikeStatus(
-    user.id,
-    post.id
-  )
+  const user = post.user || {};
+  const { isLiked, toggleLike, loading, count } = useLikeStatus(user.id, post.id);
 
   const handleToggleLike = async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    await toggleLike()
-  }
+    e.preventDefault();
+    e.stopPropagation();
+    await toggleLike();
+  };
 
   return (
     <Link
       href={`/checkin/${user.id}`}
-      className="relative shadow-lg border rounded-xl bg-white my-4 flex flex-col items-center p-6 transition-transform duration-300 hover:shadow-2xl hover:border-gray-200 hover:-translate-y-1"
+      className="block p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
     >
-      <div className="relative z-20 flex flex-col items-center">
+      <div className="flex items-center space-x-3">
         <Image
           src={user.profilePicture ?? "/no-user-pic.png"}
-          width={60}
-          height={60}
-          className="w-[60px] h-[60px] object-cover rounded-full border border-gray-200 transition-all hover:border-gray-400"
+          width={40}
+          height={40}
+          className="rounded-full w-[30px] h-[30px] object-cover"
           alt={user.name || "User"}
         />
-
-        <h1 className="">
-          <h1 className="mt-3 flex items-center text-base font-semibold text-gray-800 hover:text-gray-900 transition-colors">
+        <div className="flex-grow">
+          <h2 className="text-sm font-medium text-gray-900 flex items-center">
             {user.name?.split(" ")[0] ?? "Unknown User"}
-            {user && user?.isVerified === true ? (
-              <LucideVerified
-                className="  text-green-500 bg-white rounded-full"
-                size={15}
-              />
-            ) : null}
-          </h1>
-          <p className="block text-center text-xs ">
-            @{user.name?.split(" ")[0] ?? "Unknown User"}
-          </p>
-        </h1>
-
-        {streak && streak > 1 && (
-          <div className="absolute animate-bounce top-[-10px] left-[-50px] flex items-center">
-            🔥
-          </div>
-        )}
+            {user?.isVerified && (
+              <CheckCircle className="ml-1 text-green-500" size={14} />
+            )}
+          </h2>
+          <p className="text-xs text-gray-500">@{user.name?.split(" ")[0] ?? "Unknown User"}</p>
+        </div>
+        <button
+          onClick={handleToggleLike}
+          disabled={loading}
+          className={`flex items-center space-x-1 text-sm ${
+            isLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
+          }`}
+        >
+          <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
+          <span>{count}</span>
+        </button>
       </div>
-
-      <button
-        onClick={handleToggleLike}
-        disabled={loading}
-        className={`absolute top-3 right-3 flex items-center gap-1 text-gray-600 z-20 
-          transition-transform duration-200 ease-in-out hover:scale-110 
-          ${isLiked ? "text-red-500" : "hover:text-red-500"} 
-          focus:outline-none`}
-      >
-        <Heart
-          size={22}
-          fill={isLiked ? "red" : "none"}
-          stroke={isLiked ? "red" : "currentColor"}
-          className="transition-all duration-300 ease-in-out"
-        />
-        <small className="text-xs font-medium">
-          {count} {count === 1 ? "Like" : "Likes"}
-        </small>
-      </button>
+      {post.currentStreak > 1 && (
+        <div className="mt-2 text-xs text-gray-600">
+          🔥 {post.currentStreak} day streak
+        </div>
+      )}
     </Link>
-  )
+  );
 }
-
-
 
 
 
