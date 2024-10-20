@@ -43,17 +43,24 @@ const CheckInList = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
     )
   }
 
   return (
     <>
-    <PageHead title='checkin' description='Catch up with user and see their latest check-ins, activities, and shared experiences from around the world.' />
+      <Head>
+        <title className="">Daily Check-in</title>
+        <meta
+          name="description"
+          content="Catch up with user and see their latest check-ins, activities, and shared experiences from around the world."
+        />
+      </Head>
+
       <MainHeader />
       <main className="max-w-4xl pt-24 mx-auto ">
-        <div className="mb-4 ">
+        <div className="mb-4 px-4 ">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">

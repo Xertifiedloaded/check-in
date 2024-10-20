@@ -64,7 +64,7 @@ export default function Index() {
       <MainHeader />
 
       <main className="max-w-4xl  mx-auto px-4 pt-16">
-        <div className="mb-4">
+      <div className="mb-4 px-4 ">
           <div className="flex flex-col py-4 sm:flex-row justify-between items-start sm:items-center">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
