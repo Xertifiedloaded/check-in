@@ -53,12 +53,8 @@ export default function Card({ post }) {
         </h1>
 
         {streak && streak > 1 && (
-          <div className="absolute top-[-10px] left-[-50px] flex items-center">
-            <LucideFlame
-              fill="red"
-              className="animate-bounce duration-200"
-              color="red"
-            />
+          <div className="absolute animate-bounce top-[-10px] left-[-50px] flex items-center">
+            🔥
           </div>
         )}
       </div>
