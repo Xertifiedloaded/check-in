@@ -5,6 +5,6 @@
 # #   "postId": "66f917eda12d967d2b4126cb",
 # # }
 
-GET http://localhost:3000/api/post/feed
+GET http://localhost:3000/api/comment/670b780b2288e2dd75403972
 
 

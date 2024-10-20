@@ -1,4 +1,5 @@
-export function generateEmailHTML(postOwner, commentAuthor, content) {
+export function generateEmailHTML(postOwner, commentAuthor, content,postId) {
+    const postUrl = `https://daily-check-in.com.ng/comment/${postId}`
   return `
       <!DOCTYPE html>
       <html lang="en">
@@ -8,38 +9,41 @@ export function generateEmailHTML(postOwner, commentAuthor, content) {
         <title>New Comment Notification</title>
         <style>
           body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            padding: 20px;
             line-height: 1.6;
             color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
           }
           .container {
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
           }
           h1 {
             color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
+            font-size: 22px;
+            margin-bottom: 10px;
           }
           .comment {
-            background-color: #fff;
-            border-left: 4px solid #3498db;
+            background-color: #fafafa;
             padding: 15px;
+            border-left: 4px solid #3498db;
             margin-top: 20px;
-            border-radius: 0 5px 5px 0;
+            border-radius: 4px;
+            font-style: italic;
           }
           .cta-button {
             display: inline-block;
             background-color: #3498db;
-            color: #ffffff !important;
-            padding: 10px 20px;
+            color: white;
+            padding: 12px 24px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 6px;
             margin-top: 20px;
           }
         </style>
@@ -48,17 +52,19 @@ export function generateEmailHTML(postOwner, commentAuthor, content) {
         <div class="container">
           <h1>New Comment on Your Post</h1>
           <p>Hello ${postOwner.name},</p>
-          <p><strong>${commentAuthor}</strong> has left a comment on your post:</p>
+          <p><strong>${commentAuthor}</strong> left a comment on your post:</p>
           <div class="comment">
             "${content}"
           </div>
-          <a href="www.daily-check-in.com.ng" class="cta-button">View Comment</a>
+           <a href="${postUrl}" class="cta-button">View Comment</a>
         </div>
       </body>
       </html>
-    `
+  `;
 }
-export function generateCommentHtml(postOwner, commentAuthor, content) {
+
+export function generateCommentHtml(commentAuthor, content, postId) {
+  const postUrl = `https://daily-check-in.com.ng/comment/${postId}`;
   return `
       <!DOCTYPE html>
       <html lang="en">
@@ -68,33 +74,34 @@ export function generateCommentHtml(postOwner, commentAuthor, content) {
         <title>New Comment on Post</title>
         <style>
           body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            padding: 20px;
             line-height: 1.6;
             color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
           }
           .container {
-            background-color: #f4f4f4;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
             border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
           }
           h1 {
             color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            font-size: 24px;
+            font-size: 22px;
+            margin-bottom: 10px;
           }
           p {
             font-size: 16px;
             margin-bottom: 15px;
           }
           .comment {
-            background-color: #ffffff;
-            border-left: 4px solid #3498db;
+            background-color: #fafafa;
             padding: 15px;
+            border-left: 4px solid #3498db;
             margin-top: 20px;
             border-radius: 4px;
             font-style: italic;
@@ -102,47 +109,96 @@ export function generateCommentHtml(postOwner, commentAuthor, content) {
           .cta-button {
             display: inline-block;
             background-color: #3498db;
-            color: #ffffff !important;
-            padding: 12px 25px;
+            color: white;
+            padding: 12px 24px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 6px;
             margin-top: 20px;
-            font-weight: bold;
           }
         </style>
       </head>
       <body>
         <div class="container">
           <h1>New Comment on a Post You Engaged With</h1>
-          <p>We wanted to inform you that <strong>${commentAuthor}</strong> has posted a new comment on a discussion you were part of:</p>
+          <p><strong>${commentAuthor}</strong> left a comment on a discussion you were part of:</p>
           <div class="comment">
             "${content}"
           </div>
-          <p>To view the full conversation, click the button below:</p>
-          <a href="www.daily-check-in.com.ng" class="cta-button">View Comment</a>
+          <a href="${postUrl}" class="cta-button">View Comment</a>
         </div>
       </body>
       </html>
-    `
+  `;
 }
 
-export function generateReplyEmailHTML(commentAuthor, replyContent) {
+export function generateReplyEmailHTML(commentAuthor, replyContent, postId) {
+  const postUrl = `https://daily-check-in.com.ng/comment/${postId}`;
   return `
-    <div style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px; border-radius: 8px;">
-      <h1 style="color: #333;">Hello ${commentAuthor},</h1>
-      <p style="font-size: 16px; color: #555;">
-        Your comment has received a new reply:
-      </p>
-      <blockquote style="margin: 15px 0; padding: 10px 15px; border-left: 4px solid #007BFF; background-color: #fff; color: #444; border-radius: 4px;">
-        ${replyContent}
-      </blockquote>
-      <p style="font-size: 16px; color: #555;">
-        Thank you for participating!
-      </p>
-      <footer style="margin-top: 20px; font-size: 14px; color: #888;">
-        Best regards,<br />
-Makinde Olaitan
-      </footer>
-    </div>
-  `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>New Reply Notification</title>
+      <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #f4f7fb;
+          margin: 0;
+          padding: 20px;
+          line-height: 1.6;
+          color: #333;
+        }
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #ffffff;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          padding: 30px;
+        }
+        h1 {
+          color: #2c3e50;
+          font-size: 22px;
+          margin-bottom: 10px;
+        }
+        blockquote {
+          font-size: 16px;
+          border-left: 4px solid #3498db;
+          padding: 15px;
+          background-color: #fafafa;
+          margin-top: 20px;
+          border-radius: 4px;
+          font-style: italic;
+        }
+        .cta-button {
+          display: inline-block;
+          background-color: #3498db;
+          color: white;
+          padding: 12px 24px;
+          text-decoration: none;
+          border-radius: 6px;
+          margin-top: 20px;
+        }
+        footer {
+          font-size: 14px;
+          color: #888;
+          margin-top: 20px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>New Reply to Your Comment</h1>
+        <p><strong>${commentAuthor}</strong>, your comment has received a new reply:</p>
+        <blockquote>${replyContent}</blockquote>
+        <a href="${postUrl}" class="cta-button">View Full Conversation</a>
+        <footer>
+          Best regards,<br/>
+          Makinde Olaitan
+        </footer>
+      </div>
+    </body>
+    </html>
+  `;
 }

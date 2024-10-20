@@ -81,6 +81,11 @@ export default function Card({ post }) {
   )
 }
 
+
+
+
+
+
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
     <div className="flex items-center justify-between p-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-2">
