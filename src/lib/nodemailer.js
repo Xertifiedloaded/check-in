@@ -32,7 +32,7 @@ export const sendNotification = async (user, type) => {
     from: process.env.EMAIL_USER,
     to: user.email,
     subject: subject,
-    text: body,
+    html: body,
   }
 
   try {

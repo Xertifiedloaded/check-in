@@ -52,7 +52,7 @@ const CheckInList = () => {
     <>
     <PageHead title='checkin' description='Catch up with user and see their latest check-ins, activities, and shared experiences from around the world.' />
       <MainHeader />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-4xl mx-auto ">
         <div className="mb-8 mt-20 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div>
@@ -86,11 +86,11 @@ const CheckInList = () => {
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-3">
             {checkIn.map((post) => (
               <div
                 key={post.id}
-                className="bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
+                className="bg-white shadow-lg rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
               >
                 <FeedUserCard post={post} comments={post.comments} />
               </div>

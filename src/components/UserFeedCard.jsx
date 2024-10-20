@@ -14,8 +14,6 @@ import CommentSection from "./CommentSection"
 import axios from "axios"
 
 export function FeedUserCard({ post }) {
-
-
   const { data: session } = useSession()
   const user = post.user || {}
   const {
@@ -103,31 +101,34 @@ export function FeedUserCard({ post }) {
   }
 
   return (
-    <div className="bg-white border-b pb-2 mt-2  border-gray-200">
-      <div className="flex relative items-start space-x-3">
-        <div className="relative inline-block">
+    <div className="bg-white rounded-lg    transition-all duration-300 ">
+      <div className="flex items-start space-x-4">
+        <div className="">
           <Image
             src={user.profilePicture || "/no-user.png"}
-            width={40}
-            height={40}
-            className="rounded-full h-10 w-10 object-cover"
+            width={35}
+            height={35}
+            className="rounded-full object-cover"
             alt={user.name ?? "deleted user"}
           />
-          {user && user?.isVerified === true ? (
-            <LucideVerified width={20} fill="green" color="white" />
-          ) : null}
         </div>
 
         <div className="flex-1">
-          <div className="flex items-center">
-            <span className="font-bold  max-w-[160px] text-gray-900">
+          <div className="flex items-center mb-2">
+            <span className="font-semibold flex items-center gap-2 text-gray-900 mr-2">
               {user.name ? user.name.split(" ")[0] : "Unknown User"}
+              {user?.isVerified && (
+                <LucideVerified
+                  className="  text-green-500 bg-white rounded-full"
+                  size={15}
+                />
+              )}
             </span>
-            <span className="ml-2 text-gray-500 text-xs">
+            <span className="text-gray-500 text-sm">
               @{user.name?.split(" ")[0] ?? "Unknown User"}
             </span>
-            <span className="mx-1 text-gray-500">·</span>
-            <span className="text-gray-500 text-xs">
+            <span className="mx-2 text-gray-300">·</span>
+            <span className="text-gray-500 text-sm">
               {new Date(localPost.createdAt).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -137,59 +138,60 @@ export function FeedUserCard({ post }) {
 
           {isEditing ? (
             <textarea
-              className="mt-2 border border-gray-300 rounded p-2 w-full"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
+              rows={3}
             />
           ) : (
-            <p className="mt-2 md:text-base text-sm text-gray-900">
-              {localPost.content}
-            </p>
+            <p className="text-gray-800 mb-3">{localPost.content}</p>
           )}
 
-          <div className="mt-3 flex items-center justify-start space-x-4">
-            <button
-              onClick={handleToggleComments}
-              className="flex items-center space-x-1 text-gray-500 hover:text-blue-500"
-            >
-              <MessageCircle size={15} />
-              <span>{commentCount}</span>
-            </button>
-            <button
-              onClick={handleToggleLike}
-              className={`flex items-center space-x-1 ${
-                isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
-              }`}
-              disabled={loading}
-            >
-              <Heart size={15} fill={isLiked ? "currentColor" : "none"} />
-              <span>{likeCount}</span>
-            </button>
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex space-x-6">
+              <button
+                onClick={handleToggleComments}
+                className="flex items-center space-x-2 text-gray-500 hover:text-blue-500 transition-colors duration-200"
+              >
+                <MessageCircle size={20} />
+                <span>{commentCount}</span>
+              </button>
+              <button
+                onClick={handleToggleLike}
+                className={`flex items-center space-x-2 transition-colors duration-200 ${
+                  isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
+                }`}
+                disabled={loading}
+              >
+                <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
+                <span>{likeCount}</span>
+              </button>
+            </div>
 
             {session?.user?.id === user.id && (
-              <div className="flex text-xs space-x-4">
+              <div className="flex space-x-4">
                 {isEditing ? (
                   <button
                     onClick={handleEditSave}
-                    className="flex items-center space-x-1 text-gray-500 hover:text-green-500"
+                    className="flex items-center space-x-1 text-green-500 hover:text-green-600 transition-colors duration-200"
                   >
-                    <Save size={15} />
+                    <Save size={20} />
                     <span>Save</span>
                   </button>
                 ) : (
                   <button
                     onClick={handleEditToggle}
-                    className="flex items-center space-x-1 text-gray-500 hover:text-yellow-500"
+                    className="flex items-center space-x-1 text-yellow-500 hover:text-yellow-600 transition-colors duration-200"
                   >
-                    <Edit size={15} />
+                    <Edit size={20} />
                     <span>Edit</span>
                   </button>
                 )}
                 <button
                   onClick={() => handleDelete(localPost.id)}
-                  className="flex items-center space-x-1 text-gray-500 hover:text-red-500"
+                  className="flex items-center space-x-1 text-red-500 hover:text-red-600 transition-colors duration-200"
                 >
-                  <Trash size={15} />
+                  <Trash size={20} />
                   <span>Delete</span>
                 </button>
               </div>
@@ -199,7 +201,7 @@ export function FeedUserCard({ post }) {
       </div>
 
       {showComments && (
-        <div className="mt-4 border-t border-gray-200 pt-4">
+        <div className="mt-6 border-t border-gray-200 pt-4">
           <CommentSection
             userId={session?.user?.id}
             postId={localPost.id}
@@ -208,15 +210,24 @@ export function FeedUserCard({ post }) {
           />
         </div>
       )}
+
       {successMessage && (
         <div
-          className="bg-green-100 fixed left-0 text-0 top-0 border-l-4 border-green-500 text-green-700 p-4 mb-4"
+          className="fixed top-0 left-0 right-0 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 transition-all duration-500 ease-in-out"
           role="alert"
         >
           <p>{successMessage}</p>
         </div>
       )}
-      {error && <p className="text-red-500">{error}</p>}
+
+      {error && (
+        <div
+          className="fixed top-0 left-0 right-0 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 transition-all duration-500 ease-in-out"
+          role="alert"
+        >
+          <p>{error}</p>
+        </div>
+      )}
     </div>
   )
 }

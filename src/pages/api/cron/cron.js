@@ -4,7 +4,7 @@ import   { NotificationOption, transporter } from '../../../lib/nodemailer'
 export default async function handler(req, res) {
   if (req.method === 'POST' || req.method === 'GET') {
     try {
-      await transporter.sendMail(NotificationOption);
+      // await transporter.sendMail(NotificationOption);
       await Reminder()
       console.log('Email sent successfully at:', new Date().toLocaleString());
       return res.status(200).json({ message: 'Email sent successfully' });
