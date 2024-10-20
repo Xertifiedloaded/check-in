@@ -2,10 +2,9 @@
 
 import axios from "axios"
 import { useState, useEffect } from "react"
-import MainHeader from "../MainHeader"
-import PageHead from "@/components/PageHead"
 import { FeedUserCard } from "@/components/UserFeedCard"
 import { MessageCircle, RefreshCw, Filter } from "lucide-react"
+import Head from "next/head"
 
 export default function Index() {
   const [posts, setPosts] = useState([])
@@ -57,11 +56,14 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gray-50 ">
-      <PageHead
-        description="Explore user check-ins and activity updates. See what others are up to in real-time, from all corners of the globe."
-        title="Feed"
-      />
-      <MainHeader />
+  <Head >
+        <title className="">Daily Check-in</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta
+          name="description"
+          content="Catch up with user and see their latest check-ins, activities, and shared experiences from around the world."
+        />
+      </Head>
 
       <main className="max-w-4xl  mx-auto px-4 pt-16">
       <div className="mb-4 px-4 ">

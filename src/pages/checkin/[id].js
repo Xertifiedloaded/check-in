@@ -1,11 +1,11 @@
 "use client"
-import { useCheckIn } from "@/context/CheckInContext"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import MainHeader from "../MainHeader"
 import { FeedUserCard } from "@/components/UserFeedCard"
 import { MessageCircle, RefreshCcw } from "lucide-react"
-import PageHead from "@/components/PageHead"
+import Head from "next/head"
+
 
 const CheckInList = () => {
   const router = useRouter()
@@ -50,8 +50,9 @@ const CheckInList = () => {
 
   return (
     <>
-      <Head>
+      <Head >
         <title className="">Daily Check-in</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta
           name="description"
           content="Catch up with user and see their latest check-ins, activities, and shared experiences from around the world."

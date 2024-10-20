@@ -38,6 +38,7 @@ export default function Home() {
     <>
       <Head>
         <title className=''>Daily Check-in</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="description" content="Learn about Daily Check-in, our mission, and our team." />
       </Head>
       <main className="mt-28">
