@@ -32,7 +32,7 @@ const TwitterStylePost = ({
   error,
 }) => {
   return (
-    <div className="border-b border-gray-200  duration-200">
+    <div className="border-b overflow-hidden border-gray-200  duration-200">
       <div className="flex">
         <div className="mr-3">
           <Image
