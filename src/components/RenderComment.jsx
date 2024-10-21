@@ -13,7 +13,7 @@ export const renderComment = (
 ) => (
   <div
     key={comment.id}
-    className={`flex space-x-3 ${isReply ? "ml-8 mt-4" : "mt-6"}`}
+    // className={`flex space-x-3 ${isReply ? "ml-8 mt-4" : "mt-6"}`}
   >
     <Image
       src={comment.user?.profilePicture || "/no-user.png"}

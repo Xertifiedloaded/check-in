@@ -275,7 +275,7 @@ function CommentSection({
   const renderComment = (comment, isReply = false) => (
     <div
       key={comment.id}
-      className={`flex space-x-3 ${isReply ? "ml-12 mt-2" : "mt-4"}`}
+      className={`flex space-x-3 ${isReply ? " mt-2" : "mt-4"}`}
     >
       <Image
         src={comment?.user?.profilePicture || "/no-user.png"}
@@ -393,11 +393,11 @@ function CommentSection({
               value={newReply}
               onChange={(e) => setNewReply(e.target.value)}
               placeholder="Add a reply..."
-              className="flex-grow box-border border-b px-2 text-base focus:outline-none focus:border-blue-500 transition-all duration-300"
+              className="flex-grow box-border border-b px-1 text-base focus:outline-none focus:border-blue-500 transition-all duration-300"
             />
             <button
               type="submit"
-              className="text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-blue-500 disabled:opacity-50 box-border disabled:cursor-not-allowed"
               disabled={loading || !newReply.trim()}
             >
               {loading ? <div className="replyloader" /> : <Send className="box-border" size={16} />}

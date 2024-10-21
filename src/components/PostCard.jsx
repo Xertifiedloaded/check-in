@@ -39,7 +39,7 @@ const TwitterStylePost = ({
             src={user?.profilePicture || "/no-user.png"}
             width={48}
             height={48}
-            className="rounded-full w-[30px] h-[30px] object-cover"
+            className="rounded-full w-[25px] h-[25px] object-cover"
             alt={user.name ?? "deleted user"}
           />
         </div>
@@ -137,7 +137,7 @@ const TwitterStylePost = ({
       </div>
 
       {showComments && (
-        <div className="mt-4 pl-8 border-t border-gray-200 pt-4">
+        <div className="mt-4 p-2 border-t border-gray-200 pt-4">
           <CommentSection
             userId={session?.user?.id}
             postId={localPost.id}
