@@ -3,9 +3,9 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import MainHeader from "../MainHeader"
 import { FeedUserCard } from "@/components/UserFeedCard"
-import { MessageCircle, RefreshCcw } from "lucide-react"
+import { ArrowLeft, MessageCircle, RefreshCcw } from "lucide-react"
 import Head from "next/head"
-
+import Link from "next/link"
 
 const CheckInList = () => {
   const router = useRouter()
@@ -50,9 +50,12 @@ const CheckInList = () => {
 
   return (
     <>
-      <Head >
+      <Head>
         <title className="">Daily Check-in</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
         <meta
           name="description"
           content="Catch up with user and see their latest check-ins, activities, and shared experiences from around the world."
@@ -61,6 +64,15 @@ const CheckInList = () => {
 
       <MainHeader />
       <main className="max-w-4xl pt-24 mx-auto ">
+        <div className="flex items-center mb-6">
+          <Link
+            href="/feed"
+            className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            <span className="text-sm font-medium">Back to Home</span>
+          </Link>
+        </div>
         <div className="mb-4 px-4 ">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div>

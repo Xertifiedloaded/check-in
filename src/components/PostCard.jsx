@@ -79,7 +79,7 @@ const TwitterStylePost = ({
               rows={4}
             />
           ) : (
-            <p className="text-black text-sm mb-3">{localPost.content}</p>
+            <p className="text-black text-sm leading-[1.8] mb-3">{localPost.content}</p>
           )}
 
           <div className="flex items-center gap-6 text-gray-500 mt-3">
