@@ -1,19 +1,19 @@
-import databaseConnection from "@/lib/database";
 
-import transporter from "@/lib/nodemailer";
-import { prisma } from "@/lib/prisma"; 
+import databaseConnection from "@/lib/database";
+import { generateResetPasswordEmail, transporter } from "@/lib/nodemailer";
+import { prisma } from "@/lib/prisma";
 import { v4 as uuidv4 } from "uuid";
 
 export default async function handler(req, res) {
-  await databaseConnection(); 
+  await databaseConnection();
 
   if (req.method === "POST") {
     const { email } = req.body;
     if (!email) {
       return res.status(400).json({ message: "Email is required" });
     }
-    try {
 
+    try {
       const user = await prisma.user.findUnique({
         where: { email },
       });
@@ -21,9 +21,18 @@ export default async function handler(req, res) {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
+
+      if (user.isGoogleAuth) {
+        return res.status(400).json({
+          message:
+            "You cannot reset the password for a Google-authenticated account. Please visit google.com to manage your account.",
+        });
+      }
+
       const resetToken = uuidv4();
       const resetTokenExpiry = new Date();
-      resetTokenExpiry.setMinutes(resetTokenExpiry.getMinutes() + 10); 
+      resetTokenExpiry.setMinutes(resetTokenExpiry.getMinutes() + 10);
+
       await prisma.user.update({
         where: { email },
         data: {
@@ -32,15 +41,14 @@ export default async function handler(req, res) {
         },
       });
 
-      const resetLink = `https://www.abg-funaab.com.ng/auth/reset-password/${resetToken}`;
+      const resetLink = `http://daily-check-in.com.ng/auth/reset-password/${resetToken}`;
       const mailOptions = {
         to: email,
         subject: "Password Reset Request",
-        // html: generateResetPasswordEmail(email, resetLink),
+        html: generateResetPasswordEmail(email, resetLink),
       };
 
       await transporter.sendMail(mailOptions);
-
       res.status(200).json({ message: "Reset link sent successfully" });
     } catch (error) {
       console.error(error);
