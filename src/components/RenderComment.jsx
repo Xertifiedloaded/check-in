@@ -162,9 +162,9 @@ export const renderComment = (
           </div>
         </form>
       )}
-      {!isReply && expandedReplies[comment.id] && comment.replies && (
+      {!isReply && expandedReplies[comment.id] && comment?.replies && (
         <div className="mt-4 space-y-4">
-          {comment.replies.map((reply) => renderComment(reply, true))}
+          {comment?.replies?.map((reply) => renderComment(reply, true))}
         </div>
       )}
     </div>

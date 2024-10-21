@@ -1,10 +1,11 @@
 "use client"
-
 import { useState, useEffect } from "react"
 import { FeedUserCard } from "@/components/UserFeedCard"
 import { MessageCircle, RefreshCw } from "lucide-react"
 import Head from "next/head"
 import { useRouter } from "next/router"
+import PostHeader from "@/components/PostAndCommentHeader"
+
 
 export default function PostIdComment() {
   const router = useRouter()
@@ -58,44 +59,30 @@ export default function PostIdComment() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 ">
+    <div className="min-h-screen bg-gray-50">
       <Head>
-        <title>Daily Check-in</title>
+        <title>Daily Check-in | Comments</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
         <meta
           name="description"
-          content="Catch up with users and see their latest check-ins, activities, and shared experiences from around the world."
+          content="Join the discussion and share your thoughts on this post."
         />
       </Head>
 
       <main className="max-w-4xl mx-auto px-4 pt-16">
-        <div className="mb-4 px-4 ">
-          <div className="flex flex-col py-4 sm:flex-row justify-between items-start sm:items-center">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Post
-              </h1>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-4 py-3 sm:mt-0">
-              <button
-                onClick={() => window.location.reload()}
-                className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh
-              </button>
-            </div>
-          </div>
-        </div>
+        <PostHeader 
+          commentsCount={posts?.comments?.length || 0}
+          post={posts}
+        />
 
         {posts?.comments?.length === 0 ? (
           <div className="text-center py-7 bg-white rounded-lg shadow-sm">
             <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900">
-              No Post Found or it has been Deleted
+              No Comments Yet - Start the Discussion
             </h3>
           </div>
         ) : (
@@ -105,7 +92,10 @@ export default function PostIdComment() {
         )}
       </main>
 
-      <button className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors">
+      <button 
+        className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+        aria-label="Add comment"
+      >
         <MessageCircle className="w-6 h-6" />
       </button>
     </div>

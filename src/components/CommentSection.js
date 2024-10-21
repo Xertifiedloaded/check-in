@@ -19,6 +19,7 @@ function CommentSection({
   const [newComment, setNewComment] = useState("")
   const [comments, setComments] = useState(initialComments || [])
   const [loading, setLoading] = useState(false)
+
   const [editingComment, setEditingComment] = useState(null)
   const [updatedComment, setUpdatedComment] = useState("")
   const [deletingCommentId, setDeletingCommentId] = useState(null)
@@ -271,8 +272,6 @@ function CommentSection({
     setExpandedReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }))
   }
 
-
-
   const renderComment = (comment, isReply = false) => (
     <div
       key={comment.id}
@@ -282,26 +281,31 @@ function CommentSection({
         src={comment?.user?.profilePicture || "/no-user.png"}
         width={30}
         height={30}
-        className={`${isReply ? "w-6 h-6" : "w-8 h-8"} object-cover rounded-full`}
+        className={`${
+          isReply ? "w-6 h-6" : "w-8 h-8"
+        } object-cover rounded-full`}
         alt={comment.user?.name}
       />
       <div className="flex-grow">
         <div className="">
-          <span className="font-semibold text-sm mr-2">{comment.user?.name}</span>
+          <span className="font-semibold text-sm mr-2">
+            {comment.user?.name}
+          </span>
           <p className="text-sm">{comment.content}</p>
         </div>
         <div className="flex items-center mt-1 text-xs text-gray-500 space-x-4">
           <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
           {!isReply && (
             <button
-              onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
+              onClick={() =>
+                setReplyingTo(replyingTo === comment.id ? null : comment.id)
+              }
               className="font-semibold hover:text-gray-700 transition-colors duration-300"
             >
               Reply
             </button>
           )}
 
-          
           {comment.userId === userId && (
             <div className="relative group">
               <button className="text-gray-500 hover:text-gray-700 transition-colors duration-300">
@@ -309,13 +313,21 @@ function CommentSection({
               </button>
               <div className="absolute left-0 mt-2 w-32 bg-white rounded-md shadow-lg hidden group-hover:block">
                 <button
-                  onClick={() => isReply ? handleEditReply(comment) : handleEditComment(comment)}
+                  onClick={() =>
+                    isReply
+                      ? handleEditReply(comment)
+                      : handleEditComment(comment)
+                  }
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left transition-colors duration-300"
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => isReply ? handleDeleteReply(comment.id, comment.commentId) : handleDeleteComment(comment.id)}
+                  onClick={() =>
+                    isReply
+                      ? handleDeleteReply(comment.id, comment.commentId)
+                      : handleDeleteComment(comment.id)
+                  }
                   className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left transition-colors duration-300"
                   disabled={deletingCommentId === comment.id}
                 >
@@ -327,19 +339,29 @@ function CommentSection({
         </div>
         {(editingComment === comment.id || editingReply === comment.id) && (
           <form
-            onSubmit={(e) => isReply ? handleUpdateReply(e, comment.id, comment.commentId) : handleUpdateComment(e, comment.id)}
+            onSubmit={(e) =>
+              isReply
+                ? handleUpdateReply(e, comment.id, comment.commentId)
+                : handleUpdateComment(e, comment.id)
+            }
             className="mt-2"
           >
             <input
               type="text"
               value={isReply ? updatedReply : updatedComment}
-              onChange={(e) => isReply ? setUpdatedReply(e.target.value) : setUpdatedComment(e.target.value)}
+              onChange={(e) =>
+                isReply
+                  ? setUpdatedReply(e.target.value)
+                  : setUpdatedComment(e.target.value)
+              }
               className="w-full border-b text-sm py-1 focus:outline-none focus:border-blue-500 transition-all duration-300"
             />
             <div className="flex justify-end mt-2 space-x-2">
               <button
                 type="button"
-                onClick={() => isReply ? setEditingReply(null) : setEditingComment(null)}
+                onClick={() =>
+                  isReply ? setEditingReply(null) : setEditingComment(null)
+                }
                 className="text-gray-500 text-xs hover:text-gray-700 transition-colors duration-300"
               >
                 Cancel
@@ -371,14 +393,14 @@ function CommentSection({
               value={newReply}
               onChange={(e) => setNewReply(e.target.value)}
               placeholder="Add a reply..."
-              className="flex-grow border-b text-sm focus:outline-none focus:border-blue-500 transition-all duration-300"
+              className="flex-grow box-border border-b px-2 text-base focus:outline-none focus:border-blue-500 transition-all duration-300"
             />
             <button
               type="submit"
               className="text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading || !newReply.trim()}
             >
-              <Send size={16} />
+              {loading ? <div className="replyloader" /> : <Send className="box-border" size={16} />}
             </button>
           </form>
         )}
@@ -430,14 +452,14 @@ function CommentSection({
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
-            className="w-full border-b py-2 text-sm focus:outline-none focus:border-blue-500 transition-all duration-300"
+            className="w-full px-2 border-b box-border text-base py-2  focus:outline-none focus:border-blue-500 transition-all duration-300"
           />
           <button
             type="submit"
             className="absolute right-0 top-1/2 transform -translate-y-1/2 text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading || !newComment.trim()}
           >
-            <Send size={20} />
+            {loading ? <div className="replyloader" /> : <Send size={16} className="box-border" />}
           </button>
         </div>
       </form>
@@ -454,7 +476,3 @@ function CommentSection({
 }
 
 export default CommentSection
-
-
-
-

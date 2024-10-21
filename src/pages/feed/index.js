@@ -109,7 +109,7 @@ export default function Index() {
           <div className="space-y-4">
             {posts.map((post) => (
               <div
-                key={post.id}
+                key={post?.id}
                 className="bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
               >
                 <FeedUserCard post={post} comments={post.comments} />

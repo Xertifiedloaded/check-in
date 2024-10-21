@@ -2,13 +2,11 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Heart, CheckCircle } from "lucide-react"
+import { Heart, Share2 } from "lucide-react"
 import useLikeStatus from "@/utils/actions"
 import { useEffect, useState } from "react"
-import { Share } from "lucide-react"
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai"
 import { BsFire } from "react-icons/bs"
-import { Flame } from "lucide-react"
 export default function Card({ post }) {
   const user = post.user || {}
   const { isLiked, toggleLike, loading, count } = useLikeStatus(
@@ -287,7 +285,7 @@ export function StreakProgress({ currentStreak }) {
           onClick={share}
         >
           <span>Share</span>
-          <Share size={18} />
+          <Share2 className="w-4 h-4 mr-2" />
         </button>
       </div>
     </div>

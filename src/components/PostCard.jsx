@@ -36,7 +36,7 @@ const TwitterStylePost = ({
       <div className="flex">
         <div className="mr-3">
           <Image
-            src={user.profilePicture || "/no-user.png"}
+            src={user?.profilePicture || "/no-user.png"}
             width={48}
             height={48}
             className="rounded-full w-[30px] h-[30px] object-cover"
@@ -46,7 +46,7 @@ const TwitterStylePost = ({
         <div className="flex-1">
           <div className="flex items-center mb-1">
             <span className="font-bold text-black mr-1">
-              {user.name ? user.name.split(" ")[0] : "Unknown User"}
+              {user?.name ? user.name.split(" ")[0] : "Unknown User"}
             </span>
             {user?.isVerified && (
               <svg
@@ -59,7 +59,7 @@ const TwitterStylePost = ({
 
             <span className="text-gray-500 text-sm mx-1">·</span>
             <span className="text-gray-500 text-xs">
-              {new Date(localPost.createdAt).toLocaleDateString("en-US", {
+              {new Date(localPost?.createdAt).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
               })}
@@ -76,7 +76,7 @@ const TwitterStylePost = ({
               className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
-              rows={3}
+              rows={4}
             />
           ) : (
             <p className="text-black text-sm mb-3">{localPost.content}</p>
