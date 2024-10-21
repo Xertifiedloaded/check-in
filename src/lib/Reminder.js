@@ -1,6 +1,5 @@
-
 import { sendNotification } from "./emailContent";
-import { prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/prisma";
 
 export default async function Reminder() {
   try {
@@ -15,6 +14,10 @@ export default async function Reminder() {
     today.setHours(0, 0, 0, 0);
 
     const notificationPromises = users.map(async (user) => {
+      if (!user.email || !validateEmail(user.email)) {
+        return;
+      }
+
       let notificationSent = false;
 
       if (user.streaks.length > 0) {
@@ -57,4 +60,9 @@ export default async function Reminder() {
   } catch (error) {
     console.error("Error scheduling notifications:", error);
   }
+}
+
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 }
