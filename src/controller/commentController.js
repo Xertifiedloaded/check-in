@@ -225,11 +225,17 @@ export async function handleCreateReply(req, res) {
       where: {
         id: commentId,
       },
-      select: {
+      include: {
         user: {
           select: {
             email: true,
             name: true,
+          },
+        },
+        post: {
+          select: {
+            id: true,
+            title: true,
           },
         },
       },
@@ -238,11 +244,13 @@ export async function handleCreateReply(req, res) {
     if (comment?.user?.email) {
       const commentAuthor = comment.user.name
       const commentAuthorEmail = comment.user.email
+      const postId = comment.post.id
+      const postTitle = comment.post.title
 
       await sendEmailCommentNotification({
         to: commentAuthorEmail,
         subject: "New Reply to Your Comment",
-        html: generateReplyEmailHTML(commentAuthor, newReply.content),
+        html: generateReplyEmailHTML(commentAuthor, newReply.content, postId, postTitle),
       })
     }
 
@@ -252,6 +260,8 @@ export async function handleCreateReply(req, res) {
     return res.status(500).json({ error: "Error creating reply" })
   }
 }
+
+
 
 export async function handleGetReplies(req, res) {
   const { commentId } = req.query

@@ -36,7 +36,7 @@ export default function Card({ post }) {
           alt={user.name || "User"}
         />
         <div className="flex-grow">
-          <h2 className="text-sm font-medium text-gray-900 flex items-center">
+          <h2 className="text-sm font-semibold text-gray-900 flex items-center">
             {user.name?.split(" ")[0] ?? "Unknown User"}
             {user?.isVerified && (
               <CheckCircle className="ml-1 text-green-500" size={14} />

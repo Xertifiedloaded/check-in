@@ -131,8 +131,10 @@ export function generateCommentHtml(commentAuthor, content, postId) {
   `;
 }
 
-export function generateReplyEmailHTML(commentAuthor, replyContent, postId) {
-  const postUrl = `https://daily-check-in.com.ng/comment/${postId}`;
+
+
+export function generateReplyEmailHTML(commentAuthor, replyContent, postId, postTitle) {
+  const postUrl = `https://daily-check-in.com.ng/post/${postId}`;
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -190,9 +192,9 @@ export function generateReplyEmailHTML(commentAuthor, replyContent, postId) {
     <body>
       <div class="container">
         <h1>New Reply to Your Comment</h1>
-        <p><strong>${commentAuthor}</strong>, your comment has received a new reply:</p>
+        <p><strong>${commentAuthor}</strong>, your comment on the post "${postTitle}" has received a new reply:</p>
         <blockquote>${replyContent}</blockquote>
-        <a href="${postUrl}" class="cta-button">View Full Conversation</a>
+        <a href="${postUrl}" class="cta-button">View Full Post and Conversation</a>
         <footer>
           Best regards,<br/>
           Makinde Olaitan
