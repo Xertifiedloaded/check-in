@@ -137,7 +137,7 @@ const TwitterStylePost = ({
       </div>
 
       {showComments && (
-        <div className="mt-4 pl-12 border-t border-gray-200 pt-4">
+        <div className="mt-4 pl-8 border-t border-gray-200 pt-4">
           <CommentSection
             userId={session?.user?.id}
             postId={localPost.id}

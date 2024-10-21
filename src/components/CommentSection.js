@@ -279,7 +279,7 @@ function CommentSection({
       className={`flex space-x-3 ${isReply ? "ml-12 mt-2" : "mt-4"}`}
     >
       <Image
-        src={comment.user?.profilePicture || "/no-user.png"}
+        src={comment?.user?.profilePicture || "/no-user.png"}
         width={30}
         height={30}
         className={`${isReply ? "w-6 h-6" : "w-8 h-8"} object-cover rounded-full`}
@@ -360,7 +360,7 @@ function CommentSection({
             className="mt-2 flex items-center space-x-2"
           >
             <Image
-              src={session.user.image ?? "/no-user.png"}
+              src={session?.user?.image ?? "/no-user.png"}
               width={24}
               height={24}
               className="w-6 h-6 rounded-full"
@@ -418,7 +418,7 @@ function CommentSection({
         className="flex items-center space-x-3"
       >
         <Image
-          src={session.user.image ?? "/no-user.png"}
+          src={session?.user?.image ?? "/no-user.png"}
           width={32}
           height={32}
           className="w-8 h-8 rounded-full"

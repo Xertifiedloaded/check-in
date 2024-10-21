@@ -228,14 +228,19 @@ export async function handleCreateReply(req, res) {
       include: {
         user: {
           select: {
-            email: true,
+            id: true,
             name: true,
+            profilePicture: true,
           },
         },
         post: {
-          select: {
-            id: true,
-            title: true,
+          include: {
+            user: {
+              select: {
+                email: true,
+                name: true,
+              },
+            },
           },
         },
       },
@@ -245,7 +250,7 @@ export async function handleCreateReply(req, res) {
       const commentAuthor = comment.user.name
       const commentAuthorEmail = comment.user.email
       const postId = comment.post.id
-      const postTitle = comment.post.title
+      const postTitle = comment.post.content
 
       await sendEmailCommentNotification({
         to: commentAuthorEmail,
