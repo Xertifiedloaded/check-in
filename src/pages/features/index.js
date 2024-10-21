@@ -58,17 +58,17 @@ const Features = () => {
             {featuresList.map((feature, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-md">
                 <feature.icon className="text-blue-500 mb-4" size={32} />
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-700">{feature.description}</p>
+                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-700 text-sm">{feature.description}</p>
               </div>
             ))}
           </div>
           <div className="mt-12 text-center">
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="text-xl font-semibold mb-4">
               Ready to start your journey?
             </h2>
             <Link href='/auth/signup'>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+              <button className="bg-blue-500 text-sm hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
                 Sign Up Now
               </button>
             </Link>
