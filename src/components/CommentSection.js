@@ -272,170 +272,6 @@ function CommentSection({
     setExpandedReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }))
   }
 
-  // const renderComment = (comment, isReply = false) => (
-  //   <div
-  //     key={comment.id}
-  //     className={`flex space-x-3 ${isReply ? " mt-2" : "mt-4"}`}
-  //   >
-  //     <Image
-  //       src={comment?.user?.profilePicture || "/no-user.png"}
-  //       width={30}
-  //       height={30}
-  //       className={`${
-  //         isReply ? "w-6 h-6" : "w-8 h-8"
-  //       } object-cover rounded-full`}
-  //       alt={comment.user?.name}
-  //     />
-  //     <div className="flex-grow">
-  //       <div className="">
-  //         <span className="font-semibold text-sm mr-2">
-  //           {comment.user?.name}
-  //         </span>
-  //         <p className="text-sm">{comment.content}</p>
-  //       </div>
-  //       <div className="flex items-center mt-1 text-xs text-gray-500 space-x-4">
-  //         <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
-  //         {!isReply && (
-  //           <button
-  //             onClick={() =>
-  //               setReplyingTo(replyingTo === comment.id ? null : comment.id)
-  //             }
-  //             className="font-semibold hover:text-gray-700 transition-colors duration-300"
-  //           >
-  //             Reply
-  //           </button>
-  //         )}
-
-  //         {comment.userId === userId && (
-  //           <div className="relative group">
-  //             <button className="text-gray-500 hover:text-gray-700 transition-colors duration-300">
-  //               <MoreHorizontal size={16} />
-  //             </button>
-  //             <div className="absolute left-0 mt-2 w-32 bg-white rounded-md shadow-lg hidden group-hover:block">
-  //               <button
-  //                 onClick={() =>
-  //                   isReply
-  //                     ? handleEditReply(comment)
-  //                     : handleEditComment(comment)
-  //                 }
-  //                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left transition-colors duration-300"
-  //               >
-  //                 Edit
-  //               </button>
-  //               <button
-  //                 onClick={() =>
-  //                   isReply
-  //                     ? handleDeleteReply(comment.id, comment.commentId)
-  //                     : handleDeleteComment(comment.id)
-  //                 }
-  //                 className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left transition-colors duration-300"
-  //                 disabled={deletingCommentId === comment.id}
-  //               >
-  //                 {deletingCommentId === comment.id ? "Deleting..." : "Delete"}
-  //               </button>
-  //             </div>
-  //           </div>
-  //         )}
-  //       </div>
-  //       {(editingComment === comment.id || editingReply === comment.id) && (
-  //         <form
-  //           onSubmit={(e) =>
-  //             isReply
-  //               ? handleUpdateReply(e, comment.id, comment.commentId)
-  //               : handleUpdateComment(e, comment.id)
-  //           }
-  //           className="mt-2"
-  //         >
-  //           <input
-  //             type="text"
-  //             value={isReply ? updatedReply : updatedComment}
-  //             onChange={(e) =>
-  //               isReply
-  //                 ? setUpdatedReply(e.target.value)
-  //                 : setUpdatedComment(e.target.value)
-  //             }
-  //             className="w-full border-b text-sm py-1 focus:outline-none focus:border-blue-500 transition-all duration-300"
-  //           />
-  //           <div className="flex justify-end mt-2 space-x-2">
-  //             <button
-  //               type="button"
-  //               onClick={() =>
-  //                 isReply ? setEditingReply(null) : setEditingComment(null)
-  //               }
-  //               className="text-gray-500 text-xs hover:text-gray-700 transition-colors duration-300"
-  //             >
-  //               Cancel
-  //             </button>
-  //             <button
-  //               type="submit"
-  //               className="text-blue-500 font-semibold text-xs hover:text-blue-600 transition-colors duration-300"
-  //               disabled={loading}
-  //             >
-  //               {loading ? "Updating..." : "Update"}
-  //             </button>
-  //           </div>
-  //         </form>
-  //       )}
-  //       {replyingTo === comment.id && (
-  //         <form
-  //           onSubmit={(e) => handleReplySubmit(e, comment.id)}
-  //           className="mt-2 flex items-center space-x-2 max-w-full overflow-hidden"
-  //         >
-  //           <Image
-  //             src={session?.user?.image ?? "/no-user.png"}
-  //             width={24}
-  //             height={24}
-  //             className="w-6 h-6 rounded-full"
-  //             alt="User Avatar"
-  //           />
-  //           <input
-  //             type="text"
-  //             value={newReply}
-  //             onChange={(e) => setNewReply(e.target.value)}
-  //             placeholder="Add a reply..."
-  //             className="flex-grow box-border border-b px-1 text-base focus:outline-none focus:border-blue-500 transition-all duration-300 max-w-full"
-  //           />
-  //           <button
-  //             type="submit"
-  //             className="text-blue-500 disabled:opacity-50 box-border disabled:cursor-not-allowed"
-  //             disabled={loading || !newReply.trim()}
-  //           >
-  //             {loading ? (
-  //               <div className="replyloader" />
-  //             ) : (
-  //               <Send className="box-border" size={16} />
-  //             )}
-  //           </button>
-  //         </form>
-  //       )}
-  //       {!isReply && comment.replies && comment.replies.length > 0 && (
-  //         <div className="mt-2">
-  //           <button
-  //             onClick={() => toggleReplies(comment.id)}
-  //             className="lg:text-sm text-xs text-gray-500 hover:text-gray-700 transition-colors duration-300"
-  //           >
-  //             {expandedReplies[comment.id] ? (
-  //               <>
-  //                 <ChevronUp size={12} className="inline mr-1" />
-  //                 Hide replies
-  //               </>
-  //             ) : (
-  //               <>
-  //                 <ChevronDown size={12} className="inline mr-1" />
-  //                 View replies ({comment.replies.length})
-  //               </>
-  //             )}
-  //           </button>
-  //           {expandedReplies[comment.id] && (
-  //             <div className="mt-2 space-y-2">
-  //               {comment.replies.map((reply) => renderComment(reply, true))}
-  //             </div>
-  //           )}
-  //         </div>
-  //       )}
-  //     </div>
-  //   </div>
-  // )
 
   const renderComment = (comment, isReply = false) => (
   <div
@@ -543,38 +379,38 @@ function CommentSection({
         </form>
       )}
 
-      {replyingTo === comment.id && (
-        <form
-          onSubmit={(e) => handleReplySubmit(e, comment.id)}
-          className="mt-2 flex items-center space-x-2 w-full"
-        >
-          <Image
-            src={session?.user?.image ?? "/no-user.png"}
-            width={24}
-            height={24}
-            className="w-6 h-6 rounded-full"
-            alt="User Avatar"
-          />
-          <input
-            type="text"
-            value={newReply}
-            onChange={(e) => setNewReply(e.target.value)}
-            placeholder="Add a reply..."
-            className="flex-grow box-border border-b px-1 text-base focus:outline-none focus:border-blue-500 transition-all duration-300 max-w-full"
-          />
-          <button
-            type="submit"
-            className="text-blue-500 disabled:opacity-50 box-border disabled:cursor-not-allowed flex-shrink-0"
-            disabled={loading || !newReply.trim()}
-          >
-            {loading ? (
-              <div className="replyloader" />
-            ) : (
-              <Send className="box-border" size={16} />
-            )}
-          </button>
-        </form>
+{replyingTo === comment.id && (
+  <form
+    onSubmit={(e) => handleReplySubmit(e, comment.id)}
+    className="mt-2 flex items-center space-x-2 w-full"
+  >
+    <Image
+      src={session?.user?.image ?? "/no-user.png"}
+      width={24}
+      height={24}
+      className="w-6 h-6 rounded-full"
+      alt="User Avatar"
+    />
+    <input
+      type="text"
+      value={newReply}
+      onChange={(e) => setNewReply(e.target.value)}
+      placeholder="Add a reply..."
+      className="flex-grow box-border border-b px-1 text-base focus:outline-none focus:border-blue-500 transition-all duration-300 max-w-[85%]"
+    />
+    <button
+      type="submit"
+      className="text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+      disabled={loading || !newReply.trim()}
+    >
+      {loading ? (
+        <div className="replyloader" />
+      ) : (
+        <Send className="box-border" size={16} />
       )}
+    </button>
+  </form>
+)}
 
       {!isReply && comment.replies && comment.replies.length > 0 && (
         <div className="mt-2">
