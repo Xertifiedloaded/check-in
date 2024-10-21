@@ -60,7 +60,6 @@ export default async function handleGetComments(req, res) {
       },
       orderBy: { createdAt: "desc" },
     })
-    console.log(comments)
 
     res.status(200).json(comments)
   } catch (error) {
@@ -97,19 +96,22 @@ export async function handleCreateComment(req, res, userId) {
 
     const postOwner = comment.post.user
     const commentAuthor = comment.user.name
+    const postUrl = `https://daily-check-in.com.ng/comment/${postId}`
+    console.log(postOwner.email)
+    console.log(commentAuthor)
+    console.log(content)
+    console.log(postId)
+    console.log(postUrl)
 
     await sendEmailCommentNotification({
       to: postOwner.email,
       subject: "New Comment on Your Post",
-      html: generateEmailHTML(postOwner, commentAuthor, content, postId),
+      html: generateEmailHTML(postOwner.name, commentAuthor, content, postId),
     })
 
-    const previousCommenters = await prisma.comment.findMany({
+    const allCommenters = await prisma.comment.findMany({
       where: {
         postId: postId,
-        NOT: {
-          userId: userId,
-        },
       },
       distinct: ["userId"],
       select: {
@@ -122,16 +124,17 @@ export async function handleCreateComment(req, res, userId) {
       },
     })
 
-    const notificationPromises = previousCommenters.map(async (commenter) => {
+    const notificationPromises = allCommenters.map(async (commenter) => {
       const commenterEmail = commenter.user.email
       return sendEmailCommentNotification({
         to: commenterEmail,
-        subject: "A New Comment Has Been Added on your Post",
-        html: generateCommentHtml(postOwner, commentAuthor, content, postId),
+        subject: "New Comment on a Post You Engaged With",
+        html: generateCommentHtml(postOwner.name, commentAuthor, content, postId),
       })
     })
 
     await Promise.all(notificationPromises)
+
     res.status(201).json(comment)
   } catch (error) {
     console.error("Error creating comment:", error)
@@ -255,37 +258,51 @@ export async function handleCreateReply(req, res) {
       const commentAuthorEmail = comment.user.email
       const postId = comment.post.id
 
-      let postAuthorName = 'Unknown Author'
-      if (typeof comment.post.user.name === 'string') {
+      let postAuthorName = "Unknown Author"
+      if (typeof comment.post.user.name === "string") {
         postAuthorName = comment.post.user.name
-      } else if (typeof comment.post.user.name === 'object' && comment.post.user.name !== null) {
-        postAuthorName = comment.post.user.name.value || 
-                        comment.post.user.name.name ||
-                        comment.post.user.name.toString() ||
-                        'Unknown Author'
+      } else if (
+        typeof comment.post.user.name === "object" &&
+        comment.post.user.name !== null
+      ) {
+        postAuthorName =
+          comment.post.user.name.value ||
+          comment.post.user.name.name ||
+          comment.post.user.name.toString() ||
+          "Unknown Author"
       }
 
-      let displayContent = ''
-      if (typeof comment.post.content === 'string') {
+      let displayContent = ""
+      if (typeof comment.post.content === "string") {
         displayContent = comment.post.content
-      } else if (typeof comment.post.content === 'object' && comment.post.content !== null) {
-        displayContent = comment.post.content.text || 
-                        comment.post.content.content || 
-                        comment.post.content.toString() ||
-                        'Post content'
+      } else if (
+        typeof comment.post.content === "object" &&
+        comment.post.content !== null
+      ) {
+        displayContent =
+          comment.post.content.text ||
+          comment.post.content.content ||
+          comment.post.content.toString() ||
+          "Post content"
       } else {
-        displayContent = 'Post content'
+        displayContent = "Post content"
       }
 
-
-      const truncatedContent = displayContent.length > 100 
-        ? displayContent.substring(0, 100) + '...'
-        : displayContent
+      const truncatedContent =
+        displayContent.length > 100
+          ? displayContent.substring(0, 100) + "..."
+          : displayContent
 
       await sendEmailCommentNotification({
         to: commentAuthorEmail,
         subject: "New Reply to Your Comment",
-        html: generateReplyEmailHTML(commentAuthor, newReply.content, postId, truncatedContent, postAuthorName),
+        html: generateReplyEmailHTML(
+          commentAuthor,
+          newReply.content,
+          postId,
+          truncatedContent,
+          postAuthorName
+        ),
       })
     }
 
@@ -295,8 +312,6 @@ export async function handleCreateReply(req, res) {
     return res.status(500).json({ error: "Error creating reply" })
   }
 }
-
-
 
 export async function handleGetReplies(req, res) {
   const { commentId } = req.query

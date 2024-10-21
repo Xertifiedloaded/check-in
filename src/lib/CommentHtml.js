@@ -1,5 +1,5 @@
-export function generateEmailHTML(postOwner, commentAuthor, content,postId) {
-    const postUrl = `https://daily-check-in.com.ng/comment/${postId}`
+export function generateEmailHTML(postOwner, commentAuthor, content, postId) {
+  const postUrl = `https://daily-check-in.com.ng/comment/${postId}`
   return `
       <!DOCTYPE html>
       <html lang="en">
@@ -51,7 +51,7 @@ export function generateEmailHTML(postOwner, commentAuthor, content,postId) {
       <body>
         <div class="container">
           <h1>New Comment on Your Post</h1>
-          <p>Hello ${postOwner.name},</p>
+          <p>Hello ${postOwner},</p>
           <p><strong>${commentAuthor}</strong> left a comment on your post:</p>
           <div class="comment">
             "${content}"
@@ -60,11 +60,16 @@ export function generateEmailHTML(postOwner, commentAuthor, content,postId) {
         </div>
       </body>
       </html>
-  `;
+  `
 }
 
-export function generateCommentHtml(commentAuthor, content, postId) {
-  const postUrl = `https://daily-check-in.com.ng/comment/${postId}`;
+
+
+
+
+
+export function generateCommentHtml(postOwner, commentAuthor, content, postId) {
+  const postUrl = `https://daily-check-in.com.ng/comment/${postId}`
   return `
       <!DOCTYPE html>
       <html lang="en">
@@ -119,6 +124,7 @@ export function generateCommentHtml(commentAuthor, content, postId) {
       </head>
       <body>
         <div class="container">
+          <p>Hello ${postOwner},</p>
           <h1>New Comment on a Post You Engaged With</h1>
           <p><strong>${commentAuthor}</strong> left a comment on a discussion you were part of:</p>
           <div class="comment">
@@ -128,13 +134,16 @@ export function generateCommentHtml(commentAuthor, content, postId) {
         </div>
       </body>
       </html>
-  `;
+  `
 }
 
-
-
-export function generateReplyEmailHTML(commentAuthor, replyContent, postId, postTitle) {
-  const postUrl = `https://daily-check-in.com.ng/comment/${postId}`;
+export function generateReplyEmailHTML(
+  commentAuthor,
+  replyContent,
+  postId,
+  postTitle
+) {
+  const postUrl = `https://daily-check-in.com.ng/comment/${postId}`
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -202,5 +211,5 @@ export function generateReplyEmailHTML(commentAuthor, replyContent, postId, post
       </div>
     </body>
     </html>
-  `;
+  `
 }
