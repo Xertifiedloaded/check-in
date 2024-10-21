@@ -141,7 +141,7 @@ export const renderComment = (
             src="/no-user.png"
             width={30}
             height={30}
-            className="w-5 h-5 rounded-full"
+            className="w-5 h-5  object-cover rounded-full"
             alt="User Avatar"
           />
           <div className="flex-grow relative">

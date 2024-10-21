@@ -387,7 +387,7 @@ function CommentSection({
               src={session?.user?.image ?? "/no-user.png"}
               width={24}
               height={24}
-              className="w-6 h-6 rounded-full"
+              className="w-6 h-6 object-cover rounded-full"
               alt="User Avatar"
             />
             <input
@@ -450,7 +450,7 @@ function CommentSection({
           src={session?.user?.image ?? "/no-user.png"}
           width={32}
           height={32}
-          className="w-8 h-8 rounded-full"
+          className="w-8 h-8 object-cover rounded-full"
           alt="User Avatar"
         />
         <div className="flex-grow relative">
