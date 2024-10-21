@@ -379,7 +379,7 @@ function CommentSection({
         {replyingTo === comment.id && (
           <form
             onSubmit={(e) => handleReplySubmit(e, comment.id)}
-            className="mt-2 flex items-center space-x-2"
+            className="mt-2 flex items-center space-x-2 max-w-full overflow-hidden"
           >
             <Image
               src={session?.user?.image ?? "/no-user.png"}
@@ -393,14 +393,18 @@ function CommentSection({
               value={newReply}
               onChange={(e) => setNewReply(e.target.value)}
               placeholder="Add a reply..."
-              className="flex-grow box-border border-b px-1 text-base focus:outline-none focus:border-blue-500 transition-all duration-300"
+              className="flex-grow box-border border-b px-1 text-base focus:outline-none focus:border-blue-500 transition-all duration-300 max-w-full"
             />
             <button
               type="submit"
               className="text-blue-500 disabled:opacity-50 box-border disabled:cursor-not-allowed"
               disabled={loading || !newReply.trim()}
             >
-              {loading ? <div className="replyloader" /> : <Send className="box-border" size={16} />}
+              {loading ? (
+                <div className="replyloader" />
+              ) : (
+                <Send className="box-border" size={16} />
+              )}
             </button>
           </form>
         )}
@@ -459,7 +463,11 @@ function CommentSection({
             className="absolute right-0 top-1/2 transform -translate-y-1/2 text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading || !newComment.trim()}
           >
-            {loading ? <div className="replyloader" /> : <Send size={16} className="box-border" />}
+            {loading ? (
+              <div className="replyloader" />
+            ) : (
+              <Send size={16} className="box-border" />
+            )}
           </button>
         </div>
       </form>
