@@ -22,7 +22,7 @@ export default function Card({ post }) {
 
   const truncateContent = (content) => {
     const width = window.innerWidth;
-    const length = width <= 768 ? 60 : 25; 
+    const length = width <= 768 ? 40 : 25; 
   
     return content.length > length ? content.slice(0, length) + '...' : content;
   };
