@@ -134,7 +134,7 @@ export function generateCommentHtml(commentAuthor, content, postId) {
 
 
 export function generateReplyEmailHTML(commentAuthor, replyContent, postId, postTitle) {
-  const postUrl = `https://daily-check-in.com.ng/post/${postId}`;
+  const postUrl = `https://daily-check-in.com.ng/comment/${postId}`;
   return `
     <!DOCTYPE html>
     <html lang="en">

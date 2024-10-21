@@ -230,13 +230,17 @@ export async function handleCreateReply(req, res) {
           select: {
             id: true,
             name: true,
+            email: true,
             profilePicture: true,
           },
         },
         post: {
-          include: {
+          select: {
+            id: true,
+            content: true,
             user: {
               select: {
+                id: true,
                 email: true,
                 name: true,
               },
@@ -250,12 +254,38 @@ export async function handleCreateReply(req, res) {
       const commentAuthor = comment.user.name
       const commentAuthorEmail = comment.user.email
       const postId = comment.post.id
-      const postTitle = comment.post.content
+
+      let postAuthorName = 'Unknown Author'
+      if (typeof comment.post.user.name === 'string') {
+        postAuthorName = comment.post.user.name
+      } else if (typeof comment.post.user.name === 'object' && comment.post.user.name !== null) {
+        postAuthorName = comment.post.user.name.value || 
+                        comment.post.user.name.name ||
+                        comment.post.user.name.toString() ||
+                        'Unknown Author'
+      }
+
+      let displayContent = ''
+      if (typeof comment.post.content === 'string') {
+        displayContent = comment.post.content
+      } else if (typeof comment.post.content === 'object' && comment.post.content !== null) {
+        displayContent = comment.post.content.text || 
+                        comment.post.content.content || 
+                        comment.post.content.toString() ||
+                        'Post content'
+      } else {
+        displayContent = 'Post content'
+      }
+
+
+      const truncatedContent = displayContent.length > 100 
+        ? displayContent.substring(0, 100) + '...'
+        : displayContent
 
       await sendEmailCommentNotification({
         to: commentAuthorEmail,
         subject: "New Reply to Your Comment",
-        html: generateReplyEmailHTML(commentAuthor, newReply.content, postId, postTitle),
+        html: generateReplyEmailHTML(commentAuthor, newReply.content, postId, truncatedContent, postAuthorName),
       })
     }
 
