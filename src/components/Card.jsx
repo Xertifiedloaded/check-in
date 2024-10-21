@@ -20,6 +20,13 @@ export default function Card({ post }) {
     await toggleLike()
   }
 
+  const truncateContent = (content) => {
+    const width = window.innerWidth;
+    const length = width <= 768 ? 60 : 25; 
+  
+    return content.length > length ? content.slice(0, length) + '...' : content;
+  };
+
   return (
     <Link
       href={`/checkin/${user.id}`}
@@ -60,6 +67,11 @@ export default function Card({ post }) {
           <span>{count}</span>
         </button>
       </div>
+
+      <div className="mt-2 text-sm text-gray-800">
+        {truncateContent(post.content)}
+      </div>
+
       {post.currentStreak > 1 && (
         <div className="mt-2 text-xs text-gray-600">
           🔥 {post.currentStreak} day streak

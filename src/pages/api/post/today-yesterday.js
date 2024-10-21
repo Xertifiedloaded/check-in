@@ -70,8 +70,9 @@ export default async function handler(req, res) {
       const postData = {
         ...post,
         likeCount: post.likes.length,
+        content: post.content,
         commentCount: post.comments.length,
-        currentStreak, // Add the current streak to the post data
+        currentStreak, 
       };
 
       if (postDay === "today") {
