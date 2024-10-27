@@ -203,8 +203,119 @@ export async function handleDeleteComment(req, res, userId) {
   }
 }
 
+// export async function handleCreateReply(req, res) {
+//   const { content, userId, commentId } = req.body
+
+//   try {
+//     const newReply = await prisma.reply.create({
+//       data: {
+//         content,
+//         userId,
+//         commentId,
+//       },
+//       include: {
+//         user: {
+//           select: {
+//             id: true,
+//             name: true,
+//             profilePicture: true,
+//           },
+//         },
+//       },
+//     })
+
+//     const comment = await prisma.comment.findUnique({
+//       where: {
+//         id: commentId,
+//       },
+//       include: {
+//         user: {
+//           select: {
+//             id: true,
+//             name: true,
+//             email: true,
+//             profilePicture: true,
+//           },
+//         },
+//         post: {
+//           select: {
+//             id: true,
+//             content: true,
+//             user: {
+//               select: {
+//                 id: true,
+//                 email: true,
+//                 name: true,
+//               },
+//             },
+//           },
+//         },
+//       },
+//     })
+
+//     if (comment?.user?.email) {
+//       const commentAuthor = comment.user.name
+//       const commentAuthorEmail = comment.user.email
+//       const postId = comment.post.id
+
+//       let postAuthorName = "Unknown Author"
+//       if (typeof comment.post.user.name === "string") {
+//         postAuthorName = comment.post.user.name
+//       } else if (
+//         typeof comment.post.user.name === "object" &&
+//         comment.post.user.name !== null
+//       ) {
+//         postAuthorName =
+//           comment.post.user.name.value ||
+//           comment.post.user.name.name ||
+//           comment.post.user.name.toString() ||
+//           "Unknown Author"
+//       }
+
+//       let displayContent = ""
+//       if (typeof comment.post.content === "string") {
+//         displayContent = comment.post.content
+//       } else if (
+//         typeof comment.post.content === "object" &&
+//         comment.post.content !== null
+//       ) {
+//         displayContent =
+//           comment.post.content.text ||
+//           comment.post.content.content ||
+//           comment.post.content.toString() ||
+//           "Post content"
+//       } else {
+//         displayContent = "Post content"
+//       }
+
+//       const truncatedContent =
+//         displayContent.length > 100
+//           ? displayContent.substring(0, 50) + "..."
+//           : displayContent
+
+//       await sendEmailCommentNotification({
+//         to: commentAuthorEmail,
+//         subject: "New Reply to Your Comment",
+//         html: generateReplyEmailHTML(
+//           commentAuthor,
+//           newReply.content,
+//           postId,
+//           truncatedContent,
+//           postAuthorName
+//         ),
+//       })
+//     }
+
+//     return res.status(201).json(newReply)
+//   } catch (error) {
+//     console.error("Error creating reply:", error)
+//     return res.status(500).json({ error: "Error creating reply" })
+//   }
+// }
+
+
 export async function handleCreateReply(req, res) {
-  const { content, userId, commentId } = req.body
+  const { content, userId, commentId } = req.body;
 
   try {
     const newReply = await prisma.reply.create({
@@ -222,7 +333,7 @@ export async function handleCreateReply(req, res) {
           },
         },
       },
-    })
+    });
 
     const comment = await prisma.comment.findUnique({
       where: {
@@ -251,16 +362,16 @@ export async function handleCreateReply(req, res) {
           },
         },
       },
-    })
+    });
 
-    if (comment?.user?.email) {
-      const commentAuthor = comment.user.name
-      const commentAuthorEmail = comment.user.email
-      const postId = comment.post.id
+    if (comment?.user?.email && comment.user.id !== userId) {
+      const commentAuthor = comment.user.name;
+      const commentAuthorEmail = comment.user.email;
+      const postId = comment.post.id;
 
-      let postAuthorName = "Unknown Author"
+      let postAuthorName = "Unknown Author";
       if (typeof comment.post.user.name === "string") {
-        postAuthorName = comment.post.user.name
+        postAuthorName = comment.post.user.name;
       } else if (
         typeof comment.post.user.name === "object" &&
         comment.post.user.name !== null
@@ -269,12 +380,12 @@ export async function handleCreateReply(req, res) {
           comment.post.user.name.value ||
           comment.post.user.name.name ||
           comment.post.user.name.toString() ||
-          "Unknown Author"
+          "Unknown Author";
       }
 
-      let displayContent = ""
+      let displayContent = "";
       if (typeof comment.post.content === "string") {
-        displayContent = comment.post.content
+        displayContent = comment.post.content;
       } else if (
         typeof comment.post.content === "object" &&
         comment.post.content !== null
@@ -283,15 +394,15 @@ export async function handleCreateReply(req, res) {
           comment.post.content.text ||
           comment.post.content.content ||
           comment.post.content.toString() ||
-          "Post content"
+          "Post content";
       } else {
-        displayContent = "Post content"
+        displayContent = "Post content";
       }
 
       const truncatedContent =
         displayContent.length > 100
-          ? displayContent.substring(0, 100) + "..."
-          : displayContent
+          ? displayContent.substring(0, 50) + "..."
+          : displayContent;
 
       await sendEmailCommentNotification({
         to: commentAuthorEmail,
@@ -303,15 +414,17 @@ export async function handleCreateReply(req, res) {
           truncatedContent,
           postAuthorName
         ),
-      })
+      });
     }
 
-    return res.status(201).json(newReply)
+    return res.status(201).json(newReply);
   } catch (error) {
-    console.error("Error creating reply:", error)
-    return res.status(500).json({ error: "Error creating reply" })
+    console.error("Error creating reply:", error);
+    return res.status(500).json({ error: "Error creating reply" });
   }
 }
+
+
 
 export async function handleGetReplies(req, res) {
   const { commentId } = req.query
