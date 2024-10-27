@@ -69,7 +69,7 @@ export default function UserHeader() {
               {session && (
                 <>
                   <NavLink href="/feed" icon={Rss}>
-                    News Feed
+                    Feed
                   </NavLink>
                   <NavLink href="/manage-checkin" icon={Calendar}>
                     Manage Check-in

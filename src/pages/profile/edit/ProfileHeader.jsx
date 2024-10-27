@@ -4,7 +4,7 @@ import Image from "next/image"
 import { signOut, useSession } from "next-auth/react"
 import { Menu, X, ChevronDown, User, LogOut, Home } from "lucide-react"
 import Button from "@/components/Buttons"
-import { MdRssFeed } from "react-icons/md"
+
 export default function ProfileHeader() {
   const { data: session } = useSession()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -39,7 +39,7 @@ export default function ProfileHeader() {
                 <Link href="/feed">
                   <Button
                     className="bg-[#e2e8f099]  text-lightGray text-sm py-2 px-4 rounded-[25px]"
-                    value={<MdRssFeed />}
+                    value='feed'
                   />
                 </Link>
                 <div className="relative">
