@@ -7,8 +7,10 @@ import useLikeStatus from "@/utils/actions"
 import { useEffect, useState } from "react"
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai"
 import { BsFire } from "react-icons/bs"
+import { formatDistanceToNow } from 'date-fns';
 export default function Card({ post }) {
   const user = post.user || {}
+  console.log(post);
   const { isLiked, toggleLike, loading, count } = useLikeStatus(
     user.id,
     post.id
@@ -22,14 +24,15 @@ export default function Card({ post }) {
 
   const truncateContent = (content) => {
     const width = window.innerWidth;
-    const length = width <= 768 ? 40 : 25; 
-  
+    const length = width <= 768 ? 40 : 25;
+
     return content.length > length ? content.slice(0, length) + '...' : content;
   };
 
   return (
     <Link
-      href={`/checkin/${user.id}`}
+      // href={`/checkin/${user.id}`}
+      href={`/dashboard/${user.id}`}
       className="block p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
     >
       <div className="flex items-center space-x-3">
@@ -45,7 +48,7 @@ export default function Card({ post }) {
             {user.name?.split(" ")[0] ?? "Unknown User"}
             {user?.isVerified && (
               <svg
-                className="w-4 h-4 text-blue-500 fill-current"
+                className="w-3 h-3 text-blue-500 fill-current"
                 viewBox="0 0 24 24"
               >
                 <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z" />
@@ -59,9 +62,8 @@ export default function Card({ post }) {
         <button
           onClick={handleToggleLike}
           disabled={loading}
-          className={`flex items-center space-x-1 text-sm ${
-            isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
-          }`}
+          className={`flex items-center space-x-1 text-sm ${isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
+            }`}
         >
           <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
           <span>{count}</span>
@@ -77,6 +79,9 @@ export default function Card({ post }) {
           🔥 {post.currentStreak} day streak
         </div>
       )}
+        <div className="mt-2 text-xs text-gray-600">
+        {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+      </div>
     </Link>
   )
 }
