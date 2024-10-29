@@ -63,7 +63,7 @@ export default function Heading() {
               id="visibility"
               value={visibility}
               onChange={(e) => setVisibility(e.target.value)}
-              className="mt-1 text-slate-500 font-medium px-3 block w-full rounded-lg border-gray-200 h-[40px] outline-none  border  shadow-sm sm:text-sm"
+              className="mt-1 text-slate-500 bg-transparent font-medium px-3 block w-full rounded-lg border-gray-200 h-[40px] outline-none  border  shadow-sm sm:text-sm"
               disabled={!userId}
             >
               <option value="PUBLIC">Public</option>
