@@ -69,7 +69,7 @@ export default async function handleGetComments(req, res) {
 }
 
 export async function handleCreateComment(req, res, userId) {
-  const { content, postId } = req.body
+  const { content, postId } = req.body;
 
   try {
     const comment = await prisma.comment.create({
@@ -92,55 +92,29 @@ export async function handleCreateComment(req, res, userId) {
           },
         },
       },
-    })
+    });
 
-    const postOwner = comment.post.user
-    const commentAuthor = comment.user.name
-    const postUrl = `https://daily-check-in.com.ng/comment/${postId}`
-    console.log(postOwner.email)
-    console.log(commentAuthor)
-    console.log(content)
-    console.log(postId)
-    console.log(postUrl)
+    const postOwner = comment.post.user;
+    const commentAuthor = comment.user.name;
+    const postUrl = `https://daily-check-in.com.ng/comment/${postId}`;
 
-    await sendEmailCommentNotification({
-      to: postOwner.email,
-      subject: "New Comment on Your Post",
-      html: generateEmailHTML(postOwner.name, commentAuthor, content, postId),
-    })
+    // Only send email notification to the post owner, not the comment author
+    if (postOwner.email && postOwner.id !== userId) {
+      await sendEmailCommentNotification({
+        to: postOwner.email,
+        subject: "New Comment on Your Post",
+        html: generateEmailHTML(postOwner.name, commentAuthor, content, postId),
+      });
+    }
 
-    const allCommenters = await prisma.comment.findMany({
-      where: {
-        postId: postId,
-      },
-      distinct: ["userId"],
-      select: {
-        user: {
-          select: {
-            email: true,
-            name: true,
-          },
-        },
-      },
-    })
-
-    const notificationPromises = allCommenters.map(async (commenter) => {
-      const commenterEmail = commenter.user.email
-      return sendEmailCommentNotification({
-        to: commenterEmail,
-        subject: "New Comment on a Post You Engaged With",
-        html: generateCommentHtml(postOwner.name, commentAuthor, content, postId),
-      })
-    })
-
-    await Promise.all(notificationPromises)
-
-    res.status(201).json(comment)
+    res.status(201).json(comment);
   } catch (error) {
-    console.error("Error creating comment:", error)
-    res.status(400).json({ error: "Unable to create comment" })
+    console.error("Error creating comment:", error);
+    res.status(400).json({ error: "Unable to create comment" });
   }
 }
+
+
 
 export async function handleUpdateComment(req, res, userId) {
   const { commentid } = req.query
@@ -203,115 +177,9 @@ export async function handleDeleteComment(req, res, userId) {
   }
 }
 
-// export async function handleCreateReply(req, res) {
-//   const { content, userId, commentId } = req.body
 
-//   try {
-//     const newReply = await prisma.reply.create({
-//       data: {
-//         content,
-//         userId,
-//         commentId,
-//       },
-//       include: {
-//         user: {
-//           select: {
-//             id: true,
-//             name: true,
-//             profilePicture: true,
-//           },
-//         },
-//       },
-//     })
 
-//     const comment = await prisma.comment.findUnique({
-//       where: {
-//         id: commentId,
-//       },
-//       include: {
-//         user: {
-//           select: {
-//             id: true,
-//             name: true,
-//             email: true,
-//             profilePicture: true,
-//           },
-//         },
-//         post: {
-//           select: {
-//             id: true,
-//             content: true,
-//             user: {
-//               select: {
-//                 id: true,
-//                 email: true,
-//                 name: true,
-//               },
-//             },
-//           },
-//         },
-//       },
-//     })
 
-//     if (comment?.user?.email) {
-//       const commentAuthor = comment.user.name
-//       const commentAuthorEmail = comment.user.email
-//       const postId = comment.post.id
-
-//       let postAuthorName = "Unknown Author"
-//       if (typeof comment.post.user.name === "string") {
-//         postAuthorName = comment.post.user.name
-//       } else if (
-//         typeof comment.post.user.name === "object" &&
-//         comment.post.user.name !== null
-//       ) {
-//         postAuthorName =
-//           comment.post.user.name.value ||
-//           comment.post.user.name.name ||
-//           comment.post.user.name.toString() ||
-//           "Unknown Author"
-//       }
-
-//       let displayContent = ""
-//       if (typeof comment.post.content === "string") {
-//         displayContent = comment.post.content
-//       } else if (
-//         typeof comment.post.content === "object" &&
-//         comment.post.content !== null
-//       ) {
-//         displayContent =
-//           comment.post.content.text ||
-//           comment.post.content.content ||
-//           comment.post.content.toString() ||
-//           "Post content"
-//       } else {
-//         displayContent = "Post content"
-//       }
-
-//       const truncatedContent =
-//         displayContent.length > 100
-//           ? displayContent.substring(0, 50) + "..."
-//           : displayContent
-
-//       await sendEmailCommentNotification({
-//         to: commentAuthorEmail,
-//         subject: "New Reply to Your Comment",
-//         html: generateReplyEmailHTML(
-//           commentAuthor,
-//           newReply.content,
-//           postId,
-//           truncatedContent,
-//           postAuthorName
-//         ),
-//       })
-//     }
-
-//     return res.status(201).json(newReply)
-//   } catch (error) {
-//     console.error("Error creating reply:", error)
-//     return res.status(500).json({ error: "Error creating reply" })
-//   }
-// }
 
 
 export async function handleCreateReply(req, res) {
@@ -404,6 +272,7 @@ export async function handleCreateReply(req, res) {
           ? displayContent.substring(0, 50) + "..."
           : displayContent;
 
+      // Send email notification to the comment owner
       await sendEmailCommentNotification({
         to: commentAuthorEmail,
         subject: "New Reply to Your Comment",
@@ -423,7 +292,6 @@ export async function handleCreateReply(req, res) {
     return res.status(500).json({ error: "Error creating reply" });
   }
 }
-
 
 
 export async function handleGetReplies(req, res) {
@@ -483,3 +351,5 @@ export async function handleDeleteReply(req, res) {
     return res.status(500).json({ error: "Error deleting reply" })
   }
 }
+
+

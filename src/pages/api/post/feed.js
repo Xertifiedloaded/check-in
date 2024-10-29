@@ -1,10 +1,11 @@
-
-
 import { prisma } from "@/lib/prisma";
 
 export default async function handler(req, res) {
   try {
     const posts = await prisma.post.findMany({
+      where: {
+        visibility: 'PUBLIC', 
+      },
       include: {
         user: {
           select: {
@@ -24,7 +25,7 @@ export default async function handler(req, res) {
                 profilePicture: true,
               },
             },
-            replies: {  
+            replies: {
               include: {
                 user: {
                   select: {
@@ -69,5 +70,3 @@ export default async function handler(req, res) {
     res.status(500).json({ message: "Error fetching posts" });
   }
 }
-
-

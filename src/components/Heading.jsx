@@ -1,29 +1,30 @@
-import React, { useState } from "react"
-import Button from "./Buttons"
-import { toast } from "react-toastify"
-import { useSession } from "next-auth/react"
-import { useCheckIn } from "@/context/CheckInContext"
+import React, { useState } from "react";
+import Button from "./Buttons";
+import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
+import { useCheckIn } from "@/context/CheckInContext";
 
 export default function Heading() {
-  const [content, setContent] = useState("")
-  const { data: session } = useSession()
-  const { postCheckIn } = useCheckIn()
-  const userId = session?.user?.id
+  const [content, setContent] = useState("");
+  const [visibility, setVisibility] = useState("PUBLIC");
+  const { data: session } = useSession();
+  const { postCheckIn } = useCheckIn();
+  const userId = session?.user?.id;
 
   const handleClick = (e) => {
     if (!userId) {
-      e.preventDefault() 
-      toast.warning("You need to log in to check in.")
+      e.preventDefault();
+      toast.warning("You need to log in to check in.");
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!content.trim()) {
-      return toast.warning("Content cannot be empty.")
+      return toast.warning("Content cannot be empty.");
     }
-    postCheckIn(content, userId)
-  }
+    postCheckIn(content, userId, visibility);
+  };
 
   return (
     <section className="nav-wrapper grid justify-items-center">
@@ -51,24 +52,35 @@ export default function Heading() {
                 }
                 value={content}
                 onChange={(e) => userId && setContent(e.target.value)}
-                disabled={!userId} 
+                disabled={!userId}
               ></textarea>
-              {!userId && (
-                <div className="absolute inset-0"></div> 
-              )}
+              {!userId && <div className="absolute inset-0"></div>}
             </div>
           </label>
+
+          <div className="mt-2 text-center">
+            <select
+              id="visibility"
+              value={visibility}
+              onChange={(e) => setVisibility(e.target.value)}
+              className="mt-1 text-slate-500 font-medium px-3 block w-full rounded-lg border-gray-200 h-[40px] outline-none  border  shadow-sm sm:text-sm"
+              disabled={!userId}
+            >
+              <option value="PUBLIC">Public</option>
+              <option value="PRIVATE">Private</option>
+            </select>
+          </div>
 
           <div className="text-center mt-10">
             <Button
               type="submit"
               className="bg-blue-700 px-24 text-sm ring-4 py-4 font-medium rounded-[25px] text-white"
               value="Check-In"
-              disabled={!userId} 
+              disabled={!userId}
             />
           </div>
         </form>
       </div>
     </section>
-  )
+  );
 }

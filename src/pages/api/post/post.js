@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { content } = req.body;
+    const { content, visibility = "PUBLIC" } = req.body; 
     const session = await getServerSession(req, res, authOptions);
 
     if (!session || !session.user || !session.user.id) {
@@ -66,6 +66,7 @@ export default async function handler(req, res) {
         data: {
           content,
           userId,
+          visibility, 
         },
       });
 
@@ -74,9 +75,9 @@ export default async function handler(req, res) {
           userId,
           createdAt: {
             gte: todayStart,
-            lte: todayEnd
-          }
-        }
+            lte: todayEnd,
+          },
+        },
       });
 
       return res.status(201).json({
@@ -84,7 +85,7 @@ export default async function handler(req, res) {
         checkIn,
         updatedStreak: newStreak ? newStreak.currentStreak : 0,
         streakUpdated,
-        todayCheckInsCount: todayCheckIns
+        todayCheckInsCount: todayCheckIns,
       });
     } catch (error) {
       console.error("Error creating check-in:", error);

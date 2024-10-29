@@ -80,7 +80,7 @@ export default function UserHeader() {
           </div>
           <div className="hidden lg:ml-6 lg:flex lg:items-center">
             <Link
-              href="/profile/edit"
+              href="/personal-space"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Dashboard
@@ -162,7 +162,7 @@ export default function UserHeader() {
               </div>
             </div>
             <div className="mt-3 space-y-1">
-              <NavLink href="/profile/edit" icon={User}>
+              <NavLink href="/personal-space" icon={User}>
                 Dashboard
               </NavLink>
             </div>
