@@ -45,15 +45,6 @@ export default function ProfilePage() {
     <div className="max-w-4xl mx-auto p-4 md:p-8">
       <div className="bg-white rounded-lg shadow-lg p-6">
         <div className="flex flex-col md:flex-row items-center gap-6">
-          {/* <div className="relative  rounded-full">
-            <Image
-              src={profile?.profilePicture ?? "/no-user-pic.png"}
-              alt={profile?.name}
-              width={128}
-              height={128}
-              className="rounded-full  object-cover"
-            />
-          </div> */}
           <ProfilePicture profile={profile} />
           <div className="text-center md:text-left">
             <div className="flex items-center gap-2">
@@ -128,7 +119,7 @@ const PostCard = ({ post }) => (
   </div>
 );
 
-const LoadingState = () => (
+export const LoadingState = () => (
   <div className="flex justify-center items-center min-h-screen">
     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
   </div>

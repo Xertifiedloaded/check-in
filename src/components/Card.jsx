@@ -1,41 +1,48 @@
-"use client"
-import React from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Heart, Share2 } from "lucide-react"
-import useLikeStatus from "@/utils/actions"
-import { useEffect, useState } from "react"
-import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai"
-import { BsFire } from "react-icons/bs"
-import { formatDistanceToNow } from 'date-fns';
+"use client";
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Heart, Share2 } from "lucide-react";
+import useLikeStatus from "@/utils/actions";
+import { useEffect, useState } from "react";
+import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai";
+import { BsFire } from "react-icons/bs";
+import { formatDistanceToNow } from "date-fns";
 export default function Card({ post }) {
-  const user = post.user || {}
+
+  const user = post.user || {};
   console.log(post);
   const { isLiked, toggleLike, loading, count } = useLikeStatus(
     user.id,
     post.id
-  )
+  );
+
+
 
   const handleToggleLike = async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    await toggleLike()
-  }
+    e.preventDefault();
+    e.stopPropagation();
+    await toggleLike();
+  };
 
   const truncateContent = (content) => {
     const width = window.innerWidth;
     const length = width <= 768 ? 40 : 25;
 
-    return content.length > length ? content.slice(0, length) + '...' : content;
+    return content.length > length ? content.slice(0, length) + "..." : content;
   };
 
   return (
     <Link
-      // href={`/checkin/${user.id}`}
-      href={`/dashboard/${user.id}`}
+      href={`/checkin/${user.id}`}
+      onClick={(e) => e.stopPropagation()}
       className="block p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
     >
-      <div className="flex items-center space-x-3">
+      <Link
+        href={`/information/${user.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="flex items-center space-x-3"
+      >
         <Image
           src={user.profilePicture ?? "/no-user-pic.png"}
           width={40}
@@ -62,28 +69,31 @@ export default function Card({ post }) {
         <button
           onClick={handleToggleLike}
           disabled={loading}
-          className={`flex items-center space-x-1 text-sm ${isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
-            }`}
+          className={`flex items-center space-x-1 text-sm ${
+            isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
+          }`}
         >
           <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
           <span>{count}</span>
         </button>
-      </div>
+      </Link>
 
-      <div className="mt-2 text-sm text-gray-800">
-        {truncateContent(post.content)}
-      </div>
-
-      {post.currentStreak > 1 && (
-        <div className="mt-2 text-xs text-gray-600">
-          🔥 {post.currentStreak} day streak
+      <div>
+        <div className="mt-2 text-sm text-gray-800">
+          {truncateContent(post.content)}
         </div>
-      )}
+
+        {post.currentStreak > 1 && (
+          <div className="mt-2 text-xs text-gray-600">
+            🔥 {post.currentStreak} day streak
+          </div>
+        )}
         <div className="mt-2 text-xs text-gray-600">
-        {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+          {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+        </div>
       </div>
     </Link>
-  )
+  );
 }
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
@@ -112,7 +122,7 @@ export function StreakCard({ userName, userProfilePicture, currentStreak }) {
         <StreakBadge currentStreak={currentStreak} />
       </div>
     </div>
-  )
+  );
 }
 
 export function StreakBadge({ currentStreak }) {
@@ -123,38 +133,38 @@ export function StreakBadge({ currentStreak }) {
           <div className="badge text-xs">
             <span className="">🌟 {currentStreak} Days</span>
           </div>
-        )
+        );
       case currentStreak >= 20:
         return (
           <div className="badge text-xs">
             <span className="">🎖️ {currentStreak} Days</span>
           </div>
-        )
+        );
       case currentStreak >= 10:
         return (
           <div className="badge text-xs">
             <span className="">⚡ {currentStreak} Days</span>
           </div>
-        )
+        );
       case currentStreak >= 3:
         return (
           <div className="badge text-xs">
             <span className="">🏅 {currentStreak} Days</span>
           </div>
-        )
+        );
       default:
         return (
           <div className="badge text-xs">
             <span className="">🔥 {currentStreak} Days</span>
           </div>
-        )
+        );
     }
-  }
+  };
   return (
     <div className="flex text-xs items-center justify-center">
       {renderBadge()}
     </div>
-  )
+  );
 }
 
 export function Reward({ currentStreak }) {
@@ -163,29 +173,29 @@ export function Reward({ currentStreak }) {
       return {
         message: "🎉 You've unlocked a Gold Badge!",
         icon: <AiOutlineTrophy className="text-yellow-500 text-4xl" />,
-      }
+      };
     }
     if (currentStreak >= 10) {
       return {
         message: "🔥 You've unlocked a Streak Booster!",
         icon: <BsFire className="text-red-500 text-4xl" />,
-      }
+      };
     }
     if (currentStreak >= 5) {
       return {
         message: "🏅 You're on a roll! Keep it up!",
         icon: <AiOutlineStar className="text-blue-500 duration-300 text-4xl" />,
-      }
+      };
     }
     return {
       message: "🌟 Keep checking in to earn rewards!",
       icon: (
         <AiOutlineStar className=" duration-300 text-yellow-500 text-4xl" />
       ),
-    }
-  }
+    };
+  };
 
-  const { message, icon } = renderReward()
+  const { message, icon } = renderReward();
 
   return (
     <div className="reward  text-xs bg-white shadow-lg rounded-lg p-6  text-center">
@@ -196,62 +206,62 @@ export function Reward({ currentStreak }) {
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 export function StreakProgress({ currentStreak }) {
   const getDaysInCurrentMonth = () => {
-    const now = new Date()
-    return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
-  }
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  };
   const getDaysInCurrentYear = () => {
-    const now = new Date()
+    const now = new Date();
     return (now.getFullYear() % 4 === 0 && now.getFullYear() % 100 > 0) ||
       now.getFullYear() % 400 == 0
       ? 366
-      : 365
-  }
+      : 365;
+  };
 
   const goals = {
     days: 30,
     months: getDaysInCurrentMonth(),
     years: getDaysInCurrentYear(),
-  }
+  };
 
-  const [currentGoal, setCurrentGoal] = useState(goals.days)
-  const [progressPercentage, setProgressPercentage] = useState(0)
+  const [currentGoal, setCurrentGoal] = useState(goals.days);
+  const [progressPercentage, setProgressPercentage] = useState(0);
 
   useEffect(() => {
-    const percentage = Math.min((currentStreak / currentGoal) * 100, 100)
-    setProgressPercentage(percentage)
-  }, [currentStreak, currentGoal])
+    const percentage = Math.min((currentStreak / currentGoal) * 100, 100);
+    setProgressPercentage(percentage);
+  }, [currentStreak, currentGoal]);
 
   useEffect(() => {
     const updateGoals = () => {
       setCurrentGoal((prevGoal) => {
-        if (prevGoal === goals.months) return getDaysInCurrentMonth()
-        if (prevGoal === goals.years) return getDaysInCurrentYear()
-        return prevGoal
-      })
-    }
+        if (prevGoal === goals.months) return getDaysInCurrentMonth();
+        if (prevGoal === goals.years) return getDaysInCurrentYear();
+        return prevGoal;
+      });
+    };
 
-    updateGoals()
-    const now = new Date()
+    updateGoals();
+    const now = new Date();
     const timeToMidnight =
-      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now
+      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
     const timerId = setTimeout(() => {
-      updateGoals()
-      setInterval(updateGoals, 24 * 60 * 60 * 1000)
-    }, timeToMidnight)
+      updateGoals();
+      setInterval(updateGoals, 24 * 60 * 60 * 1000);
+    }, timeToMidnight);
 
     return () => {
-      clearTimeout(timerId)
-      clearInterval(timerId)
-    }
-  }, [])
+      clearTimeout(timerId);
+      clearInterval(timerId);
+    };
+  }, []);
 
   const share = () => {
-    const shareText = `I've maintained a ${currentStreak}-day streak! Check it out!`
+    const shareText = `I've maintained a ${currentStreak}-day streak! Check it out!`;
     if (navigator.share) {
       navigator
         .share({
@@ -260,11 +270,11 @@ export function StreakProgress({ currentStreak }) {
           url: window.location.href,
         })
         .then(() => console.log("Shared successfully!"))
-        .catch((error) => console.error("Error sharing:", error))
+        .catch((error) => console.error("Error sharing:", error));
     } else {
-      alert("Sharing is not supported in this browser.")
+      alert("Sharing is not supported in this browser.");
     }
-  }
+  };
 
   return (
     <div className="streak-progress mt-6 p-4   rounded-lg ">
@@ -306,5 +316,5 @@ export function StreakProgress({ currentStreak }) {
         </button>
       </div>
     </div>
-  )
+  );
 }

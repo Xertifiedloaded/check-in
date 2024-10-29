@@ -124,7 +124,7 @@ export function ImageUpload() {
         })
         console.log("Profile picture updated successfully:", response.data)
 
-        // Update session to reflect new profile picture
+
         await signIn("credentials", { redirect: false })
 
         toast.update(toastId, {
