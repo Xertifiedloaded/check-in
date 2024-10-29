@@ -44,6 +44,47 @@ export const CheckInProvider = ({ children }) => {
     }
   };
 
+
+
+
+
+  // const fetchCheckIns = async () => {
+  //   setLoadingCheckIns(true);
+  //   try {
+  //     const response = await fetch("/api/post/today-yesterday");
+  
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
+  
+  //     const data = await response.json();
+  
+  //     if (
+  //       !data ||
+  //       !Array.isArray(data.todayPosts) ||
+  //       !Array.isArray(data.yesterdayPosts)
+  //     ) {
+  //       console.error("Unexpected response structure:", data);
+  //       return;
+  //     }
+  
+  //     const filteredTodayPosts = data.todayPosts.filter(post =>
+  //       post.visibility === "PUBLIC" || post.visibility === "public"
+  //     );
+  
+  //     const filteredYesterdayPosts = data.yesterdayPosts.filter(post =>
+  //       post.visibility === "PUBLIC" || post.visibility === "public"
+  //     );
+  
+  //     setTodayPosts(filteredTodayPosts);
+  //     setYesterdayPosts(filteredYesterdayPosts);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   } finally {
+  //     setLoadingCheckIns(false);
+  //   }
+  // };
+  
   const fetchStreaks = async () => {
     setLoadingStreaks(true);
     try {

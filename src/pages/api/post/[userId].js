@@ -1,8 +1,7 @@
-
 import { prisma } from "@/lib/prisma";
 
 export default async function handler(req, res) {
-  const { userId } = req.query;  
+  const { userId } = req.query;
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });
@@ -12,6 +11,7 @@ export default async function handler(req, res) {
     const posts = await prisma.post.findMany({
       where: {
         userId: userId,
+        visibility: 'PUBLIC', // Filter to include only posts with PUBLIC visibility
       },
       include: {
         user: {
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
             id: true,
             name: true,
             email: true,
-            isVerified:true,
+            isVerified: true,
             profilePicture: true,
           },
         },
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
                 profilePicture: true,
               },
             },
-            replies: {  
+            replies: {
               include: {
                 user: {
                   select: {
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
         },
       },
       orderBy: {
-        createdAt: 'desc', 
+        createdAt: 'desc',
       },
     });
 
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
       likeCount: post.likes.length,
       commentCount: post.comments.length,
       comments: post.comments
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) 
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .map(comment => ({
           ...comment,
           createdAt: comment.createdAt.toISOString(),

@@ -10,6 +10,9 @@ export default async function handler(req, res) {
 
     const posts = await prisma.post.findMany({
       where: {
+        visibility: {
+          in: ["PUBLIC", "public"], 
+        },
         OR: [
           {
             createdAt: {
@@ -31,12 +34,12 @@ export default async function handler(req, res) {
             id: true,
             name: true,
             email: true,
-            username:true,
-            isVerified:true,
+            username: true,
+            isVerified: true,
             profilePicture: true,
-            streaks: { 
+            streaks: {
               select: {
-                currentStreak: true, 
+                currentStreak: true,
               },
             },
           },
@@ -65,35 +68,29 @@ export default async function handler(req, res) {
       const userId = post.userId;
       const postDay = post.createdAt >= today ? "today" : "yesterday";
 
-      // Retrieve the current streak for the user
-      const currentStreak = post.user.streaks.length > 0 ? post.user.streaks[0].currentStreak : 0; 
+      const currentStreak = post.user.streaks.length > 0 ? post.user.streaks[0].currentStreak : 0;
 
       const postData = {
         ...post,
         likeCount: post.likes.length,
         content: post.content,
         commentCount: post.comments.length,
-        currentStreak, 
+        currentStreak,
       };
 
       if (postDay === "today") {
-        if (
-          !todayPostsMap.has(userId) ||
-          post.createdAt > todayPostsMap.get(userId).createdAt
-        ) {
+        if (!todayPostsMap.has(userId) || post.createdAt > todayPostsMap.get(userId).createdAt) {
           todayPostsMap.set(userId, postData);
         }
       }
 
       if (postDay === "yesterday") {
-        if (
-          !yesterdayPostsMap.has(userId) ||
-          post.createdAt > yesterdayPostsMap.get(userId).createdAt
-        ) {
+        if (!yesterdayPostsMap.has(userId) || post.createdAt > yesterdayPostsMap.get(userId).createdAt) {
           yesterdayPostsMap.set(userId, postData);
         }
       }
     }
+
 
     const todayPosts = Array.from(todayPostsMap.values());
     const yesterdayPosts = Array.from(yesterdayPostsMap.values());
