@@ -20,6 +20,7 @@ export default async function handler(req, res) {
         email: true,
         profilePicture: true,
         isVerified: true,
+        username:true,
         createdAt: true,
         posts: {
           orderBy: {

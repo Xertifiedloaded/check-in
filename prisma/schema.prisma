@@ -12,6 +12,8 @@ model User {
   name                    String
   email                   String    @unique
   password                String?
+  phoneNumber             String?
+  username                String?
   profilePicture          String?
   otp                     String?
   otpExpiry               DateTime?
@@ -31,14 +33,16 @@ model User {
   replies                 Reply[]   @relation("UserReplies")
 }
 
+
 model Post {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  content   String
-  createdAt DateTime  @default(now())
-  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String    @db.ObjectId
-  likes     String[]  @db.ObjectId
-  comments  Comment[] @relation("PostComments")
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  content    String
+  visibility String   @default("PUBLIC")
+  createdAt  DateTime  @default(now())
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String    @db.ObjectId
+  likes      String[]  @db.ObjectId
+  comments   Comment[] @relation("PostComments")
 }
 
 model Streak {

@@ -9,15 +9,13 @@ import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai";
 import { BsFire } from "react-icons/bs";
 import { formatDistanceToNow } from "date-fns";
 export default function Card({ post }) {
-
+console.log(post);
   const user = post.user || {};
   console.log(post);
   const { isLiked, toggleLike, loading, count } = useLikeStatus(
     user.id,
     post.id
   );
-
-
 
   const handleToggleLike = async (e) => {
     e.preventDefault();
@@ -95,6 +93,8 @@ export default function Card({ post }) {
     </Link>
   );
 }
+
+
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (

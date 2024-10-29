@@ -31,6 +31,7 @@ export default async function handler(req, res) {
             id: true,
             name: true,
             email: true,
+            username:true,
             isVerified:true,
             profilePicture: true,
             streaks: { 
@@ -103,4 +104,3 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "An error occurred while fetching posts." });
   }
 }
-
