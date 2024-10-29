@@ -14,7 +14,7 @@ const ProtectedRoute = (WrappedComponent) => {
         setSession(currentSession)
         const path = router.pathname
         const isAuthPage = path === "/auth/login" || path === "/auth/signup"
-        const isDashboardPage = path.startsWith("/profile/edit")
+        const isDashboardPage = path.startsWith("/personal-space")
         const isVerificationPage = path === "/auth/verify-account" || path === "/auth/verification-success"
 
         if (currentSession) {
@@ -23,11 +23,11 @@ const ProtectedRoute = (WrappedComponent) => {
             if (!response.ok) throw new Error('Failed to fetch verification status')
             const { isVerified } = await response.json()
             if (isAuthPage) {
-              router.replace("/profile/edit")
+              router.replace("/personal-space")
             } else if (isDashboardPage && !isVerified) {
               router.replace("/auth/verify-account")
             } else if (isVerificationPage && isVerified) {
-              router.replace("/profile/edit")
+              router.replace("/personal-space")
             } else {
               setLoading(false)
             }

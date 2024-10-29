@@ -105,15 +105,13 @@ const StatCard = ({ title, value, icon }) => (
   </div>
 );
 
-const PostCard = ({ post }) => (
+
+export const PostCard = ({ post }) => (
   <div className="bg-gray-50 p-4 rounded-lg">
-    <p className="text-gray-800">{post.content}</p>
+    <p className="mt-2 lg:text-base text-sm text-gray-800">{post.content}</p>
     <div className="flex justify-between items-center mt-2">
-      <span className="text-sm text-gray-600">
+      <span className="text-xs text-gray-600">
         {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
-      </span>
-      <span className="text-sm text-gray-600">
-        {post.comments.length} comments
       </span>
     </div>
   </div>

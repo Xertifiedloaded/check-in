@@ -1,7 +1,5 @@
 import { prisma } from "@/lib/prisma";
 
-
-
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed', allowedMethods: ['GET'] });
@@ -20,13 +18,16 @@ export default async function handler(req, res) {
         email: true,
         profilePicture: true,
         isVerified: true,
-        username:true,
+        username: true,
         createdAt: true,
         posts: {
+          where: {
+            visibility: 'PUBLIC', 
+          },
           orderBy: {
             createdAt: 'desc',
           },
-          take: 5,
+          take: 10,
           select: {
             id: true,
             content: true,
@@ -45,6 +46,7 @@ export default async function handler(req, res) {
             _count: {
               select: {
                 comments: true,
+  
               },
             },
           },
@@ -71,7 +73,9 @@ export default async function handler(req, res) {
         message: 'The requested user profile does not exist',
       });
     }
+
     console.log('Fetched user:', JSON.stringify(user, null, 2));
+
     const transformedData = {
       id: user.id,
       name: user.name,
@@ -87,11 +91,11 @@ export default async function handler(req, res) {
         content: post.content,
         createdAt: post.createdAt,
         commentCount: post._count.comments,
-        likeCount: post._count.likes,
+        likeCount: post._count.likes, 
         comments: post.comments,
       })),
     };
-    
+
     res.setHeader(
       'Cache-Control',
       'public, s-maxage=10, stale-while-revalidate=59'
@@ -107,8 +111,6 @@ export default async function handler(req, res) {
     return res.status(500).json({
       error: 'Internal server error',
       message: 'An error occurred while fetching the profile data',
-
     });
-  } 
+  }
 }
-
