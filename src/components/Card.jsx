@@ -29,8 +29,8 @@ export default function Card({ post }) {
     return content.length > length ? content.slice(0, length) + "..." : content;
   };
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200">
-      <div className="p-4 flex items-start justify-between border-b border-gray-50">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200">
+      <div className="p-4 flex items-start justify-between border-b border-gray-50 dark:border-gray-700">
         <Link
           href={`/information/${user.id}`}
           onClick={(e) => e.stopPropagation()}
@@ -41,7 +41,7 @@ export default function Card({ post }) {
               src={user.profilePicture ?? "/no-user-pic.png"}
               width={40}
               height={40}
-              className="rounded-full w-10 h-10 object-cover ring-2 ring-gray-50"
+              className="rounded-full w-10 h-10 object-cover ring-2 ring-gray-50 dark:ring-gray-700"
               alt={user.name || "User"}
             />
             {post.currentStreak > 1 && (
@@ -54,7 +54,7 @@ export default function Card({ post }) {
 
           <div className="flex-grow">
             <div className="flex items-center gap-1">
-              <h2 className="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors">
                 {user.name?.split(" ")[0] ?? "Unknown User"}
               </h2>
               {user?.isVerified && (
@@ -71,12 +71,12 @@ export default function Card({ post }) {
                   src="/check.svg"
                   width={20}
                   height={20}
-                  className=" w-3 h-3 object-cover "
+                  className="w-3 h-3 dark:invert object-cover"
                   alt={user.name || "User"}
                 />
               )}
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="lg:text-[9px] text-xs text-gray-500 dark:text-gray-400">
               {formatDistanceToNow(new Date(post.createdAt), {
                 addSuffix: true,
               })}
@@ -88,11 +88,11 @@ export default function Card({ post }) {
           onClick={handleToggleLike}
           disabled={loading}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all
-            ${
-              isLiked
-                ? "text-red-500 bg-red-50"
-                : "text-gray-400 hover:text-red-500 hover:bg-red-50"
-            }`}
+        ${
+          isLiked
+            ? "text-red-500 bg-red-50 dark:bg-red-900"
+            : "text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900"
+        }`}
         >
           <Heart
             size={16}
@@ -108,9 +108,9 @@ export default function Card({ post }) {
       <Link
         href={`/checkin/${user.id}`}
         onClick={(e) => e.stopPropagation()}
-        className="block p-4 hover:bg-gray-50 transition-colors"
+        className="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
       >
-        <p className="text-sm text-gray-700 leading-relaxed">
+        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
           {truncateContent(post.content)}
         </p>
       </Link>
@@ -120,27 +120,27 @@ export default function Card({ post }) {
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
-    <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="flex mb-2 items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="flex items-center space-x-3">
         <Image
           src={userProfilePicture || "/no-user.png"}
           width={40}
           height={40}
-          className="rounded-full w-[30px] h-[30px] object-cover border border-gray-200"
+          className="rounded-full w-[30px] h-[30px] object-cover border border-gray-200 dark:border-gray-700"
           alt={userName || "User profile picture"}
         />
         <div>
-          <h2 className="text-sm font-medium text-gray-900">
+          <h2 className="text-sm font-medium text-gray-900 dark:text-white">
             {userName?.split(" ")[0] ?? "Unknown User"}
           </h2>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {currentStreak > 0
               ? `${currentStreak} day streak`
               : "No current streak"}
           </p>
         </div>
       </div>
-      <div className="flex text-sm items-center space-x-1 bg-orange-100 text-orange-600 rounded-full px-3 py-1">
+      <div className="flex text-sm items-center space-x-1 bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300 rounded-full px-3 py-1">
         <StreakBadge currentStreak={currentStreak} />
       </div>
     </div>
@@ -220,10 +220,10 @@ export function Reward({ currentStreak }) {
   const { message, icon } = renderReward();
 
   return (
-    <div className="reward  text-xs bg-white shadow-lg rounded-lg p-6  text-center">
-      <div className="flex flex-col  lg:text-lg text-xs  items-center">
+    <div className="reward text-xs bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 text-center">
+      <div className="flex flex-col lg:text-lg text-xs items-center">
         {icon}
-        <p className=" lg:text-lg text-sm   font-semibold text-gray-800">
+        <p className="lg:text-lg text-sm font-semibold text-gray-800 dark:text-gray-200">
           {message}
         </p>
       </div>
@@ -299,15 +299,19 @@ export function StreakProgress({ currentStreak }) {
   };
 
   return (
-    <div className="streak-progress mt-6 p-4   rounded-lg ">
-      <h2 className="text-lg font-semibold mb-2">Streak Progress</h2>
+    <div className="streak-progress mt-6 p-4 rounded-lg bg-white dark:bg-gray-800">
+      <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+        Streak Progress
+      </h2>
       <div className="flex justify-between mb-2">
-        <span className="text-sm text-gray-500">Goal: {currentGoal} Days</span>
-        <span className="text-sm font-bold text-green-600">
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          Goal: {currentGoal} Days
+        </span>
+        <span className="text-sm font-bold text-green-600 dark:text-green-400">
           {currentStreak} Days
         </span>
       </div>
-      <div className="relative w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+      <div className="relative w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
         <div
           className="bg-green-500 h-full rounded-full transition-all duration-300 ease-in-out"
           style={{ width: `${progressPercentage}%` }}
@@ -323,7 +327,7 @@ export function StreakProgress({ currentStreak }) {
         <select
           value={currentGoal}
           onChange={(e) => setCurrentGoal(Number(e.target.value))}
-          className=" outline-none border rounded-md px-2 py-1"
+          className="outline-none border text-black rounded-md px-2 py-1 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
         >
           <option value={goals.days}>30 Days</option>
           <option value={goals.months}>{goals.months} Days (This Month)</option>

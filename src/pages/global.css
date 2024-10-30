@@ -2,13 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+
+:root {
+
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --placeholder-color: #a0aec0;
+  --border-color: #e2e8f0;
+  --button-bg-color: #6366f1; /* indigo */
+  --button-hover-bg-color: #4f46e5; /* indigo 700 */
+  --button-disabled-bg-color: #f7fafc; /* gray 100 */
+}
+
+[data-theme='dark'] {
+  /* Dark Theme Colors */
+  --bg-color: #1a1a1a;
+  --text-color: #ffffff;
+  --placeholder-color: #a0aec0;
+  --border-color: #4a5568; /* gray 600 */
+  --button-bg-color: #6b46c1; /* violet */
+  --button-hover-bg-color: #5a2d8b; /* violet 700 */
+  --button-disabled-bg-color: #2d3748; /* gray 800 */
+}
+
+
 *,*::before,*::after{
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
 body {
-  color: black;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 .wrapper{
   @apply w-[95%] mx-auto
@@ -101,6 +128,13 @@ input{
   animation: l3 1s infinite linear;
 }
 @keyframes l3 {to{transform: rotate(1turn)}}
+
+
+
+
+
+
+
 
 
 
