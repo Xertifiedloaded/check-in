@@ -46,7 +46,7 @@ export function YesterDayCheckIn() {
 export  function UsersStreak() {
   const {  streaks } = useCheckIn();
   return (
-    <div className="w-full sticky top-0 lg:w-[30%]">
+    <div className="w-full mb-2  lg:w-[30%]">
       <h2 className="text-xl font-bold mb-4 border-b pb-3">Streak</h2>
       {streaks.length > 0 ? (
         streaks.map((streak) => <StreakCard key={streak.id} {...streak} />)

@@ -43,7 +43,7 @@ export default function EditDeletePost({ post, handlePostDelete }) {
         }
       );
       alert("Post deleted successfully.");
-      fetchPosts()
+      await fetchPosts()
     } catch (err) {
       console.error("Failed to delete post:", err);
       setError("Failed to delete post.");
@@ -84,7 +84,7 @@ export default function EditDeletePost({ post, handlePostDelete }) {
     <section>
       <div className="flex text-xs items-center gap-2">
         <button
-        //   onClick={handleDeletePost}
+          onClick={handleDeletePost}
           className={`cursor-pointer text-red-600 hover:text-red-800 disabled:opacity-50 
                         ${loading ? "opacity-50" : ""}`}
           disabled={loading}

@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify"
 import SessionWrapper from "@/sessionWrapper/SessionWrapper"
 import { useVisitTracker } from "@/hooks/UseVisitorsTracker"
 import Footer from "@/components/Footer"
+import { ThemeProvider } from "@/context/ThemeContext"
 
 
 const poppin = Poppins({
@@ -19,7 +20,8 @@ function App({ Component, pageProps }) {
   return (
     <div className={`${poppin.className}`}>
 
-        <SessionWrapper>
+       <ThemeProvider>
+       <SessionWrapper>
           <AuthProvider>
             <ToastContainer
               position="top-center"
@@ -36,6 +38,7 @@ function App({ Component, pageProps }) {
             </CheckInProvider>
           </AuthProvider>
         </SessionWrapper>
+       </ThemeProvider>
 
     </div>
   )
