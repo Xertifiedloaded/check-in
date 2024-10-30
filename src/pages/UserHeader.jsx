@@ -39,7 +39,7 @@ export default function UserHeader() {
   const NavLink = ({ href, icon: Icon, children }) => (
     <Link
       href={href}
-      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-gray-100 hover:text-gray-900"
     >
       <Icon className="mr-3 h-5 w-5" />
       {children}
@@ -47,16 +47,16 @@ export default function UserHeader() {
   )
 
   return (
-    <nav className="bg-white shadow">
+    <nav className="text-white bg-gradient-to-r from-indigo-600 to-violet-600 shadow">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
+          <div className="flex text-white">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/">
                 <Image
                   width={32}
                   height={32}
-                  className="h-8 w-auto"
+                  className="h-8 w-auto invert-0"
                   src="/check.svg"
                   alt="Logo"
                 />
@@ -88,7 +88,7 @@ export default function UserHeader() {
 
             <div className="ml-3 relative">
               <div>
-                <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button className="bg-white p-1 rounded-full text-white hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   <span className="sr-only">View profile</span>
                   <Image
                     className="h-8 w-8 rounded-full"
@@ -101,7 +101,7 @@ export default function UserHeader() {
               </div>
             </div>
             <div
-              className="text-xs ml-4 flex items-center font-medium text-gray-500"
+              className="text-xs ml-4 flex items-center font-medium text-white"
               onClick={() => signOut({ callbackUrl: "/" })}
             >
               <LogOut size={16} className="mr-2" />
@@ -115,9 +115,9 @@ export default function UserHeader() {
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
+                <X className="block invert-0 h-6 w-6" aria-hidden="true" />
               ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
+                <Menu className="block invert-0 h-6 w-6" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -153,10 +153,10 @@ export default function UserHeader() {
                 />
               </div>
               <div className="ml-3">
-                <div className="text-base font-medium text-gray-800">
+                <div className="text-base font-medium text-white">
                   {session?.user?.name}
                 </div>
-                <div className="text-sm font-medium text-gray-500">
+                <div className="text-sm font-medium text-white">
                   {session?.user?.email}
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function UserHeader() {
               </NavLink>
             </div>
             <div
-              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-gray-100 hover:text-gray-900"
               onClick={() => signOut({ callbackUrl: "/" })}
             >
               <LogOut size={16} className="mr-3 h-5 w-5" />

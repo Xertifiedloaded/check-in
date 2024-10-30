@@ -1,6 +1,7 @@
 import { PostCard } from "@/pages/personal-space";
 import axios from "axios";
 import React, { useState } from "react";
+import { Pagination } from "./Pagination";
 
 const PostsSection = ({ profile }) => {
   const [activeTab, setActiveTab] = useState("public");
@@ -87,60 +88,8 @@ const PostsSection = ({ profile }) => {
         ))}
       </div>
 
-      {totalPages > 1 && (
-        <div className="mt-8 flex justify-center">
-          <nav className="flex items-center space-x-2" aria-label="Pagination">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className={`
-                px-3 py-1 rounded-md text-sm font-medium
-                ${
-                  page === 1
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-gray-700 hover:bg-gray-100"
-                }
-              `}
-            >
-              Previous
-            </button>
+      <Pagination totalPages={totalPages} page={page} setPage={setPage} />
 
-            <div className="flex items-center space-x-2">
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setPage(i + 1)}
-                  className={`
-                    px-3 py-1 rounded-md text-sm font-medium
-                    ${
-                      page === i + 1
-                        ? "bg-blue-500 text-white"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }
-                  `}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className={`
-                px-3 py-1 rounded-md text-sm font-medium
-                ${
-                  page === totalPages
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-gray-700 hover:bg-gray-100"
-                }
-              `}
-            >
-              Next
-            </button>
-          </nav>
-        </div>
-      )}
 
       {getCurrentPosts().length === 0 && (
         <div className="text-center py-12">
