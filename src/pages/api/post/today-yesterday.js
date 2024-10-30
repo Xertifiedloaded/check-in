@@ -1,4 +1,3 @@
-
 import { prisma } from "@/lib/prisma";
 import { startOfToday, startOfYesterday } from "date-fns";
 
@@ -11,7 +10,7 @@ export default async function handler(req, res) {
     const posts = await prisma.post.findMany({
       where: {
         visibility: {
-          in: ["PUBLIC", "public"], 
+          in: ["PUBLIC", "public"],
         },
         OR: [
           {
@@ -36,6 +35,7 @@ export default async function handler(req, res) {
             email: true,
             username: true,
             isVerified: true,
+            isOwner: true,
             profilePicture: true,
             streaks: {
               select: {
@@ -68,7 +68,8 @@ export default async function handler(req, res) {
       const userId = post.userId;
       const postDay = post.createdAt >= today ? "today" : "yesterday";
 
-      const currentStreak = post.user.streaks.length > 0 ? post.user.streaks[0].currentStreak : 0;
+      const currentStreak =
+        post.user.streaks.length > 0 ? post.user.streaks[0].currentStreak : 0;
 
       const postData = {
         ...post,
@@ -79,18 +80,23 @@ export default async function handler(req, res) {
       };
 
       if (postDay === "today") {
-        if (!todayPostsMap.has(userId) || post.createdAt > todayPostsMap.get(userId).createdAt) {
+        if (
+          !todayPostsMap.has(userId) ||
+          post.createdAt > todayPostsMap.get(userId).createdAt
+        ) {
           todayPostsMap.set(userId, postData);
         }
       }
 
       if (postDay === "yesterday") {
-        if (!yesterdayPostsMap.has(userId) || post.createdAt > yesterdayPostsMap.get(userId).createdAt) {
+        if (
+          !yesterdayPostsMap.has(userId) ||
+          post.createdAt > yesterdayPostsMap.get(userId).createdAt
+        ) {
           yesterdayPostsMap.set(userId, postData);
         }
       }
     }
-
 
     const todayPosts = Array.from(todayPostsMap.values());
     const yesterdayPosts = Array.from(yesterdayPostsMap.values());
@@ -99,5 +105,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error("Error fetching posts: ", error);
     res.status(500).json({ error: "An error occurred while fetching posts." });
+  } finally {
+    await prisma.$disconnect();
   }
 }

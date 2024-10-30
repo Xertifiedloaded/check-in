@@ -48,13 +48,13 @@ export default function DailyCheckIn() {
             <textarea
               placeholder={
                 userId
-                  ? "What did you accomplish today? Share your wins, big or small..."
+                  ? "What will you accomplish today? Share your steps, wins, big or small..."
                   : "Please login to share your progress..."
               }
               value={content}
               onChange={(e) => setContent(e.target.value)}
               disabled={!userId}
-              className={`w-full p-4 min-h-[150px] rounded-xl border-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none transition-all duration-200
+              className={`w-full placeholder:text-sm p-4 min-h-[150px] rounded-xl border-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none transition-all duration-200
                 ${
                   !userId
                     ? "bg-gray-50 text-gray-500 cursor-not-allowed"
@@ -69,10 +69,7 @@ export default function DailyCheckIn() {
               </div>
             )}
           </div>
-
-          {/* Controls */}
           <div className="flex flex-col sm:flex-row gap-4">
-            {/* Visibility Toggle */}
             <div className="relative w-full sm:w-auto">
               <select
                 value={visibility}
@@ -98,7 +95,6 @@ export default function DailyCheckIn() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={!userId || !content.trim()}
@@ -115,7 +111,6 @@ export default function DailyCheckIn() {
           </div>
         </form>
 
-        {/* Tips Section */}
         <div className="mt-6 pt-6 border-t">
           <div className="flex items-center gap-2 text-gray-600">
             <Sparkles className="w-4 h-4 text-yellow-500" />

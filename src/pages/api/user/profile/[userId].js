@@ -112,5 +112,7 @@ export default async function handler(req, res) {
       error: 'Internal server error',
       message: 'An error occurred while fetching the profile data',
     });
+  }finally {
+    await prisma.$disconnect();
   }
 }
