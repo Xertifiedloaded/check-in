@@ -13,6 +13,7 @@ export default async function handler(req, res) {
             name: true,
             email: true,
             isVerified: true,
+            isOwner:true,
             profilePicture: true,
           },
         },
@@ -68,5 +69,8 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error("Error fetching posts:", error);
     res.status(500).json({ message: "Error fetching posts" });
+  }finally {
+    await prisma.$disconnect();
   }
 }
+

@@ -72,6 +72,8 @@ export async function getAnalytics(req, res) {
     } catch (error) {
       console.error('Error retrieving analytics:', error);
       res.status(500).json({ error: 'Error retrieving analytics' });
+    }finally {
+      await prisma.$disconnect();
     }
   }
   
@@ -107,6 +109,8 @@ export async function getAnalytics(req, res) {
     } catch (error) {
       console.error('Error tracking visitor:', error);
       res.status(500).json({ error: 'Error tracking visitor' });
+    }finally {
+      await prisma.$disconnect();
     }
   }
   
@@ -130,6 +134,8 @@ export async function getAnalytics(req, res) {
     } catch (error) {
       console.error('Error updating visit duration:', error);
       res.status(500).json({ error: 'Error updating visit duration' });
+    }finally {
+      await prisma.$disconnect();
     }
   }
   

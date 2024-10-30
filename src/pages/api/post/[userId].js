@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const posts = await prisma.post.findMany({
       where: {
         userId: userId,
-        visibility: 'PUBLIC', // Filter to include only posts with PUBLIC visibility
+        visibility: 'PUBLIC', 
       },
       include: {
         user: {
@@ -29,6 +29,7 @@ export default async function handler(req, res) {
               select: {
                 id: true,
                 name: true,
+                
                 profilePicture: true,
               },
             },
@@ -74,5 +75,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error("Error fetching posts:", error);
     res.status(500).json({ error: "Failed to fetch posts" });
+  }finally {
+    await prisma.$disconnect();
   }
 }

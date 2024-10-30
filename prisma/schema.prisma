@@ -14,6 +14,7 @@ model User {
   password                String?
   phoneNumber             String?
   username                String?
+  isOwner                 Boolean   @default(false)
   profilePicture          String?
   otp                     String?
   otpExpiry               DateTime?

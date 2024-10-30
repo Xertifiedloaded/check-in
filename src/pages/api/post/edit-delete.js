@@ -26,7 +26,6 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        // Get the user's session
         const posts = await prisma.post.findMany({
           where: { userId: userId },
           include: {

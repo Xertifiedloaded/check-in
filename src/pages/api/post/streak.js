@@ -44,5 +44,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error("Error fetching streaks: ", error);
     res.status(500).json({ error: "An error occurred while fetching streaks." });
+  }finally {
+    await prisma.$disconnect();
   }
 }
