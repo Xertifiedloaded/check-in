@@ -142,8 +142,8 @@ export default function PersonalSpace() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="max-w-6xl  mx-auto ">
+        <div className="bg-white   overflow-hidden">
           <div
             style={{
               backgroundImage: `url(${profile.profilePicture})`,
@@ -166,7 +166,7 @@ export default function PersonalSpace() {
             </div>
           </div>
 
-          <div className="pt-24 px-8 pb-8">
+          <div className="pt-24 px-4 md:px-8 lg:px-2 pb-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
@@ -304,11 +304,9 @@ const StatCard = ({ title, value, icon, className = "" }) => (
 
 export const PostCard = ({
   post,
-  publicPosts,
-  activeTab,
-  privatePosts,
-  setPublicPosts,
+  handlePostDelete,
   setPrivatePosts,
+  setPublicPosts,
 }) => {
   const parseContent = (content) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -327,7 +325,7 @@ export const PostCard = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-xl shadow-sm p-3 lg:text-sm text-[14px] hover:shadow-md transition-shadow duration-200">
       <p className="text-gray-800">
         {parseContent(post.content).map((part, index) => {
           if (part.match(/^https?:\/\//)) {
@@ -354,7 +352,12 @@ export const PostCard = ({
             day: "numeric",
           })}
         </div>
-        <EditDeletePost post={post} />
+        <EditDeletePost
+          setPrivatePosts={setPrivatePosts}
+          setPublicPosts={setPublicPosts}
+          handlePostDelete={handlePostDelete}
+          post={post}
+        />
       </div>
     </div>
   );

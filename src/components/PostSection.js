@@ -10,6 +10,20 @@ const PostsSection = ({ profile }) => {
   const [publicPosts, setPublicPosts] = useState(profile?.publicPosts || []);
   const [privatePosts, setPrivatePosts] = useState(profile?.privatePosts || []);
 
+
+  const handlePostDelete = (postId) => {
+    const postExistsInPublic = publicPosts.some((post) => post.id === postId);
+    const postExistsInPrivate = privatePosts.some((post) => post.id === postId);
+    if (postExistsInPublic || postExistsInPrivate) {
+      setPublicPosts((prevPublicPosts) =>
+        prevPublicPosts.filter((post) => post.id !== postId)
+      );
+
+      setPrivatePosts((prevPrivatePosts) =>
+        prevPrivatePosts.filter((post) => post.id !== postId)
+      );
+    }
+  };
   const tabs = [
     { id: "public", label: "Public Posts" },
     { id: "private", label: "Private Posts" },
@@ -63,6 +77,7 @@ const PostsSection = ({ profile }) => {
         {getCurrentPosts().map((post, index) => (
           <PostCard
           activeTab={activeTab}
+          handlePostDelete={handlePostDelete}
             publicPosts={publicPosts}
             privatePosts={privatePosts}
             setPrivatePosts={setPrivatePosts}
