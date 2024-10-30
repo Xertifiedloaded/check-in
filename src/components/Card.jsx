@@ -2,20 +2,103 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Share2 } from "lucide-react";
+import { Heart, Share2,BadgeCheck } from "lucide-react";
 import useLikeStatus from "@/utils/actions";
 import { useEffect, useState } from "react";
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai";
 import { BsFire } from "react-icons/bs";
 import { formatDistanceToNow } from "date-fns";
+// export default function Card({ post }) {
+// console.log(post);
+//   const user = post.user || {};
+//   console.log(post);
+//   const { isLiked, toggleLike, loading, count } = useLikeStatus(
+//     user.id,
+//     post.id
+//   );
+
+//   const handleToggleLike = async (e) => {
+//     e.preventDefault();
+//     e.stopPropagation();
+//     await toggleLike();
+//   };
+
+//   const truncateContent = (content) => {
+//     const width = window.innerWidth;
+//     const length = width <= 768 ? 40 : 25;
+
+//     return content.length > length ? content.slice(0, length) + "..." : content;
+//   };
+
+//   return (
+//     <Link
+//       href={`/checkin/${user.id}`}
+//       onClick={(e) => e.stopPropagation()}
+//       className="block p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+//     >
+//       <Link
+//         href={`/information/${user.id}`}
+//         onClick={(e) => e.stopPropagation()}
+//         className="flex items-center space-x-3"
+//       >
+//         <Image
+//           src={user.profilePicture ?? "/no-user-pic.png"}
+//           width={40}
+//           height={40}
+//           className="rounded-full w-[30px] h-[30px] object-cover"
+//           alt={user.name || "User"}
+//         />
+//         <div className="flex-grow">
+//           <h2 className="text-sm font-semibold text-gray-900 flex items-center">
+//             {user.name?.split(" ")[0] ?? "Unknown User"}
+//             {user?.isVerified && (
+//               <svg
+//                 className="w-3 h-3 text-blue-500 fill-current"
+//                 viewBox="0 0 24 24"
+//               >
+//                 <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z" />
+//               </svg>
+//             )}
+//           </h2>
+//           <p className="text-xs text-gray-500">
+//             @{user.name?.split(" ")[0] ?? "Unknown User"}
+//           </p>
+//         </div>
+//         <button
+//           onClick={handleToggleLike}
+//           disabled={loading}
+//           className={`flex items-center space-x-1 text-sm ${
+//             isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
+//           }`}
+//         >
+//           <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
+//           <span>{count}</span>
+//         </button>
+//       </Link>
+
+//       <div>
+//         <div className="mt-2 text-sm text-gray-800">
+//           {truncateContent(post.content)}
+//         </div>
+
+//         {post.currentStreak > 1 && (
+//           <div className="mt-2 text-xs text-gray-600">
+//             🔥 {post.currentStreak} day streak
+//           </div>
+//         )}
+//         <div className="mt-2 text-xs text-gray-600">
+//           {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+//         </div>
+//       </div>
+//     </Link>
+//   );
+// }
+
+
+
 export default function Card({ post }) {
-console.log(post);
   const user = post.user || {};
-  console.log(post);
-  const { isLiked, toggleLike, loading, count } = useLikeStatus(
-    user.id,
-    post.id
-  );
+  const { isLiked, toggleLike, loading, count } = useLikeStatus(user.id, post.id);
 
   const handleToggleLike = async (e) => {
     e.preventDefault();
@@ -29,70 +112,77 @@ console.log(post);
 
     return content.length > length ? content.slice(0, length) + "..." : content;
   };
-
   return (
-    <Link
-      href={`/checkin/${user.id}`}
-      onClick={(e) => e.stopPropagation()}
-      className="block p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-    >
-      <Link
-        href={`/information/${user.id}`}
-        onClick={(e) => e.stopPropagation()}
-        className="flex items-center space-x-3"
-      >
-        <Image
-          src={user.profilePicture ?? "/no-user-pic.png"}
-          width={40}
-          height={40}
-          className="rounded-full w-[30px] h-[30px] object-cover"
-          alt={user.name || "User"}
-        />
-        <div className="flex-grow">
-          <h2 className="text-sm font-semibold text-gray-900 flex items-center">
-            {user.name?.split(" ")[0] ?? "Unknown User"}
-            {user?.isVerified && (
-              <svg
-                className="w-3 h-3 text-blue-500 fill-current"
-                viewBox="0 0 24 24"
-              >
-                <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z" />
-              </svg>
+    <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200">
+      <div className="p-4 flex items-start justify-between border-b border-gray-50">
+        <Link
+          href={`/information/${user.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className="flex items-center space-x-3 group"
+        >
+          <div className="relative">
+            <Image
+              src={user.profilePicture ?? "/no-user-pic.png"}
+              width={40}
+              height={40}
+              className="rounded-full w-10 h-10 object-cover ring-2 ring-gray-50"
+              alt={user.name || "User"}
+            />
+            {post.currentStreak > 1 && (
+              <div className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center">
+                <span className="mr-0.5">🔥</span>{post.currentStreak}
+              </div>
             )}
-          </h2>
-          <p className="text-xs text-gray-500">
-            @{user.name?.split(" ")[0] ?? "Unknown User"}
-          </p>
-        </div>
+          </div>
+          
+          <div className="flex-grow">
+            <div className="flex items-center gap-1">
+              <h2 className="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                {user.name?.split(" ")[0] ?? "Unknown User"}
+              </h2>
+              {user?.isVerified && (
+                <BadgeCheck className="w-4 h-4 text-blue-500" />
+              )}
+            </div>
+            <p className="text-xs text-gray-500">
+              {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+            </p>
+          </div>
+        </Link>
+
         <button
           onClick={handleToggleLike}
           disabled={loading}
-          className={`flex items-center space-x-1 text-sm ${
-            isLiked ? "text-red-500" : "text-gray-500 hover:text-red-500"
-          }`}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all
+            ${isLiked 
+              ? "text-red-500 bg-red-50" 
+              : "text-gray-400 hover:text-red-500 hover:bg-red-50"
+            }`}
         >
-          <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
-          <span>{count}</span>
+          <Heart 
+            size={16} 
+            className={`transition-transform ${isLiked ? "scale-110" : "scale-100"}`}
+            fill={isLiked ? "currentColor" : "none"} 
+          />
+          <span className="text-xs font-medium">{count}</span>
         </button>
-      </Link>
-
-      <div>
-        <div className="mt-2 text-sm text-gray-800">
-          {truncateContent(post.content)}
-        </div>
-
-        {post.currentStreak > 1 && (
-          <div className="mt-2 text-xs text-gray-600">
-            🔥 {post.currentStreak} day streak
-          </div>
-        )}
-        <div className="mt-2 text-xs text-gray-600">
-          {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
-        </div>
       </div>
-    </Link>
+
+      <Link
+        href={`/checkin/${user.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="block p-4 hover:bg-gray-50 transition-colors"
+      >
+        <p className="text-sm text-gray-700 leading-relaxed">
+          {truncateContent(post.content)}
+        </p>
+      </Link>
+    </div>
   );
 }
+
+
+
 
 
 

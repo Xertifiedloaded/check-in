@@ -1,86 +1,130 @@
 import React, { useState } from "react";
-import Button from "./Buttons";
-import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useCheckIn } from "@/context/CheckInContext";
+import { toast } from "react-toastify";
+import { Clock, Lock, Globe, Sparkles } from "lucide-react";
 
-export default function Heading() {
+export default function DailyCheckIn() {
   const [content, setContent] = useState("");
   const [visibility, setVisibility] = useState("PUBLIC");
   const { data: session } = useSession();
   const { postCheckIn } = useCheckIn();
   const userId = session?.user?.id;
 
-  const handleClick = (e) => {
-    if (!userId) {
-      e.preventDefault();
-      toast.warning("You need to log in to check in.");
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!userId) {
+      return toast.warning("You need to log in to check in.");
+    }
     if (!content.trim()) {
       return toast.warning("Content cannot be empty.");
     }
     postCheckIn(content, userId, visibility);
+    setContent("");
   };
 
   return (
-    <section className="nav-wrapper grid justify-items-center">
-      <div>
-        <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight text-center text-slate-800 sm:text-5xl md:text-7xl">
-          Daily Check-In
-        </h1>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="working" className="w-full">
-            <p className="lg:mt-10 my-6 lg:mb-3 text-center text-xs md:text-sm text-slate-500">
-              Stay on track, achieve your goals, and beat procrastination
-              together!
-            </p>
-
-            <div onClick={handleClick} className="relative">
-              <textarea
-                className={`resize-none border-2 outline-none block w-full placeholder:text-xs shadow-sm h-[120px] p-4 rounded-lg border-gray-200 ${
-                  !userId ? "cursor-not-allowed" : ""
-                }`}
-                id="working"
-                placeholder={
-                  userId
-                    ? "What are you working on today?"
-                    : "Log in to enable check-in."
-                }
-                value={content}
-                onChange={(e) => userId && setContent(e.target.value)}
-                disabled={!userId}
-              ></textarea>
-              {!userId && <div className="absolute inset-0"></div>}
+    <div className="max-w-2xl mx-auto">
+      <div className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-t-2xl p-6 text-white">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <Clock className="w-6 h-6" />
             </div>
-          </label>
+            <h2 className="text-2xl font-bold">Daily Check-In</h2>
+          </div>
+          <div className="hidden sm:block">
+            <Sparkles className="w-6 h-6 text-yellow-300" />
+          </div>
+        </div>
+        <p className="text-white/90">
+          Share your daily progress and inspire others!
+        </p>
+      </div>
 
-          <div className="mt-2 text-center">
-            <select
-              id="visibility"
-              value={visibility}
-              onChange={(e) => setVisibility(e.target.value)}
-              className="mt-1 text-slate-500 bg-transparent font-medium px-3 block w-full rounded-lg border-gray-200 h-[40px] outline-none  border  shadow-sm sm:text-sm"
+      <div className="bg-white rounded-b-2xl shadow-md p-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="relative">
+            <textarea
+              placeholder={
+                userId
+                  ? "What did you accomplish today? Share your wins, big or small..."
+                  : "Please login to share your progress..."
+              }
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
               disabled={!userId}
-            >
-              <option value="PUBLIC">Public</option>
-              <option value="PRIVATE">Private</option>
-            </select>
+              className={`w-full p-4 min-h-[150px] rounded-xl border-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none transition-all duration-200
+                ${
+                  !userId
+                    ? "bg-gray-50 text-gray-500 cursor-not-allowed"
+                    : "bg-white hover:border-indigo-300"
+                }`}
+            />
+            {!userId && (
+              <div className="absolute inset-0 bg-gray-50/50 rounded-xl backdrop-blur-[1px] flex items-center justify-center">
+                <p className="text-gray-500 font-medium bg-white px-6 py-3 rounded-full shadow-sm">
+                  Login required to share
+                </p>
+              </div>
+            )}
           </div>
 
-          <div className="text-center mt-10">
-            <Button
+          {/* Controls */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            {/* Visibility Toggle */}
+            <div className="relative w-full sm:w-auto">
+              <select
+                value={visibility}
+                onChange={(e) => setVisibility(e.target.value)}
+                disabled={!userId}
+                className={`w-full sm:w-[180px] pl-10 pr-4 py-2.5 rounded-xl border-2 bg-white appearance-none
+                  ${
+                    !userId
+                      ? "bg-gray-50 text-gray-500 cursor-not-allowed"
+                      : "hover:border-indigo-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  }
+                  cursor-pointer`}
+              >
+                <option value="PUBLIC">Public Post</option>
+                <option value="PRIVATE">Private Note</option>
+              </select>
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                {visibility === "PUBLIC" ? (
+                  <Globe className="w-5 h-5 text-gray-500" />
+                ) : (
+                  <Lock className="w-5 h-5 text-gray-500" />
+                )}
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button
               type="submit"
-              className="bg-blue-700 px-24 text-sm ring-4 py-4 font-medium rounded-[25px] text-white"
-              value="Check-In"
-              disabled={!userId}
-            />
+              disabled={!userId || !content.trim()}
+              className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-200
+                ${
+                  !userId || !content.trim()
+                    ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                    : "bg-gradient-to-r from-indigo-600 to-violet-600 text-white hover:shadow-lg hover:shadow-indigo-500/25 active:scale-[0.98]"
+                }
+                w-full sm:w-auto sm:ml-auto`}
+            >
+              Share Progress
+            </button>
           </div>
         </form>
+
+        {/* Tips Section */}
+        <div className="mt-6 pt-6 border-t">
+          <div className="flex items-center gap-2 text-gray-600">
+            <Sparkles className="w-4 h-4 text-yellow-500" />
+            <p className="text-sm">
+              Pro tip: Share specific achievements to inspire others!
+            </p>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
