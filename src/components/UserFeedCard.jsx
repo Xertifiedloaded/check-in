@@ -22,7 +22,7 @@ export function FeedUserCard({ post }) {
   const [localPost, setLocalPost] = useState(post);
   const [error, setError] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
-  const modalRef = useRef(null);
+
   const handleToggleLike = async (e) => {
     e.preventDefault();
     e.stopPropagation();

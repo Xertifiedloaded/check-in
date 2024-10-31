@@ -1,3 +1,4 @@
+'use client'
 import React, { useRef } from "react";
 import Image from "next/image";
 import { Send, X } from "lucide-react";
@@ -11,22 +12,22 @@ export default function CommentModal({
   renderComment,
   comments,
 }) {
-    const modalRef = useRef(null);
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-          if (modalRef.current && !modalRef.current.contains(event.target)) {
-            handleToggleComments(); 
-          }
-        };
+    // const modalRef = useRef(null);
+    // useEffect(() => {
+    //     const handleClickOutside = (event) => {
+    //       if (modalRef?.current && !modalRef?.current?.contains(event.target)) {
+    //         handleToggleComments(); 
+    //       }
+    //     };
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
-        };
-      }, [handleToggleComments]);
+    //     document.addEventListener('mousedown', handleClickOutside);
+    //     return () => {
+    //       document.removeEventListener('mousedown', handleClickOutside);
+    //     };
+    //   }, [handleToggleComments]);
     
   return (
-    <div  ref={modalRef} className="fixed inset-0   z-[100] overflow-scroll bg-black bg-opacity-50 flex justify-center items-center">
+    <div   className="fixed inset-0   z-[100] overflow-scroll bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-xl mx-4 p-4 space-y-4">
         <div className="flex justify-between items-center">
           <h1>Comment on Post</h1>
@@ -62,12 +63,12 @@ export default function CommentModal({
         </form>
 
         <div className="space-y-4">
-          {comments.length === 0 ? (
+          {comments?.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400 text-center py-4">
               No comments yet
             </p>
           ) : (
-            comments.map((comment) => renderComment(comment))
+            comments?.map((comment) => renderComment(comment))
           )}
         </div>
       </div>

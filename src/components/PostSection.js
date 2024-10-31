@@ -1,5 +1,5 @@
+'use client'
 import { PostCard } from "@/pages/personal-space";
-import axios from "axios";
 import React, { useState } from "react";
 import { Pagination } from "./Pagination";
 
