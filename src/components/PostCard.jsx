@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import Image from "next/image";
 import {
@@ -11,7 +12,6 @@ import {
   Bookmark,
   X,
 } from "lucide-react";
-
 
 const TwitterStylePost = ({
   user,
@@ -37,11 +37,9 @@ const TwitterStylePost = ({
   const [showActions, setShowActions] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-
-
   return (
     <>
-      <div className="bg-white   dark:bg-gray-800 backdrop-blur-lg rounded-xl shadow-sm border border-gray-100 dark:border-gray-700/50  mb-6 transition-all duration-200">
+      <div className="bg-white overflow-x-hidden   dark:bg-gray-800 backdrop-blur-lg rounded-xl shadow-sm border border-gray-100 dark:border-gray-700/50  mb-6 transition-all duration-200">
         <div className="p-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -67,7 +65,7 @@ const TwitterStylePost = ({
             </div>
             <div className="flex flex-col">
               <span className="font-medium text-gray-900 dark:text-gray-100">
-                {user?.name ? user.name.split(" ")[0] : "Unknown User"}
+                {user?.name ? user?.name.split(" ")[0] : "Unknown User"}
               </span>
               <span className="text-xs text-gray-500 dark:text-gray-400">
                 {new Date(localPost?.createdAt).toLocaleDateString("en-US", {
@@ -93,7 +91,7 @@ const TwitterStylePost = ({
 
             {showActions && (
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1  border border-gray-100 dark:border-gray-700">
-                {session?.user?.id === user.id && (
+                {session?.user?.id === user?.id && (
                   <>
                     <button
                       onClick={handleEditToggle}
@@ -103,7 +101,7 @@ const TwitterStylePost = ({
                       <span>Edit post</span>
                     </button>
                     <button
-                      onClick={() => handleDelete(localPost.id)}
+                      onClick={() => handleDelete(localPost?.id)}
                       className="w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
                     >
                       <Trash size={16} />
@@ -149,7 +147,7 @@ const TwitterStylePost = ({
               </div>
             </div>
           ) : (
-            <p className="text-gray-800 dark:text-gray-200 leading-relaxed">
+            <p className="text-gray-800  dark:text-gray-200 leading-relaxed">
               {localPost?.content}
             </p>
           )}
@@ -212,7 +210,7 @@ const TwitterStylePost = ({
       {showComments && (
         <div className="border-t   border-gray-100 dark:border-gray-700/50">
           <CommentSection
-          handleToggleComments={handleToggleComments}
+            handleToggleComments={handleToggleComments}
             userId={session?.user?.id}
             onClose={onClose}
             postId={localPost.id}
