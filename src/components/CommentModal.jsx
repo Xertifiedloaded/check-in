@@ -1,7 +1,8 @@
 'use client'
-import React, { useRef } from "react";
+import React from "react";
 import Image from "next/image";
 import { Send, X } from "lucide-react";
+
 export default function CommentModal({
   handleCommentSubmit,
   handleToggleComments,
@@ -12,57 +13,31 @@ export default function CommentModal({
   renderComment,
   comments,
 }) {
-    // const modalRef = useRef(null);
-    // useEffect(() => {
-    //     const handleClickOutside = (event) => {
-    //       if (modalRef?.current && !modalRef?.current?.contains(event.target)) {
-    //         handleToggleComments(); 
-    //       }
-    //     };
+  const handleOutsideClick = (e) => {
+    if (e.target === e.currentTarget) {
+      handleToggleComments();
+    }
+  };
 
-    //     document.addEventListener('mousedown', handleClickOutside);
-    //     return () => {
-    //       document.removeEventListener('mousedown', handleClickOutside);
-    //     };
-    //   }, [handleToggleComments]);
-    
   return (
-    <div   className="fixed inset-0   z-[100] overflow-scroll bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-xl mx-4 p-4 space-y-4">
-        <div className="flex justify-between items-center">
-          <h1>Comment on Post</h1>
-          <X onClick={handleToggleComments} />
-        </div>
-        <form
-          onSubmit={handleCommentSubmit}
-          className="flex items-center space-x-3"
-        >
-          <Image
-            src={session?.user?.image ?? "/no-user.png"}
-            width={32}
-            height={32}
-            className="w-10 h-10 object-cover rounded-full border-2 border-gray-300 dark:border-gray-600"
-            alt="User Avatar"
-          />
-          <div className="flex-grow">
-            <input
-              type="text"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Add a comment..."
-              className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition duration-300"
-            />
-          </div>
-          <button
-            type="submit"
-            className="text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading || !newComment.trim()}
+    <div 
+      onClick={handleOutsideClick}
+      className="fixed inset-0 z-[100] bg-black bg-opacity-50 flex flex-col justify-end md:justify-center md:items-center"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white dark:bg-gray-800 w-full md:w-full md:max-w-xl rounded-t-lg md:rounded-lg shadow-lg mx-0 md:mx-4 flex flex-col max-h-[90vh]"
+      >
+        <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
+          <h2 className="text-lg font-semibold">Comments</h2>
+          <button 
+            onClick={handleToggleComments} 
+            className="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full p-1"
           >
-            {loading ? <div className="replyloader" /> : <Send size={20} />}
+            <X size={24} />
           </button>
-        </form>
-
-        <div className="space-y-4">
+        </div>
+        <div className="flex-grow overflow-y-auto px-4 py-2 space-y-4">
           {comments?.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400 text-center py-4">
               No comments yet
@@ -70,6 +45,36 @@ export default function CommentModal({
           ) : (
             comments?.map((comment) => renderComment(comment))
           )}
+        </div>
+        <div className="sticky bottom-0 bg-white dark:bg-gray-800 border-t dark:border-gray-700 p-4">
+          <form 
+            onSubmit={handleCommentSubmit}
+            className="flex items-center space-x-3"
+          >
+            <Image
+              src={session?.user?.image ?? "/no-user.png"}
+              width={40}
+              height={40}
+              className="w-10 h-10 object-cover rounded-full border-2 border-gray-300 dark:border-gray-600"
+              alt="User Avatar"
+            />
+            <div className="flex-grow">
+              <input
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Add a comment..."
+                className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition duration-300"
+              />
+            </div>
+            <button
+              type="submit"
+              className="text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading || !newComment.trim()}
+            >
+              {loading ? <div className="replyloader" /> : <Send size={20} />}
+            </button>
+          </form>
         </div>
       </div>
     </div>
