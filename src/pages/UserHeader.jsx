@@ -40,7 +40,7 @@ export default function UserHeader() {
   const NavLink = ({ href, icon: Icon, children }) => (
     <Link
       href={href}
-      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-gray-100 hover:text-gray-900"
+      className="flex items-center px-3 py-2 rounded-md text-sm font-medium dark:text-white text-gray-900 hover:bg-gray-100 hover:text-gray-900"
     >
       <Icon className="mr-3 h-5 w-5" />
       {children}
@@ -48,16 +48,16 @@ export default function UserHeader() {
   );
 
   return (
-    <nav className="text-white bg-gradient-to-r from-indigo-600 to-violet-600 shadow">
+    <nav className=" dark:bg-gray-800 bg-white text-gray-900 dark:text-white ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex text-white">
+          <div className="flex text-gray-900">
             <div className="flex-shrink-0 gap-5 flex items-center">
               <Link href="/">
                 <Image
                   width={32}
                   height={32}
-                  className="h-8 w-auto invert-0"
+                  className="h-8 dark:invert w-auto invert-0"
                   src="/check.svg"
                   alt="Logo"
                 />
@@ -81,14 +81,14 @@ export default function UserHeader() {
           <div className="hidden lg:ml-6 lg:flex lg:items-center">
             <Link
               href="/personal-space"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md dark:text-white text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Dashboard
             </Link>
 
             <div className="ml-3 relative">
               <div>
-                <button className="bg-white p-1 rounded-full text-white hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button className="bg-white p-1 rounded-full text-gray-900 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   <span className="sr-only">View profile</span>
                   <Image
                     className="h-8 w-8 rounded-full"
@@ -101,7 +101,7 @@ export default function UserHeader() {
               </div>
             </div>
             <div
-              className="text-xs ml-4 flex items-center font-medium text-white"
+              className="text-xs ml-4 flex items-center font-medium dark:text-white text-gray-900"
               onClick={() => signOut({ callbackUrl: "/" })}
             >
               <LogOut size={16} className="mr-2" />
@@ -111,7 +111,7 @@ export default function UserHeader() {
           <div className="-mr-2 flex items-center lg:hidden">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              className="inline-flex items-center justify-center  p-2 rounded-md text-gray-400 dark:text-white   focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (
@@ -153,10 +153,10 @@ export default function UserHeader() {
                 />
               </div>
               <div className="ml-3">
-                <div className="text-base font-medium text-white">
+                <div className="text-base font-medium dark:text-white text-gray-900">
                   {session?.user?.name}
                 </div>
-                <div className="text-sm font-medium text-white">
+                <div className="text-sm font-medium dark:text-white text-gray-900">
                   {session?.user?.email}
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function UserHeader() {
               </NavLink>
             </div>
             <div
-              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-gray-100 hover:text-gray-900"
+              className="flex items-center px-3 py-2 rounded-md text-sm font-medium dark:text-white text-gray-900 hover:bg-gray-100 hover:text-gray-900"
               onClick={() => signOut({ callbackUrl: "/" })}
             >
               <LogOut size={16} className="mr-3 h-5 w-5" />

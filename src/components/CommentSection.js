@@ -1,170 +1,172 @@
-import React, { useState, useEffect } from "react"
-import axios from "axios"
-import Image from "next/image"
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Image from "next/image";
 import {
-  Heart,
   MoreHorizontal,
   Send,
   ChevronDown,
   ChevronUp,
-} from "lucide-react"
-import { useSession } from "next-auth/react"
+} from "lucide-react";
+import { useSession } from "next-auth/react";
+import CommentModal from "./CommentModal";
 
 function CommentSection({
   postId,
   userId,
   comments: initialComments,
   updateCommentCount,
-}) {
-  const [newComment, setNewComment] = useState("")
-  const [comments, setComments] = useState(initialComments || [])
-  const [loading, setLoading] = useState(false)
+  handleToggleComments
 
-  const [editingComment, setEditingComment] = useState(null)
-  const [updatedComment, setUpdatedComment] = useState("")
-  const [deletingCommentId, setDeletingCommentId] = useState(null)
-  const [replyingTo, setReplyingTo] = useState(null)
-  const [newReply, setNewReply] = useState("")
-  const [expandedReplies, setExpandedReplies] = useState({})
-  const [editingReply, setEditingReply] = useState(null)
-  const [updatedReply, setUpdatedReply] = useState("")
-  const { data: session } = useSession()
+}) {
+  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState(initialComments || []);
+  const [loading, setLoading] = useState(false);
+
+  const [editingComment, setEditingComment] = useState(null);
+  const [updatedComment, setUpdatedComment] = useState("");
+  const [deletingCommentId, setDeletingCommentId] = useState(null);
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [newReply, setNewReply] = useState("");
+  const [expandedReplies, setExpandedReplies] = useState({});
+  const [editingReply, setEditingReply] = useState(null);
+  const [updatedReply, setUpdatedReply] = useState("");
+  const { data: session } = useSession();
   useEffect(() => {
     const intervalId = setInterval(() => {
-      fetchNewComments()
-    }, 10000)
-    return () => clearInterval(intervalId)
-  }, [comments])
+      fetchNewComments();
+    }, 10000);
+    return () => clearInterval(intervalId);
+  }, [comments]);
 
   const fetchNewComments = async () => {
-    if (comments.length === 0) return
-    const latestComment = comments[0]
+    if (comments.length === 0) return;
+    const latestComment = comments[0];
     try {
       const response = await axios.get(`/api/comment/comment`, {
         params: {
           postId,
           after: latestComment.createdAt,
         },
-      })
+      });
       if (response.status === 200) {
-        const newComments = response.data.comments
+        const newComments = response.data.comments;
         if (newComments.length > 0) {
-          setComments((prevComments) => [...newComments, ...prevComments])
+          setComments((prevComments) => [...newComments, ...prevComments]);
         }
       }
     } catch (error) {
-      console.error("Error fetching new comments:", error)
+      console.error("Error fetching new comments:", error);
     }
-  }
+  };
 
   const handleCommentSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (newComment.trim()) {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await axios.post("/api/comment/comment", {
           content: newComment,
           postId,
           userId,
-        })
+        });
 
         if (response.status === 201) {
-          const newCommentObj = response.data
-          setComments((prevComments) => [newCommentObj, ...prevComments])
-          setNewComment("")
-          updateCommentCount((prevCount) => prevCount + 1)
+          const newCommentObj = response.data;
+          setComments((prevComments) => [newCommentObj, ...prevComments]);
+          setNewComment("");
+          updateCommentCount((prevCount) => prevCount + 1);
         } else {
-          console.error("Failed to submit comment")
+          console.error("Failed to submit comment");
         }
       } catch (error) {
-        console.error("Error submitting comment:", error)
+        console.error("Error submitting comment:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-  }
+  };
 
   const handleEditComment = (comment) => {
-    setEditingComment(comment.id)
-    setUpdatedComment(comment.content)
-  }
+    setEditingComment(comment.id);
+    setUpdatedComment(comment.content);
+  };
 
   const handleDeleteComment = async (commentId) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
-      setDeletingCommentId(commentId)
+      setDeletingCommentId(commentId);
       try {
         const response = await axios.delete(
           `/api/comment/comment?commentid=${commentId}`
-        )
+        );
         if (response.status === 204) {
           setComments((prevComments) =>
             prevComments.filter((comment) => comment.id !== commentId)
-          )
-          updateCommentCount((prevCount) => prevCount - 1)
+          );
+          updateCommentCount((prevCount) => prevCount - 1);
         } else {
-          console.error("Failed to delete comment")
+          console.error("Failed to delete comment");
         }
       } catch (error) {
         if (error.response?.status === 403) {
-          alert("You are not authorized to delete this comment.")
+          alert("You are not authorized to delete this comment.");
         } else {
-          console.error("Error deleting comment:", error)
+          console.error("Error deleting comment:", error);
         }
       } finally {
-        setDeletingCommentId(null)
+        setDeletingCommentId(null);
       }
     }
-  }
+  };
 
   const handleUpdateComment = async (e, commentId) => {
-    e.preventDefault()
+    e.preventDefault();
     if (updatedComment.trim()) {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await axios.patch(
           `/api/comment/comment?commentid=${commentId}`,
           {
             content: updatedComment,
           }
-        )
+        );
 
         if (response.status === 200) {
-          const updatedCommentObj = { ...response.data, id: commentId }
+          const updatedCommentObj = { ...response.data, id: commentId };
           setComments((prevComments) =>
             prevComments.map((comment) =>
               comment.id === commentId ? updatedCommentObj : comment
             )
-          )
-          setEditingComment(null)
-          setUpdatedComment("")
+          );
+          setEditingComment(null);
+          setUpdatedComment("");
         } else {
-          console.error("Failed to update comment")
+          console.error("Failed to update comment");
         }
       } catch (error) {
         if (error.response?.status === 403) {
-          alert("You are not authorized to update this comment.")
+          alert("You are not authorized to update this comment.");
         } else {
-          console.error("Error updating comment:", error)
+          console.error("Error updating comment:", error);
         }
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-  }
+  };
 
   const handleReplySubmit = async (e, commentId) => {
-    e.preventDefault()
+    e.preventDefault();
     if (newReply.trim()) {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await axios.post("/api/comment/reply", {
           content: newReply,
           userId,
           commentId,
-        })
+        });
 
         if (response.status === 201) {
-          const newReplyObj = response.data
+          const newReplyObj = response.data;
           setComments((prevComments) =>
             prevComments.map((comment) =>
               comment.id === commentId
@@ -174,40 +176,40 @@ function CommentSection({
                   }
                 : comment
             )
-          )
-          setNewReply("")
-          setReplyingTo(null)
-          updateCommentCount((prevCount) => prevCount + 1)
+          );
+          setNewReply("");
+          setReplyingTo(null);
+          updateCommentCount((prevCount) => prevCount + 1);
         } else {
-          console.error("Failed to submit reply")
+          console.error("Failed to submit reply");
         }
       } catch (error) {
-        console.error("Error submitting reply:", error)
+        console.error("Error submitting reply:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-  }
+  };
 
   const handleEditReply = (reply) => {
-    setEditingReply(reply.id)
-    setUpdatedReply(reply.content)
-  }
+    setEditingReply(reply.id);
+    setUpdatedReply(reply.content);
+  };
 
   const handleUpdateReply = async (e, replyId, commentId) => {
-    e.preventDefault()
+    e.preventDefault();
     if (updatedReply.trim()) {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await axios.patch(
           `/api/comment/reply?replyId=${replyId}`,
           {
             content: updatedReply,
           }
-        )
+        );
 
         if (response.status === 200) {
-          const updatedReplyObj = response.data
+          const updatedReplyObj = response.data;
           setComments((prevComments) =>
             prevComments.map((comment) =>
               comment.id === commentId
@@ -221,29 +223,29 @@ function CommentSection({
                   }
                 : comment
             )
-          )
-          setEditingReply(null)
-          setUpdatedReply("")
+          );
+          setEditingReply(null);
+          setUpdatedReply("");
         } else {
-          console.error("Failed to update reply")
+          console.error("Failed to update reply");
         }
       } catch (error) {
-        console.error("Error updating reply:", error)
-        alert("Failed to update reply. Please try again.")
+        console.error("Error updating reply:", error);
+        alert("Failed to update reply. Please try again.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     } else {
-      alert("Reply content cannot be empty.")
+      alert("Reply content cannot be empty.");
     }
-  }
+  };
 
   const handleDeleteReply = async (replyId, commentId) => {
     if (window.confirm("Are you sure you want to delete this reply?")) {
       try {
         const response = await axios.delete(
           `/api/comment/reply?replyId=${replyId}`
-        )
+        );
         if (response.status === 204) {
           setComments((prevComments) =>
             prevComments.map((comment) =>
@@ -256,21 +258,21 @@ function CommentSection({
                   }
                 : comment
             )
-          )
-          updateCommentCount((prevCount) => prevCount - 1)
+          );
+          updateCommentCount((prevCount) => prevCount - 1);
         } else {
-          console.error("Failed to delete reply")
+          console.error("Failed to delete reply");
         }
       } catch (error) {
-        console.error("Error deleting reply:", error)
-        alert("Failed to delete reply. Please try again.")
+        console.error("Error deleting reply:", error);
+        alert("Failed to delete reply. Please try again.");
       }
     }
-  }
+  };
 
   const toggleReplies = (commentId) => {
-    setExpandedReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }))
-  }
+    setExpandedReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
+  };
 
   const renderComment = (comment, isReply = false) => (
     <div
@@ -355,7 +357,7 @@ function CommentSection({
                   ? setUpdatedReply(e.target.value)
                   : setUpdatedComment(e.target.value)
               }
-              className="w-full border-b text-sm py-1 focus:outline-none focus:border-blue-500 transition-all duration-300"
+              className="w-full dark:bg-transparent dark:border dark:border-gray-500 px-1 rounded-md border-b text-sm py-1 focus:outline-none focus:border-blue-500 transition-all duration-300"
             />
             <div className="flex justify-end mt-2 space-x-2">
               <button
@@ -395,11 +397,11 @@ function CommentSection({
               value={newReply}
               onChange={(e) => setNewReply(e.target.value)}
               placeholder="Add a reply..."
-            className="w-full px-2 border-b box-border text-base py-2  focus:outline-none focus:border-blue-500 transition-all duration-300"
+              className="w-full px-2 border-b  dark:bg-transparent dark:border-0 box-border text-base py-2  focus:outline-none focus:border-blue-500 transition-all duration-300"
             />
             <button
               type="submit"
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading || !newReply.trim()}
             >
               {loading ? (
@@ -438,52 +440,20 @@ function CommentSection({
         )}
       </div>
     </div>
-  )
+  );
 
   return (
-    <div className=" space-y-4">
-      <form
-        onSubmit={handleCommentSubmit}
-        className="flex items-center space-x-3"
-      >
-        <Image
-          src={session?.user?.image ?? "/no-user.png"}
-          width={32}
-          height={32}
-          className="w-8 h-8 object-cover rounded-full"
-          alt="User Avatar"
-        />
-        <div className="flex-grow relative">
-          <input
-            type="text"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
-            className="w-full px-2 border-b box-border text-base py-2  focus:outline-none focus:border-blue-500 transition-all duration-300"
-          />
-          <button
-            type="submit"
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 text-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading || !newComment.trim()}
-          >
-            {loading ? (
-              <div className="replyloader" />
-            ) : (
-              <Send size={16} className="box-border" />
-            )}
-          </button>
-        </div>
-      </form>
-
-      <div className="space-y-4">
-        {comments.length === 0 ? (
-          <p className="text-gray-500 text-center py-4">No comments yet</p>
-        ) : (
-          comments.map((comment) => renderComment(comment))
-        )}
-      </div>
-    </div>
-  )
+    <CommentModal
+      handleCommentSubmit={handleCommentSubmit}
+      session={session}
+      newComment={newComment}
+      handleToggleComments={handleToggleComments}
+      setNewComment={setNewComment}
+      loading={loading}
+      renderComment={renderComment}
+      comments={comments}
+    />
+  );
 }
 
-export default CommentSection
+export default CommentSection;

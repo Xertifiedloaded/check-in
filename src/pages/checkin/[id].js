@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import MainHeader from "../MainHeader"
 import { FeedUserCard } from "@/components/UserFeedCard"
-import { ArrowLeft, MessageCircle, RefreshCcw } from "lucide-react"
+import { ArrowLeft, MessageCircle } from "lucide-react"
 import Head from "next/head"
 import Link from "next/link"
 
@@ -50,37 +50,34 @@ const CheckInList = () => {
 
   return (
     <>
-      <Head>
-        <title className="">Daily Check-in</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-        />
+    <Head>
+        <title>Community Feed | Daily Check-in</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta
           name="description"
-          content="Catch up with user and see their latest check-ins, activities, and shared experiences from around the world."
+          content="Explore daily check-ins and connect with our vibrant community sharing their experiences and progress."
         />
       </Head>
 
       <MainHeader />
-      <main className="max-w-4xl pt-24 mx-auto ">
-        <div className="flex items-center mb-6">
-          <Link
-            href="/feed"
-            className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+      <main className="max-w-4xl  mx-auto px-4 pt-24 pb-24">
+      <nav className="mb-8">
+          <Link 
+            href="/" 
+            className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
-            <span className="text-sm font-medium">Back to Home</span>
+            <span className="text-sm font-medium">Return to Dashboard</span>
           </Link>
-        </div>
+        </nav>
         <div className="mb-4 px-4 ">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Checkin
+          <div className="space-y-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+                CheckIn
               </h1>
-              <p className="text-gray-600 text-xs lg:text-base mt-1">
-                Stay updated with what others are doing
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                See what everyone's been up to today
               </p>
             </div>
             <div className="flex items-center gap-2 sm:gap-4 mt-4 sm:mt-0">
@@ -106,11 +103,10 @@ const CheckInList = () => {
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 ">
             {checkIn.map((post) => (
               <div
                 key={post.id}
-                className="bg-white shadow-lg rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
               >
                 <FeedUserCard post={post} comments={post.comments} />
               </div>
