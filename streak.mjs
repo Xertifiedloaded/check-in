@@ -21,4 +21,4 @@ async function updateUserStreak(userId, newStreakValue) {
 }
 
 
-updateUserStreak("6715767b7a12bc456be51b50", 15);
+updateUserStreak("670d1d66d31b620d72561561", 10);
