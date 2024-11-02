@@ -32,13 +32,51 @@ model User {
   deletedAt               DateTime?
   comments                Comment[] @relation("UserComments")
   replies                 Reply[]   @relation("UserReplies")
+  lastSeen                DateTime?  @default(now())
+  isOnline                Boolean?   @default(false)
+  
+  // Chat related fields
+  conversationIds         String[]  @db.ObjectId
+  conversations          Conversation[] @relation(fields: [conversationIds], references: [id])
+  sentMessages           Message[]     @relation("SentMessages")
 }
 
+model Conversation {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  participantIds String[]  @db.ObjectId
+  participants   User[]    @relation(fields: [participantIds], references: [id])
+  messages       Message[] @relation("ConversationMessages")
+  lastMessageId  String?   @db.ObjectId
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  lastMessageContent String?
+  lastMessageTime   DateTime?
+  lastMessageSenderId String? @db.ObjectId
+}
+
+model Message {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String       @db.ObjectId
+  conversation   Conversation @relation("ConversationMessages", fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String       @db.ObjectId
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  content        String
+  type           String       @default("text")
+  fileUrl        String?
+  fileName       String?
+  fileSize       Int?
+  readByUserIds  String[]    @db.ObjectId
+  isEdited       Boolean     @default(false)
+  isDeleted      Boolean     @default(false)
+  deletedAt      DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
 
 model Post {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   content    String
-  visibility String   @default("PUBLIC")
+  visibility String    @default("PUBLIC")
   createdAt  DateTime  @default(now())
   user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String    @db.ObjectId
