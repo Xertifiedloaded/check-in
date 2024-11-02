@@ -77,8 +77,6 @@ export default function UserHeader() {
                 </NavLink>
               </div>
             </div>
-
-            {/* Right section */}
             <div className="flex items-center space-x-4">
               <ThemeToggleButton />
               
@@ -125,9 +123,9 @@ export default function UserHeader() {
         </div>
 
         {isOpen && (
-          <div className="relative lg:hidden">
+          <div className="relative lg:hidden bg-white dark:bg-gray-900">
             <div className="absolute inset-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-              <div className="px-4 py-3 space-y-1">
+              <div className="px-4 py-3 bg-white dark:bg-gray-900 space-y-1">
                 <NavLink href="/" icon={Home}>
                   Home
                 </NavLink>
