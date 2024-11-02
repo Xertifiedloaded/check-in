@@ -19,7 +19,7 @@ async function sendEmails() {
       return transporter.sendMail({
         from: `makindeolaitan01@gmail.com`,
         to: user.email,
-        subject: "Update: Temporary Access Disruption for Glo Network Users",
+        subject: "Access Restored: DailyCheckin is Back Online!",
         html:`
         <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
         <header style="background-color: #f4f4f4; padding: 20px; text-align: center;">
@@ -30,13 +30,19 @@ async function sendEmails() {
             Hi <strong>${user.name}</strong>,
           </p>
           <p style="font-size: 16px; line-height: 1.6;">
-            We’re reaching out to inform you of a temporary access issue that some users are facing. If you’re using the Glo service provider, you may experience difficulties accessing our platform. This issue isn’t limited to our website; it affects all websites hosted on Vercel, including Vercel’s own site.
+            We're excited to let you know that our platform is now accessible from any ISP(Internet Service Provider) at <a href="https://dailycheckin.com.ng" style="color: #007bff;">dailycheckin.com.ng</a>. You can log in anytime to keep up with your daily activities.
           </p>
           <p style="font-size: 16px; line-height: 1.6;">
-            We’re actively working to resolve this by migrating to a new hosting platform that will ensure reliable access for everyone, regardless of network provider. This migration should be completed within the next 24 hours, though it may take a short period afterward for our domain to fully propagate.
+            If you haven’t checked in today, be sure to do so to maintain your streak! Consistent check-ins help you stay on track and make the most of our platform.
           </p>
           <p style="font-size: 16px; line-height: 1.6;">
-            If you’re able to connect through a network other than Glo, you can continue using our platform without interruption. We greatly appreciate your patience and understanding as we make this transition to improve your experience.
+            We’re thrilled to announce new updates on dailyCheckin! You can now view each other’s profiles, including profile pictures, and choose to make your check-ins private or public. We've also introduced a new UI design, along with options for both dark and light mode to enhance your experience.
+          </p>
+          <p style="font-size: 16px; line-height: 1.6;">
+            And that’s not all—soon, you’ll be able to chat directly with other users on the platform. This new messaging feature is just around the corner, so stay tuned for more updates!
+          </p>
+          <p style="font-size: 16px; line-height: 1.6;">
+            Thank you for being part of the dailyCheckin community. We’re here to support you every step of the way.
           </p>
         </main>
         <footer style="background-color: #f4f4f4; padding: 20px; text-align: center;">
@@ -48,7 +54,6 @@ async function sendEmails() {
         `,
       });
     });
-
     await Promise.all(emailPromises);
     console.log("Emails sent successfully to all users!");
   } catch (error) {
