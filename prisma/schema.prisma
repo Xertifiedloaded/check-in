@@ -32,8 +32,8 @@ model User {
   deletedAt               DateTime?
   comments                Comment[] @relation("UserComments")
   replies                 Reply[]   @relation("UserReplies")
-  lastSeen                DateTime  @default(now())
-  isOnline                Boolean   @default(false)
+  lastSeen                DateTime?  @default(now())
+  isOnline                Boolean?   @default(false)
   
   // Chat related fields
   conversationIds         String[]  @db.ObjectId
