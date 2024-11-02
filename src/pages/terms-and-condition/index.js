@@ -54,11 +54,6 @@ const TermsAndConditions = () => {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">9. Governing Law</h2>
-              <p className='text-sm text-gray-700 dark:text-gray-300'>These Terms shall be governed and construed in accordance with the laws of [Your Country/State], without regard to its conflict of law provisions.</p>
-            </section>
-
-            <section>
               <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">10. Contact Us</h2>
               <p className='text-sm text-gray-700 dark:text-gray-300'>If you have any questions about these Terms, please contact us at:</p>
               <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
