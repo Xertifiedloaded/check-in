@@ -1,10 +1,8 @@
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 
-
-export  function ChatSidebar({
+export function ChatSidebar({
   conversations,
   selectedConversation,
   onSelectConversation,
@@ -64,7 +62,9 @@ export  function ChatSidebar({
             key={conversation.id}
             onClick={() => onSelectConversation(conversation)}
             className={`p-4 cursor-pointer  transition-colors ${
-              selectedConversation?.id === conversation.id ? "bg-blue-50 dark:bg-gray-500" : ""
+              selectedConversation?.id === conversation.id
+                ? "bg-blue-50 dark:bg-gray-500"
+                : ""
             }`}
           >
             <div className="flex items-center space-x-3">
@@ -94,10 +94,12 @@ export  function ChatSidebar({
                   </h3>
                   {conversation.lastMessageTime && (
                     <span className="text-xs text-gray-500">
-                      {new Date(conversation?.lastMessageTime).toLocaleTimeString(
-                        [],
-                        { hour: "2-digit", minute: "2-digit" }
-                      )}
+                      {new Date(
+                        conversation?.lastMessageTime
+                      ).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </span>
                   )}
                 </div>
@@ -120,8 +122,7 @@ export  function ChatSidebar({
   );
 }
 
-
-export  function ChatMain({ conversation, currentUser, onBack, onMessageSent }) {
+export function ChatMain({ conversation, currentUser, onBack, onMessageSent }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -145,7 +146,9 @@ export  function ChatMain({ conversation, currentUser, onBack, onMessageSent }) 
     if (!conversation) return;
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/chat/conversation/${conversation.participant.id}`);
+      const response = await fetch(
+        `/api/chat/conversation/${conversation.participant.id}`
+      );
       const data = await response.json();
       setMessages(data);
     } catch (error) {
@@ -272,8 +275,10 @@ export  function ChatMain({ conversation, currentUser, onBack, onMessageSent }) 
         )}
       </div>
 
-
-      <form onSubmit={handleSendMessage} className="bg-white dark:bg-transparent  border-t p-4">
+      <form
+        onSubmit={handleSendMessage}
+        className="bg-white dark:bg-transparent  border-t p-4"
+      >
         <div className="flex space-x-4">
           <input
             type="text"
@@ -294,11 +299,6 @@ export  function ChatMain({ conversation, currentUser, onBack, onMessageSent }) 
     </div>
   );
 }
-
-
-
-
-
 
 export default function ChatPage() {
   const [conversations, setConversations] = useState([]);
@@ -347,9 +347,11 @@ export default function ChatPage() {
       setSearchResults([]);
       return;
     }
-    
+
     try {
-      const response = await fetch(`/api/users/search?q=${encodeURIComponent(query)}`);
+      const response = await fetch(
+        `/api/chat/search?q=${encodeURIComponent(query)}`
+      );
       if (!response.ok) throw new Error("Failed to search users");
       const data = await response.json();
       setSearchResults(data);
@@ -365,10 +367,10 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
       });
-      
+
       if (!response.ok) throw new Error("Failed to create conversation");
       const newConversation = await response.json();
-      
+
       setConversations((prev) => [newConversation, ...prev]);
       setSelectedConversation(newConversation);
       setIsSearchOpen(false);
@@ -396,12 +398,22 @@ export default function ChatPage() {
               }}
               className="text-gray-500 hover:text-gray-700"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
-          
+
           <input
             type="text"
             placeholder="Search for users..."
@@ -412,7 +424,7 @@ export default function ChatPage() {
             }}
             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
           />
-          
+
           <div className="max-h-96 overflow-y-auto">
             {searchResults.map((user) => (
               <div
@@ -508,13 +520,18 @@ export default function ChatPage() {
       <main className="flex-1  lg:ml-96">
         {selectedConversation ? (
           <ChatMain
-            conversation={selectedConversation}
+            conversation={{
+              ...selectedConversation,
+              messages: selectedConversation?.messages || [],
+            }}
             currentUser={currentUser}
             onBack={() => setSelectedConversation(null)}
             onMessageSent={(message) => {
               setSelectedConversation((prev) => ({
                 ...prev,
-                messages: [...prev.messages, message],
+                messages: prev.messages
+                  ? [...prev.messages, message]
+                  : [message],
               }));
             }}
           />
