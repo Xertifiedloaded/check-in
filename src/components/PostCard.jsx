@@ -1,4 +1,5 @@
-"use client";
+
+
 import React, { useState } from "react";
 import Image from "next/image";
 import {
@@ -12,7 +13,9 @@ import {
   Bookmark,
   X,
 } from "lucide-react";
-
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 const TwitterStylePost = ({
   user,
   localPost,
@@ -39,8 +42,8 @@ const TwitterStylePost = ({
 
   return (
     <>
-      <div className="bg-white overflow-x-hidden   dark:bg-gray-800 backdrop-blur-lg rounded-xl shadow-sm border border-gray-100 dark:border-gray-700/50  mb-6 transition-all duration-200">
-        <div className="p-4 flex items-center justify-between">
+      <Card className="mb-6">
+        <CardHeader>
           <div className="flex items-center gap-4">
             <div className="relative">
               <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-offset-2 ring-blue-500/20 dark:ring-blue-400/30 ring-offset-white dark:ring-offset-gray-800">
@@ -77,9 +80,9 @@ const TwitterStylePost = ({
               </span>
             </div>
           </div>
-
           <div className="relative">
-            <button
+            <Button
+              variant="ghost"
               onClick={() => setShowActions(!showActions)}
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700/50 rounded-full transition-colors"
             >
@@ -87,75 +90,92 @@ const TwitterStylePost = ({
                 size={20}
                 className="text-gray-600 dark:text-gray-400"
               />
-            </button>
+            </Button>
 
             {showActions && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1  border border-gray-100 dark:border-gray-700">
+              <div className="absolute z-20 right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-100 dark:border-gray-700">
                 {session?.user?.id === user?.id && (
                   <>
-                    <button
+                    <Button
+                      variant="ghost"
                       onClick={handleEditToggle}
                       className="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50 flex items-center gap-2"
                     >
                       <Edit size={16} />
                       <span>Edit post</span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="ghost"
                       onClick={() => handleDelete(localPost?.id)}
                       className="w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
                     >
                       <Trash size={16} />
                       <span>Delete</span>
-                    </button>
+                    </Button>
                   </>
                 )}
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setIsBookmarked(!isBookmarked)}
                   className="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50 flex items-center gap-2"
                 >
                   <Bookmark size={16} />
                   <span>{isBookmarked ? "Remove save" : "Save post"}</span>
-                </button>
+                </Button>
               </div>
             )}
           </div>
-        </div>
+        </CardHeader>
 
-        <div className="px-4 pb-4">
+        {localPost?.imageUrl && (
+          <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
+            <Image
+              src={localPost.imageUrl}
+              alt={`Post image for ${user?.name}`}
+              fill
+              className="object-cover"
+            />
+          </div>
+        )}
+
+        <CardContent>
           {isEditing ? (
             <div className="space-y-3">
-              <textarea
+              <Textarea
                 className="w-full p-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent resize-none text-gray-800 dark:text-gray-200"
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 rows={4}
               />
               <div className="flex justify-end gap-2">
-                <button
+                <Button
+                  variant="ghost"
                   onClick={handleEditToggle}
                   className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 rounded-lg transition-colors"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="primary"
                   onClick={handleEditSave}
-                  className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 rounded-lg transition-colors flex items-center gap-2"
+                  className="px-4 py-2 text-sm flex items-center gap-2"
                 >
                   <Save size={16} />
                   <span>Save</span>
-                </button>
+                </Button>
               </div>
             </div>
           ) : (
-            <p className="text-gray-800  dark:text-gray-200 leading-relaxed">
+            <p className="text-gray-800 dark:text-gray-200 leading-relaxed">
               {localPost?.content}
             </p>
           )}
-        </div>
+        </CardContent>
 
         <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-700/50">
           <div className="flex items-center gap-6">
-            <button
+            <Button
+              variant="ghost"
               onClick={handleToggleLike}
               disabled={loading}
               className={`group flex items-center gap-2 transition-colors ${
@@ -170,9 +190,10 @@ const TwitterStylePost = ({
                 className="transition-transform group-hover:scale-110"
               />
               <span className="text-sm font-medium">{likeCount}</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant="ghost"
               onClick={handleToggleComments}
               className="group flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
             >
@@ -181,17 +202,21 @@ const TwitterStylePost = ({
                 className="transition-transform group-hover:scale-110"
               />
               <span className="text-sm font-medium">{commentCount}</span>
-            </button>
+            </Button>
 
-            <button className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+            <Button
+              variant="ghost"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+            >
               <Share2
                 size={20}
                 className="transition-transform hover:scale-110"
               />
-            </button>
+            </Button>
           </div>
 
-          <button
+          <Button
+            variant="ghost"
             onClick={() => setIsBookmarked(!isBookmarked)}
             className={`transition-colors ${
               isBookmarked
@@ -204,11 +229,11 @@ const TwitterStylePost = ({
               fill={isBookmarked ? "currentColor" : "none"}
               className="transition-transform hover:scale-110"
             />
-          </button>
+          </Button>
         </div>
-      </div>
+      </Card>
       {showComments && (
-        <div className="border-t   border-gray-100 dark:border-gray-700/50">
+        <div className="border-t border-gray-100 dark:border-gray-700/50">
           <CommentSection
             handleToggleComments={handleToggleComments}
             userId={session?.user?.id}

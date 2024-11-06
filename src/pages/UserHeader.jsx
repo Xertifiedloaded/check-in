@@ -123,9 +123,9 @@ export default function UserHeader() {
         </div>
 
         {isOpen && (
-          <div className="relative lg:hidden bg-white dark:bg-gray-900">
-            <div className="absolute inset-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-              <div className="px-4 py-3 bg-white dark:bg-gray-900 space-y-1">
+          <div className="relative lg:hidden bg-white dark:bg-dark">
+            <div className="absolute inset-0 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800">
+              <div className="px-4 py-3 bg-white dark:bg-black space-y-1">
                 <NavLink href="/" icon={Home}>
                   Home
                 </NavLink>
@@ -138,10 +138,8 @@ export default function UserHeader() {
                 <NavLink href="/personal-space" icon={User}>
                   Dashboard
                 </NavLink>
-              </div>
-              
-              <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-800">
-                <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                <div className="px-4 py-3 border-t border-gray-200 dark:border-black">
+                <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-black">
                   <Image
                     className="h-10 w-10 rounded-full ring-2 ring-white dark:ring-gray-700"
                     src={session?.user?.image || "/no-user.png"}
@@ -167,6 +165,9 @@ export default function UserHeader() {
                   Sign Out
                 </button>
               </div>
+              </div>
+              
+       
             </div>
           </div>
         )}

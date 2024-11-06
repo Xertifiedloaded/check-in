@@ -4,7 +4,7 @@ export default function RootLayout() {
   return (
     <Html lang="en">
       <Head />
-      <body className="font-poppins bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <body className="font-poppins bg-white dark:bg-black text-gray-900 dark:text-gray-100">
         <Main />
         <NextScript />
       </body>

@@ -17,7 +17,6 @@
 }
 
 [data-theme='dark'] {
-  /* Dark Theme Colors */
   --bg-color: #1a1a1a;
   --text-color: #ffffff;
   --placeholder-color: #a0aec0;

@@ -9,7 +9,11 @@ import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai";
 import { BsFire } from "react-icons/bs";
 import { formatDistanceToNow } from "date-fns";
 
-export default function Card({ post }) {
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
+import { Button } from "@/components/ui/button";
+
+export default function CardComponent({ post }) {
   const user = post.user || {};
   const { isLiked, toggleLike, loading, count } = useLikeStatus(
     user.id,
@@ -28,9 +32,10 @@ export default function Card({ post }) {
 
     return content.length > length ? content.slice(0, length) + "..." : content;
   };
+
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200">
-      <div className="p-4 flex items-start justify-between border-b border-gray-50 dark:border-gray-700">
+    <Card className="bg-white dark:bg-black relative rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 mb-3">
+      <CardHeader>
         <Link
           href={`/information/${user.id}`}
           onClick={(e) => e.stopPropagation()}
@@ -84,43 +89,58 @@ export default function Card({ post }) {
           </div>
         </Link>
 
-        <button
+        <Button
+          variant="ghost"
           onClick={handleToggleLike}
           disabled={loading}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all
-        ${
-          isLiked
-            ? "text-red-500 bg-red-50 dark:bg-red-900"
-            : "text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900"
-        }`}
+          className={`flex absolute right-0 top-0 items-center gap-1.5 px-3 py-1.5 rounded-full transition-all
+`}
         >
           <Heart
             size={16}
             className={`transition-transform ${
-              isLiked ? "scale-110" : "scale-100"
+              isLiked ? "scale-110 text-red-500" : "scale-100"
             }`}
-            fill={isLiked ? "currentColor" : "none"}
+            fill={isLiked ? "red" : "none"}
           />
           <span className="text-xs font-medium">{count}</span>
-        </button>
-      </div>
+        </Button>
+      </CardHeader>
 
-      <Link
-        href={`/checkin/${user.id}`}
-        onClick={(e) => e.stopPropagation()}
-        className="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-      >
-        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-          {truncateContent(post.content)}
-        </p>
-      </Link>
-    </div>
+      {post.imageUrl && (
+        <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
+          <Link
+            href={`/checkin/${user.id}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={post?.imageUrl}
+              alt={`Post image for ${user.name}`}
+              fill
+              className="object-cover"
+            />
+          </Link>
+        </div>
+      )}
+
+      <CardContent>
+        <Link
+          href={`/checkin/${user.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className="block hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          <p className="text-sm pt-2 text-gray-700 dark:text-gray-300 leading-relaxed">
+            {truncateContent(post.content)}
+          </p>
+        </Link>
+      </CardContent>
+    </Card>
   );
 }
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
-    <div className="flex mb-2 items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="flex mb-2 items-center justify-between p-4 bg-white dark:bg-black dark:border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="flex items-center space-x-3">
         <Image
           src={userProfilePicture || "/no-user.png"}
