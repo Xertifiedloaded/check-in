@@ -1,78 +1,108 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Search } from 'lucide-react';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
-interface User {
+interface SearchUser {
   id: string;
   name: string;
   profilePicture: string;
 }
 
 export const FriendSearch = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const searchUsers = async () => {
-    if (!searchTerm.trim()) return;
-    
-    setIsLoading(true);
+
+  useEffect(() => {
+    const searchUsers = async () => {
+      if (!searchQuery.trim()) {
+        setSearchResults([]);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const response = await fetch(`/api/chat/search?q=${encodeURIComponent(searchQuery)}`);
+        const data = await response.json();
+        setSearchResults(data);
+      } catch (error) {
+        console.error('Error searching users:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const timeoutId = setTimeout(searchUsers, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  const sendFriendRequest = async (userId: string) => {
     try {
-      const response = await fetch(`/api/chat/search?q=${searchTerm}`);
-      const data = await response.json();
-      setSearchResults(data);
+      const response = await fetch('/api/chat/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ friendId: userId }),
+      });
+
+      if (response.ok) {
+        setSearchResults(prev => prev.filter(user => user.id !== userId));
+      }
     } catch (error) {
-      console.error('Error searching users:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Error sending friend request:', error);
     }
   };
 
-//   const sendFriendRequest = async (userId: string) => {
-//     try {
-//       await fetch('/api/chat/request', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({ friendId: userId }),
-//       });
-//       // Show success message
-//       alert('Friend request sent!');
-//     } catch (error) {
-//       console.error('Error sending friend request:', error);
-//     }
-//   };
-
   return (
-    <div className="p-4">
-      <div className="flex gap-2">
+    <div className="p-4 space-y-4">
+      <h2 className="text-lg font-semibold">Find Friends</h2>
+      <div className="relative">
         <Input
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search users..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pr-10"
         />
-        <Button onClick={searchUsers} disabled={isLoading}>
-          Search
-        </Button>
+        <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
       </div>
-      
-      <div className="mt-4 space-y-2">
-        {searchResults.map((user) => (
-          <div key={user.id} className="flex items-center justify-between p-2 border rounded">
-            <div className="flex items-center gap-2">
-              <Avatar>
-                <AvatarImage src={user.profilePicture} />
-                <AvatarFallback>{user.name[0]}</AvatarFallback>
-              </Avatar>
-              <span>{user.name}</span>
-            </div>
-            <Button onClick={() => sendFriendRequest(user.id)} variant="outline">
-              Add Friend
-            </Button>
-          </div>
-        ))}
-      </div>
+
+      <ScrollArea className="h-[400px]">
+        <div className="space-y-2">
+          {isLoading ? (
+            <p className="text-center text-gray-500">Searching...</p>
+          ) : searchResults.length > 0 ? (
+            searchResults.map((user) => (
+              <div
+                key={user.id}
+                className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <AvatarImage src={user.profilePicture} />
+                    <AvatarFallback>{user.name[0]}</AvatarFallback>
+                  </Avatar>
+                  <span className="font-medium">{user.name}</span>
+                </div>
+                <Button
+                  onClick={() => sendFriendRequest(user.id)}
+                  size="sm"
+                  variant="outline"
+                >
+                  Add Friend
+                </Button>
+              </div>
+            ))
+          ) : searchQuery ? (
+            <p className="text-center text-gray-500">No users found</p>
+          ) : null}
+        </div>
+      </ScrollArea>
     </div>
   );
 };

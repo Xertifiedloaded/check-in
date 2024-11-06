@@ -58,7 +58,6 @@ const ChatApp = () => {
   const [showFriendSearch, setShowFriendSearch] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Fetch friends list
   useEffect(() => {
     const fetchFriends = async () => {
       try {
@@ -76,7 +75,7 @@ const ChatApp = () => {
   useEffect(() => {
     const fetchFriendRequests = async () => {
       try {
-        const response = await fetch('/api/friends/requests');
+        const response = await fetch('/api/chat/request');
         const data = await response.json();
         setFriendRequests(data);
       } catch (error) {
@@ -204,7 +203,7 @@ const ChatApp = () => {
             </Button>
           </div>
 
-          {/* Friend Requests Section */}
+
           {friendRequests.length > 0 && (
             <div className="mb-4">
               <h3 className="text-sm font-medium mb-2">Friend Requests</h3>
@@ -346,7 +345,6 @@ const ChatApp = () => {
         )}
       </div>
 
-      {/* Mobile Friends List */}
       <div className="md:hidden absolute left-4 top-4">
         <Sheet>
           <SheetTrigger asChild>
@@ -369,7 +367,6 @@ const ChatApp = () => {
                   key={friend.id}
                   onClick={() => {
                     setSelectedFriend(friend);
-                    // Close sheet on mobile after selection
                     document.dispatchEvent(
                       new KeyboardEvent('keydown', { key: 'Escape' })
                     );
