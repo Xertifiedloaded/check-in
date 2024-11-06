@@ -4,7 +4,8 @@ import { FeedUserCard } from "@/components/UserFeedCard"
 import { MessageCircle, RefreshCw } from "lucide-react"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import PostHeader from "../components/PostAndCommentHeader"
+import PostHeader from "../../components/PostAndCommentHeader"
+
 
 
 export default function PostIdComment() {

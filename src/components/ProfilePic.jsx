@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Camera, X, ArrowUp, ArrowDown } from 'lucide-react';
-import { LoadingState } from "@/pages/information/[userId]";
+import { LoadingSpinner } from '../pages/information/[userId]';
 
 const ProfilePicture = ({ profile }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -94,7 +94,7 @@ const ProfilePicture = ({ profile }) => {
             <div className="relative p-4">
               {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-                  <LoadingState />
+                  <LoadingSpinner/>
                 </div>
               )}
               

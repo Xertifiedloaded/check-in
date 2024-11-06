@@ -5,10 +5,10 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { FaGoogle } from "react-icons/fa"
-import Button from "../components/Buttons"
-import Input from "../components/Input"
-import PageHead from "../components/PageHead"
-import ProtectedRoute from "../hooks/ProtectedRoute"
+import Button from "../../../components/Buttons"
+import Input from "../../../components/Input"
+
+import ProtectedRoute from "../../../hooks/ProtectedRoute"
 
 const Signup = () => {
   const [loading, setLoading] = useState(false)
@@ -61,10 +61,7 @@ const Signup = () => {
 
   return (
     <>
-      <PageHead
-        title="Sign Up"
-        description="Create your account and join the community"
-      />
+
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 p-4">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
           <div className="p-8">

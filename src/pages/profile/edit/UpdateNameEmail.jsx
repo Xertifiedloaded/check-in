@@ -1,6 +1,6 @@
 "use client";
-import Button from "../components/Buttons"
-import Input from "../components/Input"
+import Button from "../../../components/Buttons";
+import Input from "../../../components/Input"
 import axios from "axios"
 import { useSession } from "next-auth/react"
 import React, { useState, useEffect } from "react"

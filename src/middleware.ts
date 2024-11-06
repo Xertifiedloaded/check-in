@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
 
   if (token?.sub) {
     try {
-      // Make API call to update online status
+
       await fetch(`${request.nextUrl.origin}/api/users/online-status`, {
         method: 'POST',
         headers: {

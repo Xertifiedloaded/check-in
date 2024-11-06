@@ -3,7 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { signOut, useSession } from "next-auth/react"
 import { Menu, X, ChevronDown, User, LogOut, Home } from "lucide-react"
-import Button from "../components/Buttons"
+import Button from "../../../components/Buttons"
 
 export default function ProfileHeader() {
   const { data: session } = useSession()
