@@ -66,7 +66,7 @@ const ChatApp = () => {
         setFriends(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Error fetching friends:', error);
-        setFriends([]); 
+        setFriends([]);
       }
     };
     fetchFriends();
@@ -83,7 +83,7 @@ const ChatApp = () => {
       }
     };
     fetchFriendRequests();
-    
+
     const interval = setInterval(fetchFriendRequests, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -151,9 +151,9 @@ const ChatApp = () => {
       const response = await fetch(`/api/chat/friends/accept/${requestId}`, {
         method: 'POST',
       });
-      
+
       if (response.ok) {
-        setFriendRequests(prev => 
+        setFriendRequests(prev =>
           prev.filter(request => request.id !== requestId)
         );
         const friendsResponse = await fetch('/api/chat/friends');
@@ -203,6 +203,7 @@ const ChatApp = () => {
           </div>
 
 
+
           {friendRequests.length > 0 && (
             <div className="mb-4">
               <h3 className="text-sm font-medium mb-2">Friend Requests</h3>
@@ -237,11 +238,10 @@ const ChatApp = () => {
             <button
               key={friend.id}
               onClick={() => setSelectedFriend(friend)}
-              className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                selectedFriend?.id === friend.id
+              className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${selectedFriend?.id === friend.id
                   ? 'bg-blue-50'
                   : 'hover:bg-gray-100'
-              }`}
+                }`}
             >
               <div className="relative">
                 <Avatar>
@@ -249,9 +249,8 @@ const ChatApp = () => {
                   <AvatarFallback>{friend.name[0]}</AvatarFallback>
                 </Avatar>
                 <span
-                  className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
-                    friend.isOnline ? 'bg-green-500' : 'bg-gray-400'
-                  }`}
+                  className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${friend.isOnline ? 'bg-green-500' : 'bg-gray-400'
+                    }`}
                 />
               </div>
               <div className="flex-1 text-left">
@@ -294,11 +293,10 @@ const ChatApp = () => {
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex items-start gap-2 ${
-                      message.senderId === session?.user?.id
+                    className={`flex items-start gap-2 ${message.senderId === session?.user?.id
                         ? 'flex-row-reverse'
                         : ''
-                    }`}
+                      }`}
                   >
                     <Avatar className="w-8 h-8">
                       <AvatarImage src={message.sender.profilePicture} />
@@ -307,11 +305,10 @@ const ChatApp = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div
-                      className={`max-w-[70%] rounded-lg p-3 ${
-                        message.senderId === session?.user?.id
+                      className={`max-w-[70%] rounded-lg p-3 ${message.senderId === session?.user?.id
                           ? 'bg-blue-500 text-white'
                           : 'bg-gray-100'
-                      }`}
+                        }`}
                     >
                       <p className="text-sm">{message.content}</p>
                       <span className="text-xs opacity-70">
@@ -386,6 +383,9 @@ const ChatApp = () => {
               ))}
             </ScrollArea>
           </SheetContent>
+          <Button onClick={() => setShowFriendSearch(true)} variant="outline">
+            <UserPlus className="w-4 h-4" />
+          </Button>
         </Sheet>
       </div>
     </div>
