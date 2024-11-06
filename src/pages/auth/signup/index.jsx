@@ -1,35 +1,35 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { signIn } from "next-auth/react"
-import { useRouter } from "next/router"
-import Link from "next/link"
-import { FaGoogle } from "react-icons/fa"
-import Button from "../../../components/Buttons"
-import Input from "../../../components/Input"
+import React, { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { FaGoogle } from "react-icons/fa";
+import Button from "../../../components/Buttons";
+import Input from "../../../components/Input";
 
-import ProtectedRoute from "../../../hooks/ProtectedRoute"
+import ProtectedRoute from "../../../hooks/ProtectedRoute";
 
 const Signup = () => {
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [payload, setPayload] = useState({
     name: "",
     email: "",
     password: "",
     passwordConfirm: "",
-  })
-  const [error, setError] = useState(null)
+  });
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setPayload((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setPayload((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     try {
       const res = await fetch(`/api/post/postsignup`, {
@@ -39,29 +39,28 @@ const Signup = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      })
+      });
 
       if (!res.ok) {
-        const errorData = await res.json()
-        throw new Error(errorData.message || "Failed to create account")
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to create account");
       }
 
-      await res.json()
-      router.push("/auth/login")
+      await res.json();
+      router.push("/auth/login");
     } catch (err) {
-      setError(err.message || "An unexpected error occurred.")
+      setError(err.message || "An unexpected error occurred.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/" })
-  }
+    signIn("google", { callbackUrl: "/" });
+  };
 
   return (
     <>
-
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 p-4">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
           <div className="p-8">
@@ -150,6 +149,6 @@ const Signup = () => {
         </div>
       </div>
     </>
-  )
-}
-export default ProtectedRoute(Signup)
+  );
+};
+export default ProtectedRoute(Signup);
