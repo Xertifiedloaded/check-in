@@ -1,14 +1,15 @@
 import { prisma } from '@/lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-
-  const session = await getSession({ req });
-  if (!session?.user) {
+  const session = await getServerSession(req, res, authOptions);
+  
+  if (!session || !session.user) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
@@ -25,21 +26,15 @@ export default async function handler(
       const existingRequest = await prisma.friendship.findFirst({
         where: {
           OR: [
-            {
-              userId: userId,
-              friendId: friendId,
-            },
-            {
-              userId: friendId,
-              friendId: userId,
-            },
+            { userId: userId, friendId: friendId },
+            { userId: friendId, friendId: userId },
           ],
         },
       });
 
       if (existingRequest) {
-        return res.status(400).json({ 
-          error: 'Friend request already exists or users are already friends' 
+        return res.status(400).json({
+          error: 'Friend request already exists or users are already friends',
         });
       }
 

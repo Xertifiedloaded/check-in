@@ -88,7 +88,6 @@ const ChatApp = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch messages for selected friend
   useEffect(() => {
     const fetchMessages = async () => {
       if (!selectedFriend) return;
