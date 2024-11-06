@@ -7,39 +7,38 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 model User {
-  id                      String    @id @default(auto()) @map("_id") @db.ObjectId
+  id                      String       @id @default(auto()) @map("_id") @db.ObjectId
   name                    String
-  email                   String    @unique
+  email                   String       @unique
   password                String?
   phoneNumber             String?
   username                String?
-  isOwner                 Boolean   @default(false)
+  isOwner                 Boolean      @default(false)
   profilePicture          String?
   otp                     String?
   otpExpiry               DateTime?
-  isGoogleAuth            Boolean   @default(false)
+  isGoogleAuth            Boolean      @default(false)
   permissions             String[]
-  isVerified              Boolean?  @default(false)
+  isVerified              Boolean?     @default(false)
   verificationToken       String?
   verificationTokenExpiry DateTime?
   googleId                String?
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
-  posts                   Post[]    @relation()
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+  posts                   Post[]       @relation()
   streaks                 Streak[]
-  isDeleted               Boolean   @default(false)
+  isDeleted               Boolean      @default(false)
   deletedAt               DateTime?
-  comments                Comment[] @relation("UserComments")
-  replies                 Reply[]   @relation("UserReplies")
-// chat
-  sentMessages     Message[]    @relation("SentMessages")
-  receivedMessages Message[]    @relation("ReceivedMessages")
-  friends          Friendship[] @relation("UserFriends")
-  friendsOf        Friendship[] @relation("FriendUsers")
-  lastSeen        DateTime     @default(now())
-  isOnline        Boolean      @default(false)
+  comments                Comment[]    @relation("UserComments")
+  replies                 Reply[]      @relation("UserReplies")
+  // chat
+  sentMessages            Message[]    @relation("SentMessages")
+  receivedMessages        Message[]    @relation("ReceivedMessages")
+  friends                 Friendship[] @relation("UserFriends")
+  friendsOf               Friendship[] @relation("FriendUsers")
+  lastSeen                DateTime     @default(now())
+  isOnline                Boolean      @default(false)
 }
 
 model Friendship {
@@ -48,7 +47,7 @@ model Friendship {
   userId    String   @db.ObjectId
   friend    User     @relation("FriendUsers", fields: [friendId], references: [id])
   friendId  String   @db.ObjectId
-  status    String   @default("PENDING") 
+  status    String   @default("PENDING")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -67,9 +66,8 @@ model Message {
   updatedAt  DateTime @updatedAt
 }
 
-
-
 model Post {
+  imageUrl   String?
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   content    String
   visibility String    @default("PUBLIC")
