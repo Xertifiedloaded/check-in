@@ -1,4 +1,4 @@
-import { handleDeleteUserPost, handleUpdateUserPost } from "@/controller/ProfilePostController";
+import { handleDeleteUserPost, handleUpdateUserPost } from "../../../../controller/ProfilePostController";
 
 
 export default async function handler(req, res) {

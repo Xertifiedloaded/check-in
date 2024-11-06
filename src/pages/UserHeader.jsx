@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Menu, X, Home, Rss, Calendar, User, LogOut, Bell } from "lucide-react";
 import { signOut } from "next-auth/react";
-import ThemeToggleButton from "@/components/ToggleTheme";
+import ThemeToggleButton from "../components/ToggleTheme";
 
 export default function UserHeader() {
   const { data: session } = useSession();

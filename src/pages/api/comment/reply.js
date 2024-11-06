@@ -3,7 +3,7 @@ import {
   handleGetReplies,
   handleUpdateReply,
   handleDeleteReply,
-} from "@/controller/commentController"
+} from "../../../controller/commentController"
 
 export default async function handler(req, res) {
   const { method } = req

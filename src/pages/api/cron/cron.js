@@ -1,5 +1,5 @@
-import Reminder from '@/lib/Reminder';
-import   { NotificationOption, transporter } from '../../../lib/nodemailer'
+import Reminder from '../../../lib/Reminder';
+
 
 export default async function handler(req, res) {
   if (req.method === 'POST' || req.method === 'GET') {

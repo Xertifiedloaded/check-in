@@ -1,7 +1,7 @@
 "use client"
 import React from "react"
 import Card, { StreakCard } from "./Card"
-import { useCheckIn } from "@/context/CheckInContext"
+import { useCheckIn } from "../context/CheckInContext"
 
 export default function TodayCheckIn() {
   const { todayPosts } = useCheckIn()

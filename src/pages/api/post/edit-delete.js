@@ -1,7 +1,6 @@
-import { authOptions } from "@/lib/authOptions"
-import { prisma } from "@/lib/prisma"
+import { authOptions } from "../../../lib/authOptions"
+import { prisma } from "../../../lib/prisma"
 import { getServerSession } from "next-auth"
-import { getSession } from "next-auth/react"
 
 export default async function handler(req, res) {
   const { method } = req

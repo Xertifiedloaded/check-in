@@ -3,7 +3,8 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { FaGoogle, FaGithub } from "react-icons/fa"
-import ProtectedRoute from "@/hooks/ProtectedRoute"
+import ProtectedRoute from "../../../hooks/ProtectedRoute"
+
 
 const Login = () => {
   const [loading, setLoading] = useState(false)

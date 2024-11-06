@@ -5,9 +5,9 @@ import DeleteAccount from "./DeleteAccount"
 import ProfileHeader from "./ProfileHeader"
 import ProfileInfo from "./ProfileInfo"
 import UpdatePassword from "./UpdatePassword"
-import PageHead from "@/components/PageHead"
-import StreakPage from "@/components/Streak"
-import ProtectedRoute from "@/hooks/ProtectedRoute"
+
+import StreakPage from "../../../components/Streak"
+import ProtectedRoute from "../../../hooks/ProtectedRoute"
 import { useSession } from "next-auth/react"
 
 const UpdateProfile = () => {
@@ -37,10 +37,7 @@ const UpdateProfile = () => {
 
   return (
     <>
-      <PageHead
-        title="Update Profile"
-        description="Manage your profile and account settings"
-      />
+
       <div className="min-h-screen bg-gray-100">
         <ProfileHeader />
 

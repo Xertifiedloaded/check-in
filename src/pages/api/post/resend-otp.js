@@ -1,8 +1,8 @@
 
-import databaseConnection from "@/lib/database";
-import { generateOTP } from "@/lib/Otp";
+import databaseConnection from "../../../lib/database";
+import { generateOTP } from "../../../lib/Otp";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../../lib/prisma";
 
 
 export default async function handler(req, res) {

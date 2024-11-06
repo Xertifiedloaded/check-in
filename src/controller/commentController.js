@@ -3,8 +3,8 @@ import {
   generateEmailHTML,
   generateReplyEmailHTML,
 } from "@/lib/CommentHtml"
-import { sendEmailCommentNotification } from "@/lib/emailContent"
-import { prisma } from "@/lib/prisma"
+import { sendEmailCommentNotification } from "../lib/emailContent"
+import { prisma } from "../lib/prisma"
 import { differenceInDays } from "date-fns"
 
 export const getUserCurrentStreak = async (userId) => {

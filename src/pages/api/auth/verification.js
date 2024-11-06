@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken"
-import { generateOTP } from "@/lib/Otp"
-import databaseConnection from "@/lib/database"
-import { prisma } from "@/lib/prisma"
-import { sendOtpEmail } from "@/lib/nodemailer"
+import { generateOTP } from "../../../lib/Otp"
+import databaseConnection from "../../../lib/database"
+import { prisma } from "../../../lib/prisma"
+import { sendOtpEmail } from "../../../lib/nodemailer"
 import { getSession } from "next-auth/react"
 
 export default async function handler(req, res) {

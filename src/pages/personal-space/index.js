@@ -3,9 +3,9 @@ import { useRouter } from "next/router";
 import { Edit2, X, Save } from "lucide-react";
 
 import { useSession } from "next-auth/react";
-import PostsSection from "@/components/PostSection";
-import { DashboardPic } from "@/components/ProfilePic";
-import EditDeletePost from "@/components/EditDeleteCheckin";
+import PostsSection from "../../components/PostSection";
+import { DashboardPic } from "../../components/ProfilePic";
+import EditDeletePost from "../../components/EditDeleteCheckin";
 
 export default function PersonalSpace() {
   const { data: session, status } = useSession();

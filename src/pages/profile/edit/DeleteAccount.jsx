@@ -1,7 +1,7 @@
 'use client'
 import React from "react"
 import UpdateHeading from "./UpdateHeading"
-import Button from "@/components/Buttons"
+import Button from "../../../components/Buttons"
 import axios from "axios"
 import { useSession, signOut } from "next-auth/react"
 import { useRouter } from "next/router"

@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import Image from "next/image"
-import Button from "@/components/Buttons"
+import Button from "../components/Buttons"
 import Link from "next/link"
 import { MdRssFeed, MdMenu, MdClose } from "react-icons/md"
-import ThemeToggleButton from "@/components/ToggleTheme"
+import ThemeToggleButton from "../components/ToggleTheme"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

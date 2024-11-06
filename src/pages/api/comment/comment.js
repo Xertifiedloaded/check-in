@@ -1,5 +1,6 @@
-import handleGetComments, { handleCreateComment, handleDeleteComment, handleUpdateComment } from "@/controller/commentController"
-import { authOptions } from "@/lib/authOptions"
+
+import handleGetComments, { handleCreateComment, handleDeleteComment, handleUpdateComment } from "../../../controller/commentController"
+import { authOptions } from "../../../lib/authOptions"
 import { getServerSession } from "next-auth"
 
 export default async function handler(req, res) {

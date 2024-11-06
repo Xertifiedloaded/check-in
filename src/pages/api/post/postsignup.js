@@ -1,6 +1,6 @@
 
-import { generateToken } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { generateToken } from "../../../lib/auth";
+import { prisma } from "../../../lib/prisma";
 
 import bcrypt from "bcryptjs"
 

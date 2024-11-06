@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useCheckIn } from "@/context/CheckInContext";
+import { useCheckIn } from "../context/CheckInContext";
 import { toast } from "react-toastify";
 import { Clock, Lock, Globe, Sparkles } from "lucide-react";
 
