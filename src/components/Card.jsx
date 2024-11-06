@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, Share2, BadgeCheck } from "lucide-react";
-import useLikeStatus from "@/utils/actions";
+import useLikeStatus from "../utils/actions";
 import { useEffect, useState } from "react";
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai";
 import { BsFire } from "react-icons/bs";

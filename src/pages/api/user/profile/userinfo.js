@@ -1,5 +1,5 @@
-import { handleGetProfile,handleUpdateProfile,handleDeleteProfilePicture } from "@/controller/UserProfileController";
-import { prisma } from "@/lib/prisma";
+import { handleGetProfile,handleUpdateProfile,handleDeleteProfilePicture } from "../../../../controller/UserProfileController";
+
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');

@@ -5,10 +5,10 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { FaGoogle } from "react-icons/fa"
-import Button from "@/components/Buttons"
-import Input from "@/components/Input"
-import PageHead from "@/components/PageHead"
-import ProtectedRoute from "@/hooks/ProtectedRoute"
+import Button from "../components/Buttons"
+import Input from "../components/Input"
+import PageHead from "../components/PageHead"
+import ProtectedRoute from "../hooks/ProtectedRoute"
 
 const Signup = () => {
   const [loading, setLoading] = useState(false)

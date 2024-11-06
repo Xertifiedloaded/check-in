@@ -2,7 +2,7 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import MainHeader from "../MainHeader"
-import { FeedUserCard } from "@/components/UserFeedCard"
+import { FeedUserCard } from "../../components/UserFeedCard"
 import { ArrowLeft, MessageCircle } from "lucide-react"
 import Head from "next/head"
 import Link from "next/link"

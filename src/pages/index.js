@@ -1,7 +1,7 @@
 import Head from "next/head"
-import Heading from "@/components/Heading"
-import CheckIn from "@/components/CheckIn"
-import { useCheckIn } from "@/context/CheckInContext"
+import Heading from "../components/Heading"
+import CheckIn from "../components/CheckIn"
+import { useCheckIn } from "../context/CheckInContext"
 import MainHeader from "./MainHeader"
 import { MessageCircle } from "lucide-react"
 

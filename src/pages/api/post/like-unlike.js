@@ -1,7 +1,7 @@
 
 
-import { authOptions } from '@/lib/authOptions';
-import { prisma } from '@/lib/prisma';
+import { authOptions } from '../../../lib/authOptions';
+import { prisma } from '../../../lib/prisma';
 import { ObjectId } from 'mongodb';
 import { getServerSession } from 'next-auth';
 

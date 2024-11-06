@@ -1,5 +1,5 @@
-import { getUserCurrentStreak } from "@/controller/commentController";
-import { authOptions } from "@/lib/authOptions";
+import { getUserCurrentStreak } from "../../../controller/commentController";
+import { authOptions } from "../../../lib/authOptions";
 
 import { getServerSession } from "next-auth";
 

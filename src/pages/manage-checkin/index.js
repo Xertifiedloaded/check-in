@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react"
 import axios from "axios"
-import EditPostModal from "@/components/Modal"
-import PageHead from "@/components/PageHead"
+import EditPostModal from "../components/Modal"
+import PageHead from "../components/PageHead"
 import ProfileHeader from "../profile/edit/ProfileHeader"
 import { Pencil, Trash2, MessageSquare, Calendar } from "lucide-react"
 

@@ -1,7 +1,7 @@
 
 
-import databaseConnection from '@/lib/database';
-import { prisma } from '@/lib/prisma';
+import databaseConnection from '../../../lib/database';
+import { prisma } from '../../../lib/prisma';
 import bcrypt from 'bcryptjs'; 
 
 export default async function handler(req, res) {

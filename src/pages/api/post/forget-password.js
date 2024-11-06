@@ -1,7 +1,7 @@
 
-import databaseConnection from "@/lib/database";
-import { generateResetPasswordEmail, transporter } from "@/lib/nodemailer";
-import { prisma } from "@/lib/prisma";
+import databaseConnection from "../../../lib/database";
+import { generateResetPasswordEmail, transporter } from "../../../lib/nodemailer";
+import { prisma } from "../../../lib/prisma";
 import { v4 as uuidv4 } from "uuid";
 
 export default async function handler(req, res) {

@@ -1,8 +1,8 @@
 'use client'
-import Input from "@/components/Input"
+import Input from "../components/Input"
 import React, { useState } from "react"
 import UpdateHeading from "./UpdateHeading"
-import Button from "@/components/Buttons"
+import Button from "../components/Buttons"
 
 export default function UpdatePassword() {
   const [payload, setPayload] = useState({

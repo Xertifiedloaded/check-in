@@ -1,5 +1,5 @@
-import databaseConnection from "@/lib/database"
-import { prisma } from "@/lib/prisma"
+import databaseConnection from "../../../lib/database"
+import { prisma } from "../../../lib/prisma"
 
 export default async function handler(req, res) {
   await databaseConnection()

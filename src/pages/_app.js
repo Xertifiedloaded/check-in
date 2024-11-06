@@ -1,13 +1,13 @@
 import "./global.css"
 import "react-toastify/dist/ReactToastify.css"
 import { Poppins } from "next/font/google"
-import { AuthProvider } from "@/context/AuthContext"
-import { CheckInProvider } from "@/context/CheckInContext"
+import { AuthProvider } from "../context/AuthContext"
+import { CheckInProvider } from "../context/CheckInContext"
 import { ToastContainer } from "react-toastify"
-import SessionWrapper from "@/sessionWrapper/SessionWrapper"
-import { useVisitTracker } from "@/hooks/UseVisitorsTracker"
-import Footer from "@/components/Footer"
-import { ThemeProvider } from "@/context/ThemeContext"
+import SessionWrapper from "../sessionWrapper/SessionWrapper"
+import { useVisitTracker } from "../hooks/UseVisitorsTracker"
+import Footer from "../components/Footer"
+import { ThemeProvider } from "../context/ThemeContext"
 
 
 const poppin = Poppins({

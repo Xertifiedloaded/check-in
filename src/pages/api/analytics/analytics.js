@@ -1,5 +1,5 @@
 
-import { getAnalytics, trackVisit, updateVisitDuration } from '@/controller/analyticsController';
+import { getAnalytics, trackVisit, updateVisitDuration } from '../../../controller/analyticsController';
 
 
 export default async function handler(req, res) {

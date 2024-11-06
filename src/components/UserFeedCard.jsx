@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import useLikeStatus from "@/utils/actions";
+import useLikeStatus from "../utils/actions";
 import CommentSection from "./CommentSection";
 import axios from "axios";
 import TwitterStylePost from "./PostCard";
