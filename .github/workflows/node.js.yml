@@ -2,7 +2,7 @@ name: Reminder Cron Job
 
 on:
   schedule:
-    - cron: '* * * * *' 
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Send reminder to production endpoint
         run: |
-          response=$(curl -s -w "\n%{http_code}" -X POST 'https://daily-check-in.com.ng/api/cron/cron')
+          response=$(curl -s -w "\n%{http_code}" -X POST 'https://daily-check-in.com.ng/api/cron/test')
           status_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
           
