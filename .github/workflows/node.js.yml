@@ -35,9 +35,9 @@ jobs:
           curl -X POST 'https://daily-check-in.com.ng/api/cron/test'
         continue-on-error: true
       
-      - name: Send reminder to local endpoint (fallback)
-        if: failure()
-        env:
-          LOCAL_API_URL: 'http://localhost:3000/api/cron/test'
-        run: |
-          curl -X POST "$LOCAL_API_URL"
+      # - name: Send reminder to local endpoint (fallback)
+      #   if: failure()
+      #   env:
+      #     LOCAL_API_URL: 'http://localhost:3000/api/cron/test'
+      #   run: |
+      #     curl -X POST "$LOCAL_API_URL"
