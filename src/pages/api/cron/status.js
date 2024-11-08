@@ -1,7 +1,6 @@
 import axios from "axios"
 
-// https://www.daily-check-in.com.ng/
-
+// https://daily-check-in.com.ng
 export default async function handler(req, res) {
   const authHeader = req.headers.authorization
   if (
@@ -14,7 +13,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const response = await axios.post(
-        "https://www.daily-check-in.com.ng/api/cron/cron",
+        "https://daily-check-in.com.ng/api/cron/cron",
         {},
         {
           headers: {
