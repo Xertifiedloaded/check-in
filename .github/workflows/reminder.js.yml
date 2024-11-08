@@ -1,4 +1,4 @@
-name: Reminder Cron Job
+name:Checkin Reminder Cron Job
 
 on:
   schedule:
