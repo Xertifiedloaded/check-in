@@ -1,0 +1,40 @@
+name: Reminder Cron Job
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' 
+  workflow_dispatch:  
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [20.x]  
+        
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+   - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+      
+    - name: Send reminder to production endpoint
+      run: |
+        curl -X POST 'https://daily-check-in.com.ng/api/cron/test'
+      continue-on-error: true
+      
+    - name: Send reminder to local endpoint (fallback)
+      if: failure()
+      env:
+        LOCAL_API_URL: 'http://localhost:3000/api/cron/test'
+      run: |
+        curl -X POST "$LOCAL_API_URL"
