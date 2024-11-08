@@ -1,5 +1,6 @@
 import { transporter } from "./nodemailer"
 
+
 export async function sendEmailCommentNotification({ to, subject, html }) {
   try {
     const info = await transporter.sendMail({

@@ -37,7 +37,7 @@ model User {
   receivedMessages        Message[]    @relation("ReceivedMessages")
   friends                 Friendship[] @relation("UserFriends")
   friendsOf               Friendship[] @relation("FriendUsers")
-  lastSeen                DateTime     @default(now())
+  lastSeen                DateTime?     @default(now())
   isOnline                Boolean      @default(false)
 }
 

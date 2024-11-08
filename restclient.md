@@ -1,5 +1,5 @@
-# Testing GET request to fetch streaks
-GET http://localhost:3000/api/streaks
+# Testing GET request to fetch s
+GET http://localhost:3000/api/s
 Content-Type: application/json
 
 # Testing POST request to like a post
