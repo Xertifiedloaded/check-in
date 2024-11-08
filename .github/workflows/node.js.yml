@@ -2,7 +2,7 @@ name: Reminder Cron Job
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '* * * * *'  
   workflow_dispatch:
 
 jobs:
@@ -26,3 +26,8 @@ jobs:
             exit 1
           fi
         continue-on-error: true
+      
+      - name: Debug Cron Trigger
+        run: |
+          echo "Workflow triggered at: $(date)"
+          echo "Last cron run: $(date --date='1 minute ago')"
