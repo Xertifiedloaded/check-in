@@ -107,7 +107,7 @@ const Signup = () => {
                   payload={payload}
                   fieldName={fieldName}
                   handleChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 placeholder:text-xs rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full dark:text-black px-3 py-2 border border-gray-300 placeholder:text-xs rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                   type={
                     fieldName.toLowerCase().includes("password")
                       ? "password"

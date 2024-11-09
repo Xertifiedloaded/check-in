@@ -46,7 +46,7 @@ export default function ForgetPassword() {
                             onChange={handleChange}
                             value={payload.email}
                             placeholder="Enter your email"
-                            className="w-full border border-gray-300 rounded-lg p-2"
+                            className="w-full dark:text-black border border-gray-300 rounded-lg p-2"
                         />
                         <button
                             type="submit"
