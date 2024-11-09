@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/pages/chat/index.tsx"
-  ],
+, "src/pages/personal-space/index.js", "src/components/PostSection.js"  ],
   "exclude": [
     "node_modules"
   ]

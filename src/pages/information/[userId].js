@@ -157,7 +157,7 @@ const PostsList = ({ posts, profile }) => (
   </div>
 );
 
-const PostCard = ({ post }) => {
+export const PostCard = ({ post }) => {
   const parseContent = (content) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const parts = content.split(urlRegex);
