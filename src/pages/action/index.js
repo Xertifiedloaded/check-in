@@ -322,7 +322,6 @@ const AdminDashboard = () => {
           </Alert>
         )}
 
-        {/* Content */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold">{
             navigationItems.find(item => item.id === activeTab)?.label
