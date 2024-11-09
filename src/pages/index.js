@@ -1,19 +1,19 @@
-import Head from "next/head"
-import Heading from "../components/Heading"
-import CheckIn from "../components/CheckIn"
-import { useCheckIn } from "../context/CheckInContext"
-import MainHeader from "./MainHeader"
-import { MessageCircle } from "lucide-react"
-
+import Head from "next/head";
+import Heading from "../components/Heading";
+import CheckIn from "../components/CheckIn";
+import { useCheckIn } from "../context/CheckInContext";
+import MainHeader from "./MainHeader";
+import { MessageCircle } from "lucide-react";
+import TabsWrapper from "../components/TabComponent";
 export default function Home() {
-  const { loadingCheckIns, error } = useCheckIn()
+  const { loadingCheckIns, error } = useCheckIn();
 
   if (loadingCheckIns) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
       </div>
-    )
+    );
   }
   if (error) {
     return (
@@ -31,21 +31,27 @@ export default function Home() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <>
       <Head>
-        <title className=''>Daily Check-in</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-        <meta name="description" content="Learn about Daily Check-in, our mission, and our team." />
+        <title className="">Daily Check-in</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <meta
+          name="description"
+          content="Learn about Daily Check-in, our mission, and our team."
+        />
       </Head>
       <main className="mt-28">
         <MainHeader />
-        <Heading />
+        <TabsWrapper />
         <CheckIn />
       </main>
     </>
-  )
+  );
 }
