@@ -15,7 +15,13 @@
   --button-hover-bg-color: #4f46e5; /* indigo 700 */
   --button-disabled-bg-color: #f7fafc; /* gray 100 */
 }
+.cursor-zoom-in {
+  cursor: zoom-in;
+}
 
+[data-dialog-content] {
+  z-index: 50;
+}
 [data-theme='dark'] {
   --bg-color: #1a1a1a;
   --text-color: #ffffff;

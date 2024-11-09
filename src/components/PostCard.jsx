@@ -16,6 +16,8 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+
 const TwitterStylePost = ({
   user,
   localPost,
@@ -39,6 +41,13 @@ const TwitterStylePost = ({
 }) => {
   const [showActions, setShowActions] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isImageOpen, setIsImageOpen] = useState(false);
+
+  const handleImageClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsImageOpen(true);
+  };
 
   return (
     <>
@@ -128,13 +137,18 @@ const TwitterStylePost = ({
         </CardHeader>
 
         {localPost?.imageUrl && (
-          <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
-            <Image
-              src={localPost.imageUrl}
-              alt={`Post image for ${user?.name}`}
-              fill
-              className="object-cover"
-            />
+          <div className="relative aspect-[16/9] overflow-hidden">
+            <div
+              onClick={handleImageClick}
+              className="cursor-zoom-in w-full h-full"
+            >
+              <Image
+                src={localPost.imageUrl}
+                alt={`Post image for ${user?.name}`}
+                fill
+                className="object-cover transition-transform hover:scale-[1.02]"
+              />
+            </div>
           </div>
         )}
 
@@ -232,6 +246,36 @@ const TwitterStylePost = ({
           </Button>
         </div>
       </Card>
+
+      <Dialog
+        open={isImageOpen}
+        onOpenChange={(open) => {
+          setIsImageOpen(open);
+        }}
+      >
+        <DialogContent
+          className="max-w-[95vw] max-h-[95vh] w-auto p-0 bg-transparent border-none"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="relative w-full h-full flex items-center justify-center bg-black/80">
+            <Image
+              src={localPost?.imageUrl}
+              alt={`Post image for ${user?.name}`}
+              width={1920}
+              height={1080}
+              className="object-contain max-h-[90vh] max-w-[90vw]"
+              priority
+            />
+            <button
+              onClick={() => setIsImageOpen(false)}
+              className="absolute top-4 right-4 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition-colors"
+            >
+              <X size={24} />
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {showComments && (
         <div className="border-t border-gray-100 dark:border-gray-700/50">
           <CommentSection

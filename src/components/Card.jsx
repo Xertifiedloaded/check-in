@@ -8,12 +8,17 @@ import { useEffect, useState } from "react";
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai";
 import { BsFire } from "react-icons/bs";
 import { formatDistanceToNow } from "date-fns";
-
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { X } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 
+
 export default function CardComponent({ post }) {
+  const [isImageOpen, setIsImageOpen] = useState(false);
   const user = post.user || {};
   const { isLiked, toggleLike, loading, count } = useLikeStatus(
     user.id,
@@ -29,114 +34,222 @@ export default function CardComponent({ post }) {
   const truncateContent = (content) => {
     const width = window.innerWidth;
     const length = width <= 768 ? 40 : 25;
-
     return content.length > length ? content.slice(0, length) + "..." : content;
   };
 
   return (
-    <Card className="bg-white dark:bg-black relative rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 mb-3">
-      <CardHeader>
-        <Link
-          href={`/information/${user.id}`}
-          onClick={(e) => e.stopPropagation()}
-          className="flex items-center space-x-3 group"
-        >
-          <div className="relative">
-            <Image
-              src={user.profilePicture ?? "/no-user-pic.png"}
-              width={40}
-              height={40}
-              className="rounded-full w-10 h-10 object-cover ring-2 ring-gray-50 dark:ring-gray-700"
-              alt={user.name || "User"}
-            />
-            {post.currentStreak > 1 && (
-              <div className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center">
-                <span className="mr-0.5">🔥</span>
-                {post.currentStreak}
+    <>
+      <Card className="bg-white dark:bg-black relative rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 mb-3">
+        <CardHeader>
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Link
+                href={`/information/${user?.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center space-x-3 group"
+              >
+                <div className="relative">
+                  <Image
+                    src={user?.profilePicture ?? "/no-user-pic.png"}
+                    width={40}
+                    height={40}
+                    className="rounded-full w-10 h-10 object-cover ring-2 ring-gray-50 dark:ring-gray-700"
+                    alt={user.name || "User"}
+                  />
+                  {post?.currentStreak > 1 && (
+                    <div className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center">
+                      <span className="mr-0.5">🔥</span>
+                      {post.currentStreak}
+                    </div>
+                  )}
+                </div>
+                <div className="flex-grow">
+                  <div className="flex items-center gap-1">
+                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors">
+                      {user?.name?.split(" ")[0] ?? "Unknown User"}
+                    </h2>
+                    {user?.isVerified && (
+                      <svg
+                        className="w-3 h-3 text-blue-500 fill-current"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z" />
+                      </svg>
+                    )}
+                    {user?.isOwner && (
+                      <Image
+                        src="/check.svg"
+                        width={20}
+                        height={20}
+                        className="w-3 h-3 dark:invert object-cover"
+                        alt={user.name || "User"}
+                      />
+                    )}
+                  </div>
+                  <p className="lg:text-[9px] text-xs text-gray-500 dark:text-gray-400">
+                    {formatDistanceToNow(new Date(post.createdAt), {
+                      addSuffix: true,
+                    })}
+                  </p>
+                </div>
+              </Link>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+              <div className="flex justify-between space-x-2">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={user?.profilePicture ?? "/no-user-pic.png"} />
+                  <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold">{user.name}</h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {user?.bio || "No bio available"}
+                  </p>
+                  <div className="flex items-center pt-2 gap-4">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <b>{user.followers ?? 0}</b> followers
+                    </span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <b>{user.following}</b> following
+                    </span>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
+            </HoverCardContent>
+          </HoverCard>
 
-          <div className="flex-grow">
-            <div className="flex items-center gap-1">
-              <h2 className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors">
-                {user.name?.split(" ")[0] ?? "Unknown User"}
-              </h2>
-              {user?.isVerified && (
-                <svg
-                  className="w-3 h-3 text-blue-500 fill-current"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z" />
-                </svg>
-              )}
-
-              {user?.isOwner && (
-                <Image
-                  src="/check.svg"
-                  width={20}
-                  height={20}
-                  className="w-3 h-3 dark:invert object-cover"
-                  alt={user.name || "User"}
-                />
-              )}
-            </div>
-            <p className="lg:text-[9px] text-xs text-gray-500 dark:text-gray-400">
-              {formatDistanceToNow(new Date(post.createdAt), {
-                addSuffix: true,
-              })}
-            </p>
-          </div>
-        </Link>
-
-        <Button
-          variant="ghost"
-          onClick={handleToggleLike}
-          disabled={loading}
-          className={`flex absolute right-0 top-0 items-center gap-1.5 px-3 py-1.5 rounded-full transition-all
-`}
-        >
-          <Heart
-            size={16}
-            className={`transition-transform ${
-              isLiked ? "scale-110 text-red-500" : "scale-100"
-            }`}
-            fill={isLiked ? "red" : "none"}
-          />
-          <span className="text-xs font-medium">{count}</span>
-        </Button>
-      </CardHeader>
-
-      {post.imageUrl && (
-        <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
-          <Link
-            href={`/checkin/${user.id}`}
-            onClick={(e) => e.stopPropagation()}
+          <Button
+            variant="ghost"
+            onClick={handleToggleLike}
+            disabled={loading}
+            className={`flex absolute right-0 top-0 items-center gap-1.5 px-3 py-1.5 rounded-full transition-all`}
           >
+            <Heart
+              size={16}
+              className={`transition-transform ${
+                isLiked ? "scale-110 text-red-500" : "scale-100"
+              }`}
+              fill={isLiked ? "red" : "none"}
+            />
+            <span className="text-xs font-medium">{count}</span>
+          </Button>
+        </CardHeader>
+
+        {post.imageUrl && (
+          <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
+            <div 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsImageOpen(true);
+              }}
+              className="cursor-zoom-in w-full h-full"
+            >
+              <Image
+                src={post?.imageUrl}
+                alt={`Post image for ${user.name}`}
+                fill
+                className="object-cover transition-transform hover:scale-[1.02]"
+                priority
+              />
+            </div>
+          </div>
+        )}
+
+        <CardContent>
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Link
+                href={`/checkin/${user.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="block  dark:hover:bg-gray-700 transition-colors"
+              >
+                <p className="text-sm pt-1 text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {truncateContent(post.content)}
+                </p>
+              </Link>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.profilePicture ?? "/no-user-pic.png"} />
+                    <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-sm font-medium leading-none">{user.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {formatDistanceToNow(new Date(post.createdAt), {
+                        addSuffix: true,
+                      })}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {post.content}
+                </p>
+                {post?.imageUrl && (
+                  <div className="relative h-32 w-full rounded-md overflow-hidden">
+                    <Image
+                      src={post?.imageUrl}
+                      alt={`Post image for ${user.name}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Heart size={14} /> {count} likes
+                  </div>
+                  {post.commentsCount && (
+                    <div className="flex items-center gap-1">
+                      <MessageCircle size={14} /> {post.commentsCount} comments
+                    </div>
+                  )}
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        </CardContent>
+      </Card>
+
+      <Dialog 
+        open={isImageOpen} 
+        onOpenChange={(open) => {
+          setIsImageOpen(open);
+        }}
+      >
+        <DialogContent 
+          className="max-w-[95vw] max-h-[95vh] w-auto p-0 bg-transparent border-none"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="relative w-full h-full flex items-center justify-center bg-black/80">
             <Image
               src={post?.imageUrl}
               alt={`Post image for ${user.name}`}
-              fill
-              className="object-cover"
+              width={1920}
+              height={1080}
+              className="object-contain max-h-[90vh] max-w-[90vw]"
+              priority
             />
-          </Link>
-        </div>
-      )}
-
-      <CardContent>
-        <Link
-          href={`/checkin/${user.id}`}
-          onClick={(e) => e.stopPropagation()}
-          className="block hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        >
-          <p className="text-sm pt-2 text-gray-700 dark:text-gray-300 leading-relaxed">
-            {truncateContent(post.content)}
-          </p>
-        </Link>
-      </CardContent>
-    </Card>
+            <button
+              onClick={() => setIsImageOpen(false)}
+              className="absolute top-4 right-4 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition-colors"
+            >
+              <X size={24} />
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
+
+
+
+
+
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
