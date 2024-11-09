@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-// node script.mjs
 const prisma = new PrismaClient();
 async function updatePostVisibility() {
   try {
@@ -9,7 +8,6 @@ async function updatePostVisibility() {
       },
     });
 
-    console.log("All posts updated to PUBLIC visibility.");
   } catch (error) {
     console.error("Error updating post visibility:", error);
   } finally {
