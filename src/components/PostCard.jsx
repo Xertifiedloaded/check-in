@@ -51,7 +51,7 @@ const TwitterStylePost = ({
 
   return (
     <>
-      <Card className="mb-6">
+      <Card className="mb-6 overflow-hidden">
         <CardHeader>
           <div className="flex items-center gap-4">
             <div className="relative">
