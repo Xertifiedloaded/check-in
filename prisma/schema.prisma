@@ -67,6 +67,7 @@ model Task {
   @@index([userId])
 }
 
+
 model Message {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   content    String
