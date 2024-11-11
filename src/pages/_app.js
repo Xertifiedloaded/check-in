@@ -1,31 +1,40 @@
-import "./global.css"
-import "react-toastify/dist/ReactToastify.css"
-import { Poppins } from "next/font/google"
-import { AuthProvider } from "../context/AuthContext"
-import { CheckInProvider } from "../context/CheckInContext"
-import { ToastContainer } from "react-toastify"
-import SessionWrapper from "../sessionWrapper/SessionWrapper"
-import { useVisitTracker } from "../hooks/UseVisitorsTracker"
-import Footer from "../components/Footer"
-import { ThemeProvider } from "../context/ThemeContext"
-import { useEffect } from 'react';
-import { io } from 'socket.io-client';
+import "./global.css";
+import "react-toastify/dist/ReactToastify.css";
+import { Poppins } from "next/font/google";
+import { AuthProvider } from "../context/AuthContext";
+import { CheckInProvider } from "../context/CheckInContext";
+import { ToastContainer } from "react-toastify";
+import SessionWrapper from "../sessionWrapper/SessionWrapper";
+import { useVisitTracker } from "../hooks/UseVisitorsTracker";
+import Footer from "../components/Footer";
+import { ThemeProvider } from "../context/ThemeContext";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+import { useRouter } from "next/router";
 
 const poppin = Poppins({
   weight: ["200", "300", "400", "600", "700", "800"],
   subsets: ["latin"],
-})
+});
 
 function App({ Component, pageProps }) {
+  const router = useRouter();
+  const hiddenFooterRoutes = [
+    "/auth/signup",
+    "/auth/login",
+    "/chat",
+    "/reset-password",
+    "/forget-password",
+    "/account-verified",
+    "/verify-account",
+    '/personal-space'
+  ];
 
-
-
-  useVisitTracker()
+  useVisitTracker();
   return (
     <div className={`${poppin.className}`}>
-
-       <ThemeProvider>
-       <SessionWrapper>
+      <ThemeProvider>
+        <SessionWrapper>
           <AuthProvider>
             <ToastContainer
               position="top-center"
@@ -38,14 +47,13 @@ function App({ Component, pageProps }) {
             />
             <CheckInProvider>
               <Component {...pageProps} />
-              <Footer/>
+              {!hiddenFooterRoutes.includes(router.pathname) && <Footer />}
             </CheckInProvider>
           </AuthProvider>
         </SessionWrapper>
-       </ThemeProvider>
-
+      </ThemeProvider>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

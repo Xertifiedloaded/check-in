@@ -1,4 +1,4 @@
-// server.js
+
 const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
@@ -8,13 +8,13 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-let io; // Singleton instance
+let io;
 
 const initSocket = (server) => {
   if (!io) {
     io = new Server(server, {
       cors: {
-        origin: "http://localhost:3000", // Adjust according to your frontend's origin
+        origin: "https://daily-check-in.com.ng", 
         methods: ["GET", "POST"],
         credentials: true,
       },
@@ -51,7 +51,6 @@ app.prepare().then(() => {
     handle(req, res, parsedUrl);
   });
 
-  // Initialize Socket.io with the HTTP server
   initSocket(server);
 
   const PORT = process.env.PORT || 3000;

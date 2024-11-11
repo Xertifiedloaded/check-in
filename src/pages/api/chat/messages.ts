@@ -15,19 +15,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { userId, otherUserId, page = '1' } = req.query;
+    const { page = '1' } = req.query;
+    const userId = Array.isArray(req.query.userId) ? req.query.userId[0] : req.query.userId;
+    const otherUserId = Array.isArray(req.query.otherUserId) ? req.query.otherUserId[0] : req.query.otherUserId;
     const pageNum = parseInt(page as string);
 
     if (!userId || !otherUserId) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    // Verify current user is involved in the conversation
     if (session.user.id !== userId && session.user.id !== otherUserId) {
       return res.status(403).json({ error: 'Unauthorized access to conversation' });
     }
 
-    // Find chat between users
     const chat = await prisma.chat.findFirst({
       where: {
         OR: [

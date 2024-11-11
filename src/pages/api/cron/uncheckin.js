@@ -1,35 +1,39 @@
 import { PrismaClient } from "@prisma/client";
 import { transporter } from "../../../lib/nodemailer";
 import { reminderTemplate } from "../../../lib/CheckinReminder";
+
 const prisma = new PrismaClient();
 
 async function sendReminderEmailToAll(users) {
-    const bccEmails = users.map(user => user.email).join(", ");
-    const personalizedHtml = users.map(user => {
-      return reminderTemplate(user.name, "https://daily-check-in.com.ng");
-    }).join("<br/>");
-  
+  for (const user of users) {
+    const personalizedHtml = reminderTemplate(user.name, "https://daily-check-in.com.ng");
+
     const mailOptions = {
-      bcc: bccEmails,
+      to: user.email, 
       subject: "Reminder to Check-In",
-      html: personalizedHtml, 
+      html: personalizedHtml,
     };
 
-    await transporter.sendMail(mailOptions);
-    console.log("Reminder emails sent to all users.");
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log(`Reminder email sent to ${user.email}`);
+    } catch (error) {
+      console.error(`Failed to send email to ${user.email}:`, error);
+    }
   }
+}
 
 export async function sendRemindersToUnseenUsers() {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0);
 
     const users = await prisma.user.findMany({
       where: {
         posts: {
           none: {
             createdAt: {
-              gte: today, 
+              gte: today,
             },
           },
         },
@@ -38,12 +42,12 @@ export async function sendRemindersToUnseenUsers() {
 
     const validUsers = users.filter(user => user.email && validateEmail(user.email));
     if (validUsers.length > 0) {
-      await sendReminderEmailToAll(validUsers); 
+      await sendReminderEmailToAll(validUsers);
     } else {
       console.log("No users found to send reminders.");
     }
   } catch (error) {
-    console.error("Error sending reminders:", error);
+    console.error("Error fetching users:", error);
   } finally {
     await prisma.$disconnect();
   }
