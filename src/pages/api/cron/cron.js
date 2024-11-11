@@ -5,7 +5,7 @@ import Reminder from "../../../lib/Reminder";
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
-      // await Reminder()
+      await Reminder()
       console.log('Email sent successfully at:', new Date().toLocaleString());
       return res.status(200).json({ message: 'Email sent successfully' });
 
