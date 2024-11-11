@@ -8,7 +8,8 @@ import SessionWrapper from "../sessionWrapper/SessionWrapper"
 import { useVisitTracker } from "../hooks/UseVisitorsTracker"
 import Footer from "../components/Footer"
 import { ThemeProvider } from "../context/ThemeContext"
-
+import { useEffect } from 'react';
+import { io } from 'socket.io-client';
 
 const poppin = Poppins({
   weight: ["200", "300", "400", "600", "700", "800"],
@@ -16,6 +17,9 @@ const poppin = Poppins({
 })
 
 function App({ Component, pageProps }) {
+
+
+
   useVisitTracker()
   return (
     <div className={`${poppin.className}`}>
