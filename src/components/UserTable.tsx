@@ -41,7 +41,7 @@ export function UserTable({ users: initialUsers }: { users: User[] }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, isVerified: checked }),
             })
-            if (!response.ok) throw new Error('Failed to update verification status')
+            if (!response) throw new Error('Failed to update verification status')
 
             setUsers(users.map(user =>
                 user.id === userId ? { ...user, isVerified: checked } : user
@@ -71,7 +71,7 @@ export function UserTable({ users: initialUsers }: { users: User[] }) {
 
         try {
             const response = await axios.delete(`/api/user/action/deleteuser?userId=${userToDelete.id}`);
-            if (!response.ok) throw new Error('Failed to delete user')
+            if (!response) throw new Error('Failed to delete user')
 
             setUsers(users.filter(user => user.id !== userToDelete.id))
 
