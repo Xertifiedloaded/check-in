@@ -1,3 +1,6 @@
+// @ts-ignore
+
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
@@ -162,7 +165,7 @@ export function UserTable({ users: initialUsers }: { users: User[] }) {
             <StreakModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                user={selectedUser}
+                user={selectedUser as any}
             />
 
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

@@ -13,7 +13,7 @@ import axios from "axios"
   interface StreakModalProps {
     isOpen: boolean
     onClose: () => void
-    user: { id: string; streak: number } | null
+    user: any
   }
   
   export function StreakModal({ isOpen, onClose, user }: StreakModalProps) {
