@@ -41,12 +41,20 @@ model User {
   lastSeen                DateTime     @default(now())
   isOnline                Boolean      @default(false)
 }
+model Streak {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  startDate     DateTime
+  currentStreak Int?
+  lastCheckIn   DateTime?
+  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String    @db.ObjectId
+}
 
 model Friendship {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation("UserFriends", fields: [userId], references: [id])
+  user      User     @relation("UserFriends", fields: [userId], references: [id],onDelete: Cascade)
   userId    String   @db.ObjectId
-  friend    User     @relation("FriendUsers", fields: [friendId], references: [id])
+  friend    User     @relation("FriendUsers", fields: [friendId], references: [id] ,onDelete: Cascade)
   friendId  String   @db.ObjectId
   status    String   @default("PENDING")
   createdAt DateTime @default(now())
@@ -62,7 +70,7 @@ model Task {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id],onDelete: Cascade)
 
   @@index([userId])
 }
@@ -71,9 +79,9 @@ model Task {
 model Message {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   content    String
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id],onDelete: Cascade)
   senderId   String   @db.ObjectId
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id],onDelete: Cascade)
   receiverId String   @db.ObjectId
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
@@ -92,14 +100,6 @@ model Post {
   comments   Comment[] @relation("PostComments")
 }
 
-model Streak {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  startDate     DateTime
-  currentStreak Int?
-  lastCheckIn   DateTime?
-  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String    @db.ObjectId
-}
 
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
