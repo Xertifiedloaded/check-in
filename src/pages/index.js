@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Heading from "../components/Heading";
+import { Toaster } from "@/components/ui/toaster"
 import CheckIn from "../components/CheckIn";
 import { useCheckIn } from "../context/CheckInContext";
 import MainHeader from "./MainHeader";
@@ -48,6 +48,7 @@ export default function Home() {
         />
       </Head>
       <main className="mt-28">
+      <Toaster />
         <MainHeader />
         <TabsWrapper />
         <CheckIn />

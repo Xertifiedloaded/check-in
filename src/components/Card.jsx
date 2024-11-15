@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 
 export default function CardComponent({ post }) {
   const [isImageOpen, setIsImageOpen] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const user = post.user || {};
   const { isLiked, toggleLike, loading, count } = useLikeStatus(
     user.id,
@@ -214,37 +215,39 @@ export default function CardComponent({ post }) {
         </CardContent>
       </Card>
 
-      <Dialog 
-        open={isImageOpen} 
-        onOpenChange={(open) => {
-          setIsImageOpen(open);
-        }}
+      <Dialog
+      open={isImageOpen}
+      onOpenChange={(open) => {
+        setIsImageOpen(open);
+      }}
+    >
+      <DialogContent
+        className="max-w-[95vw] max-h-[95vh] w-auto p-0 bg-transparent border-none"
+        onClick={(e) => e.stopPropagation()}
       >
-        <DialogContent 
-          className="max-w-[95vw] max-h-[95vh] w-auto p-0 bg-transparent border-none"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="relative w-full h-full flex items-center justify-center bg-black/80">
-            <Image
-              src={post?.imageUrl}
-              alt={`Post image for ${user.name}`}
-              width={1920}
-              height={1080}
-              className="object-contain max-h-[90vh] max-w-[90vw]"
-              priority
-            />
-            <button
-              onClick={() => setIsImageOpen(false)}
-              className="absolute top-4 right-4 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition-colors"
-            >
-              <X size={24} />
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
+        <div className="relative w-full h-full flex items-center justify-center bg-black/80">
+          {isImageLoading && (
+            <div className="absolute inset-0 flex justify-center items-center text-white z-10">
+              <span>Loading...</span>
+            </div>
+          )}
+
+          <Image
+            src={post?.imageUrl}
+            alt={`Post image for ${user.name}`}
+            width={1920}
+            height={1080}
+            className="object-contain max-h-[90vh] max-w-[90vw]"
+            priority
+            onLoadingComplete={() => setIsImageLoading(false)} 
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
     </>
   );
 }
+
 
 
 
