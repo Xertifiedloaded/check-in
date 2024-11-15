@@ -1,6 +1,5 @@
 import axios from "axios"
 
-// https://daily-check-in.com.ng
 export default async function handler(req, res) {
   const authHeader = req.headers.authorization
   if (

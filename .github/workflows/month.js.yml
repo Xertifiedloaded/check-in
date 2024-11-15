@@ -1,0 +1,33 @@
+name: Monthly Cron Job
+
+on:
+  schedule:
+   - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send reminder to production endpoint
+        run: |
+          response=$(curl -s -w "\n%{http_code}" --max-time 60 --retry 3 -X POST 'https://daily-check-in.com.ng/api/cron/month')
+          status_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "Status code: $status_code"
+          echo "Response body: $body"
+          
+          if [ "$status_code" -ge 200 ] && [ "$status_code" -lt 300 ]; then
+            echo "Request successful"
+          else
+            echo "Request failed with status code $status_code"
+            exit 1
+          fi
+        continue-on-error: true
+      
+      - name: Debug Cron Trigger
+        run: |
+          echo "Workflow triggered at: $(date)"
+          echo "Last cron run: $(date --date='1 minute ago')"
