@@ -1,91 +1,75 @@
+
+import { Server } from 'socket.io';
 import { prisma } from '@/lib/prisma';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
 
+let io;
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const session = await getSession({ req });
-
-  if (!session?.user) {
-    return res.status(401).json({ error: 'Unauthorized' });
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const userId = session.user.id;
+  if (!io) {
+    const httpServer = res.socket.server;
+    io = new Server(httpServer, {
+      cors: {
+        origin: 'https://daily-check-in.com.ng',
+        methods: ['GET', 'POST'],
+      },
+    });
 
-  if (req.method === 'GET') {
-    const { friendId } = req.query;
+    io.on('connection', (socket) => {
+      console.log(`Socket.IO: User connected ${socket.id}`);
+    });
 
-    try {
-      const messages = await prisma.message.findMany({
-        where: {
-          OR: [
-            { senderId: userId, receiverId: friendId as string },
-            { senderId: friendId as string, receiverId: userId },
-          ],
-        },
-        include: {
-          sender: {
-            select: {
-              name: true,
-              profilePicture: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: 'asc',
-        },
-      });
+    res.socket.server.io = io; 
+  }
 
-      // Mark messages as read
-      if (messages.length > 0) {
-        await prisma.message.updateMany({
-          where: {
-            receiverId: userId,
-            senderId: friendId as string,
-            read: false,
-          },
-          data: {
-            read: true,
-          },
-        });
-      }
+  try {
+    const { content, senderId, receiverId } = req.body;
 
-      return res.status(200).json(messages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      return res.status(500).json({ error: 'Internal server error' });
+    if (!content || !senderId || !receiverId) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
-  }
 
-  if (req.method === 'POST') {
-    const { content, receiverId } = req.body;
-
-    try {
-      const message = await prisma.message.create({
-        data: {
-          content,
-          senderId: userId,
-          receiverId,
-        },
-        include: {
-          sender: {
-            select: {
-              name: true,
-              profilePicture: true,
-            },
+    const chat = await prisma.chat.upsert({
+      where: {
+        senderId_receiverId: { senderId, receiverId }, 
+      },
+      update: {
+        lastMessage: content,
+        updatedAt: new Date(),
+      },
+      create: {
+        senderId,
+        receiverId,
+        lastMessage: content,
+      },
+    });
+    const message = await prisma.message.create({
+      data: {
+        content,
+        chatId: chat.id,
+        senderId,
+      },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            profilePicture: true,
           },
         },
-      });
+      },
+    });
 
-      return res.status(201).json(message);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      return res.status(500).json({ error: 'Internal server error' });
-    }
+  
+    io.to(senderId).emit('receive-message', message);
+    io.to(receiverId).emit('receive-message', message);
+
+    return res.json(message);
+  } catch (error) {
+    console.error('Error processing message:', error);
+    return res.status(500).json({ error: 'Failed to process message' });
   }
-
-  return res.status(405).json({ error: 'Method not allowed' });
 }

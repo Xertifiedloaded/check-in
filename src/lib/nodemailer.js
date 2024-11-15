@@ -10,6 +10,9 @@ export const transporter = nodemailer.createTransport({
   },
 })
 
+
+
+
 export const sendOtpEmail = async (userEmail, otp, verificationLink) => {
   await transporter.sendMail({
     to: userEmail,
