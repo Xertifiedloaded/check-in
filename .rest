@@ -1,10 +1,7 @@
-# GET   http://localhost:3000/api/post/getpost
-# Content-Type: application/json
+GET http://localhost:3000/api/post/all
 
-# # {
-# #   "postId": "66f917eda12d967d2b4126cb",
-# # }
+ Content-Type: application/json
 
-DELETE  http://localhost:3000/api/admin/delete-account?userId=67112091c1e057da87b657fd
+
 
 
