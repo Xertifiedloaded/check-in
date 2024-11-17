@@ -6,7 +6,6 @@ import CardComponent from "./Card"
 
 export default function TodayCheckIn() {
   const { todayPosts } = useCheckIn()
-  console.log(todayPosts)
 
   return (
     <section>
@@ -23,6 +22,17 @@ export default function TodayCheckIn() {
     </section>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
 
 export function YesterDayCheckIn() {
   const { yesterdayPosts } = useCheckIn()

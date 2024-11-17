@@ -18,25 +18,25 @@ export const CheckInProvider = ({ children }) => {
   const fetchCheckIns = async () => {
     setLoadingCheckIns(true);
     try {
-      const response = await fetch("/api/post/today-yesterday");
+      const response = await fetch("/api/post/all");
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       const data = await response.json();
+       setTodayPosts(data.posts);
+      // if (
+      //   // !data ||
+      //   // !Array.isArray(data.todayPosts) ||
+      //   // !Array.isArray(data.yesterdayPosts)
+      // ) {
+      //   console.error("Unexpected response structure:", data);
+      //   return;
+      // }
 
-      if (
-        !data ||
-        !Array.isArray(data.todayPosts) ||
-        !Array.isArray(data.yesterdayPosts)
-      ) {
-        console.error("Unexpected response structure:", data);
-        return;
-      }
-
-      setTodayPosts(data.todayPosts);
-      setYesterdayPosts(data.yesterdayPosts);
+      // setTodayPosts(data.todayPosts);
+      // setYesterdayPosts(data.yesterdayPosts);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
