@@ -1,10 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react"
 import axios from "axios"
-import DeleteAccount from "./DeleteAccount"
-import ProfileHeader from "./ProfileHeader"
-import ProfileInfo from "./ProfileInfo"
-import UpdatePassword from "./UpdatePassword"
 
 import StreakPage from "../../../components/Streak"
 import ProtectedRoute from "../../../hooks/ProtectedRoute"
@@ -39,7 +35,6 @@ const UpdateProfile = () => {
     <>
 
       <div className="min-h-screen bg-gray-100">
-        <ProfileHeader />
 
         <div className="max-w-7xl mx-auto py-[20px] sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
@@ -62,52 +57,7 @@ const UpdateProfile = () => {
               )}
             </div>
 
-            <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
-              <div className="px-4 py-5 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Profile Information
-                </h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                  Personal details and application.
-                </p>
-              </div>
-              <div className="border-t border-gray-200">
-                <ProfileInfo />
-              </div>
-            </div>
-
-            {userGoogleAccount ? (
-              <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
-                <div className="px-4 py-5 sm:px-6">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Update Password
-                  </h3>
-                  <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    Ensure your account is using a long, random password to stay
-                    secure.
-                  </p>
-                </div>
-                <div className="border-t border-gray-200">
-                  <UpdatePassword />
-                </div>
-              </div>
-            ) : null}
-
-            <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-              <div className="px-4 py-5 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Delete Account
-                </h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                  Permanently remove your account and all of its contents from
-                  the platform. This action is not reversible, so please
-                  continue with caution.
-                </p>
-              </div>
-              <div className="border-t border-gray-200">
-                <DeleteAccount />
-              </div>
-            </div>
+  
           </div>
         </div>
       </div>
