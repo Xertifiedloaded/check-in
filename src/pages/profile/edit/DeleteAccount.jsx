@@ -37,7 +37,7 @@ export default function DeleteAccount() {
       />
       <Button
         type="submit"
-        className="bg-bgColorRed py-2 px-3 rounded-[25px] mt-4 text-white text-sm"
+        className="bg-bgColorRed py-2 px-3 rounded-[25px] mt-4 dark:text-white text-sm"
         value="Delete Account"
       />
     </form>

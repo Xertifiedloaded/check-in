@@ -13,7 +13,6 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!userId) return;
-
     const fetchProfile = async () => {
       try {
         setLoading(true);
@@ -147,7 +146,7 @@ const StatsSection = ({ profile }) => {
 const PostsList = ({ posts, profile }) => (
   <div className="space-y-4">
     <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-      {profile?.name}Recent Public Posts
+      Recent Public Posts by {profile?.name}
     </h2>
     <div className="space-y-3">
       {posts.map((post) => (
