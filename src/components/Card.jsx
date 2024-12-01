@@ -8,14 +8,17 @@ import { useEffect, useState } from "react";
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai";
 import { BsFire } from "react-icons/bs";
 import { formatDistanceToNow } from "date-fns";
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
-
 
 export default function CardComponent({ post }) {
   const [isImageOpen, setIsImageOpen] = useState(false);
@@ -98,7 +101,9 @@ export default function CardComponent({ post }) {
             <HoverCardContent className="w-80">
               <div className="flex justify-between space-x-2">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src={user?.profilePicture ?? "/no-user-pic.png"} />
+                  <AvatarImage
+                    src={user?.profilePicture ?? "/no-user-pic.png"}
+                  />
                   <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="space-y-1">
@@ -138,7 +143,7 @@ export default function CardComponent({ post }) {
 
         {post.imageUrl && (
           <div className="relative aspect-[16/9] overflow-hidden rounded-t-xl">
-            <div 
+            <div
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -174,11 +179,15 @@ export default function CardComponent({ post }) {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.profilePicture ?? "/no-user-pic.png"} />
+                    <AvatarImage
+                      src={user.profilePicture ?? "/no-user-pic.png"}
+                    />
                     <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-medium leading-none">{user.name}</p>
+                    <p className="text-sm font-medium leading-none">
+                      {user.name}
+                    </p>
                     <p className="text-sm text-muted-foreground">
                       {formatDistanceToNow(new Date(post.createdAt), {
                         addSuffix: true,
@@ -216,43 +225,37 @@ export default function CardComponent({ post }) {
       </Card>
 
       <Dialog
-      open={isImageOpen}
-      onOpenChange={(open) => {
-        setIsImageOpen(open);
-      }}
-    >
-      <DialogContent
-        className="max-w-[95vw] max-h-[95vh] w-auto p-0 bg-transparent border-none"
-        onClick={(e) => e.stopPropagation()}
+        open={isImageOpen}
+        onOpenChange={(open) => {
+          setIsImageOpen(open);
+        }}
       >
-        <div className="relative w-full h-full flex items-center justify-center bg-black/80">
-          {isImageLoading && (
-            <div className="absolute inset-0 flex justify-center items-center text-white z-10">
-              <span>Loading...</span>
-            </div>
-          )}
+        <DialogContent
+          className="max-w-[95vw] max-h-[95vh] w-auto p-0 bg-transparent border-none"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="relative w-full h-full flex items-center justify-center bg-black/80">
+            {isImageLoading && (
+              <div className="absolute inset-0 flex justify-center items-center text-white z-10">
+                <span>Loading...</span>
+              </div>
+            )}
 
-          <Image
-            src={post?.imageUrl}
-            alt={`Post image for ${user.name}`}
-            width={1920}
-            height={1080}
-            className="object-contain max-h-[90vh] max-w-[90vw]"
-            priority
-            onLoadingComplete={() => setIsImageLoading(false)} 
-          />
-        </div>
-      </DialogContent>
-    </Dialog>
+            <Image
+              src={post?.imageUrl}
+              alt={`Post image for ${user.name}`}
+              width={1920}
+              height={1080}
+              className="object-contain max-h-[90vh] max-w-[90vw]"
+              priority
+              onLoadingComplete={() => setIsImageLoading(false)}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
-
-
-
-
-
-
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   return (
@@ -270,7 +273,9 @@ export function StreakCard({ userName, userProfilePicture, currentStreak }) {
             {userName?.split(" ")[0] ?? "Unknown User"}
           </h2>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            {currentStreak > 0
+            {currentStreak > 1
+              ? `${currentStreak} days streak`
+              : currentStreak === 1
               ? `${currentStreak} day streak`
               : "No current streak"}
           </p>
@@ -286,38 +291,63 @@ export function StreakCard({ userName, userProfilePicture, currentStreak }) {
 export function StreakBadge({ currentStreak }) {
   const renderBadge = () => {
     switch (true) {
+      case currentStreak >= 100:
+        return (
+          <div className="badge text-xs">
+            <span>🏆 {currentStreak} Days</span>
+          </div>
+        );
+      case currentStreak >= 75:
+        return (
+          <div className="badge text-xs">
+            <span>💎 {currentStreak} Days</span>
+          </div>
+        );
+      case currentStreak >= 50:
+        return (
+          <div className="badge text-xs">
+            <span>🌠 {currentStreak} Days</span>
+          </div>
+        );
       case currentStreak >= 30:
         return (
           <div className="badge text-xs">
-            <span className="">🌟 {currentStreak} Days</span>
+            <span>🌟 {currentStreak} Days</span>
           </div>
         );
       case currentStreak >= 20:
         return (
           <div className="badge text-xs">
-            <span className="">🎖️ {currentStreak} Days</span>
+            <span>🎖️ {currentStreak} Days</span>
           </div>
         );
       case currentStreak >= 10:
         return (
           <div className="badge text-xs">
-            <span className="">⚡ {currentStreak} Days</span>
+            <span>⚡ {currentStreak} Days</span>
+          </div>
+        );
+      case currentStreak >= 5:
+        return (
+          <div className="badge text-xs">
+            <span>🌈 {currentStreak} Days</span>
           </div>
         );
       case currentStreak >= 3:
         return (
           <div className="badge text-xs">
-            <span className="">🏅 {currentStreak} Days</span>
+            <span>🏅 {currentStreak} Days</span>
           </div>
         );
       default:
         return (
           <div className="badge text-xs">
-            <span className="">🔥 {currentStreak} Days</span>
+            <span>🔥 {currentStreak} Days</span> {/* Fire */}
           </div>
         );
     }
   };
+
   return (
     <div className="flex text-xs items-center justify-center">
       {renderBadge()}
