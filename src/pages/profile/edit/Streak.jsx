@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { format, startOfToday } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -47,8 +42,6 @@ const UpdateProfileStreak = () => {
     };
     fetchStreak();
   }, []);
-
-
 
   const customDayRender = ({ date, ...props }) => {
     const dateString = format(date, "yyyy-MM-dd");
@@ -101,16 +94,22 @@ const UpdateProfileStreak = () => {
       <Card className="w-full shadow-2xl border-none">
         <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-t-xl">
           <CardTitle className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-800">Streak Tracker</h2>
+            <h2 className="lg:text-2xl text-lg font-bold text-gray-800">
+              Streak Tracker
+            </h2>
             <div
               className={cn(
-                "px-4 py-2 rounded-full text-sm font-semibold",
+                "px-4 py-2 rounded-full text-xs font-bold",
                 currentStreak > 0
-                  ? "bg-emerald-100 text-emerald-800"
-                  : "bg-rose-100 text-rose-800"
+                  ? "bg-emerald-100 text-emerald-800 w-20 text-center"
+                  : "bg-rose-100 text-rose-800 w-40"
               )}
             >
-              Streak: {currentStreak} Days
+              {currentStreak > 1
+                ? `${currentStreak} Days`
+                : currentStreak === 1
+                ? `${currentStreak} Day`
+                : "No current streak"}
             </div>
           </CardTitle>
         </CardHeader>

@@ -123,7 +123,7 @@ export default function PersonalSpace() {
     }
   };
 
-  // Profile Update Method
+
   const handleProfileUpdate = async () => {
     try {
       setLoading(true);
@@ -144,7 +144,6 @@ export default function PersonalSpace() {
     }
   };
 
-  // Profile Change Handler
   const handleProfileChange = (field, value) => {
     if (field === 'isEditing') {
       setIsEditing(value);
@@ -165,7 +164,7 @@ export default function PersonalSpace() {
     setIsEditing(false);
   };
 
-  // Loading and Error States
+
   if (!userId) return null;
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
