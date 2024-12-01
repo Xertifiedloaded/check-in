@@ -63,6 +63,7 @@ export default async function handler(req, res) {
           startDate: currentDate,
           currentStreak: 1,
           lastCheckIn: currentDate,
+          
         },
       });
       streakUpdated = true;
@@ -111,6 +112,7 @@ export default async function handler(req, res) {
         content: content.trim(),
         imageUrl,
         visibility,
+        createdAt: new Date(),
         userId: session.user.id,
       },
       include: {
