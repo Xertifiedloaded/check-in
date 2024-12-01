@@ -8,46 +8,46 @@ generator client {
 }
 
 model User {
-  id                      String       @id @default(auto()) @map("_id") @db.ObjectId
+  id                      String    @id @default(auto()) @map("_id") @db.ObjectId
   name                    String
-  email                   String       @unique
+  email                   String    @unique
   password                String?
   phoneNumber             String?
   username                String?
-  isOwner                 Boolean      @default(false)
+  isOwner                 Boolean   @default(false)
   profilePicture          String?
   otp                     String?
   otpExpiry               DateTime?
-  isGoogleAuth            Boolean      @default(false)
+  isGoogleAuth            Boolean   @default(false)
   permissions             String[]
-  isVerified              Boolean?     @default(false)
+  isVerified              Boolean?  @default(false)
   verificationToken       String?
   verificationTokenExpiry DateTime?
   googleId                String?
-  createdAt               DateTime     @default(now())
-  updatedAt               DateTime     @updatedAt
-  posts                   Post[]       @relation()
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  posts                   Post[]    @relation()
   streaks                 Streak[]
-  isDeleted               Boolean      @default(false)
+  isDeleted               Boolean   @default(false)
   deletedAt               DateTime?
-  tasks         Task[]
-  comments                Comment[]    @relation("UserComments")
-  replies                 Reply[]      @relation("UserReplies")
-  sentChats     Chat[] @relation("SentChats")
-  receivedChats Chat[] @relation("ReceivedChats")
-   sentMessages   Message[]  @relation("UserSentMessages")
+  tasks                   Task[]
+  comments                Comment[] @relation("UserComments")
+  replies                 Reply[]   @relation("UserReplies")
+  sentChats               Chat[]    @relation("SentChats")
+  receivedChats           Chat[]    @relation("ReceivedChats")
+  sentMessages            Message[] @relation("UserSentMessages")
 }
 
 model Chat {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  sender      User     @relation("SentChats", fields: [senderId], references: [id])
-  senderId    String   @db.ObjectId
-  receiver    User     @relation("ReceivedChats", fields: [receiverId], references: [id])
-  receiverId  String   @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  sender      User      @relation("SentChats", fields: [senderId], references: [id])
+  senderId    String    @db.ObjectId
+  receiver    User      @relation("ReceivedChats", fields: [receiverId], references: [id])
+  receiverId  String    @db.ObjectId
   messages    Message[]
   lastMessage String?
-  updatedAt   DateTime @updatedAt
-  
+  updatedAt   DateTime  @updatedAt
+
   @@unique([senderId, receiverId])
 }
 
@@ -74,10 +74,9 @@ model Task {
   @@index([userId])
 }
 
-
-
 model Post {
   imageUrl   String?
+  date       DateTime?
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   content    String
   visibility String    @default("PUBLIC")

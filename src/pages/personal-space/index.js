@@ -372,8 +372,7 @@ const ProfileEditForm = ({
   onSave,
   onCancel,
   uploadLoading,
-  handleImageUpload,
-  handleDeleteImage
+
 }) => {
   return (
     <div className="w-full">
