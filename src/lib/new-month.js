@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-
 import { happyNewMonthTemplate } from "./NewYearTemplate";
 import { transporter } from "./nodemailer";
-
-
+import * as fs from 'fs';
+import * as path from 'path';
 const prisma = new PrismaClient();
 
 async function sendHappyNewMonthEmails() {
@@ -19,22 +18,24 @@ async function sendHappyNewMonthEmails() {
       });
 
       const validUsers = users.filter(user => user.email && validateEmail(user.email));
-
-      if (validUsers.length > 0) {
-        const bccEmails = validUsers.map(user => user.email).join(", ");
-        const personalizedHtml = validUsers.map(user => happyNewMonthTemplate(user.name)).join("<br/>");
-
+      for (const user of validUsers) {
         const mailOptions = {
-          bcc: bccEmails,
+          to: user.email,
           subject: "Happy New Month from Daily Checkin!",
-          html: personalizedHtml,
+          html: happyNewMonthTemplate(user.name),
+          attachments: [
+            {
+              filename: 'banner.jpg',
+              path: path.join(process.cwd(), 'public', 'banner.jpg'),
+              cid: 'monthlyBanner' 
+            }
+          ]
         };
 
         await transporter.sendMail(mailOptions);
-        console.log("Happy new month emails sent to all users.");
-      } else {
-        console.log("No users found to send happy new month emails.");
       }
+
+      console.log(`Happy new month emails sent to ${validUsers.length} users.`);
     } else {
       console.log("Not the start of a new month, skipping happy new month emails.");
     }
