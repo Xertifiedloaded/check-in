@@ -258,6 +258,32 @@ export default function CardComponent({ post }) {
 }
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
+  const getBadgeClasses = (streak) => {
+    if (streak >= 200) {
+      return "bg-purple-600 text-white"; // Legend
+    } else if (streak >= 150) {
+      return "bg-yellow-500 text-white"; // Master
+    } else if (streak >= 100) {
+      return "bg-green-600 text-white"; // Champion
+    } else if (streak >= 75) {
+      return "bg-blue-600 text-white"; // Diamond
+    } else if (streak >= 50) {
+      return "bg-indigo-600 text-white"; // Sapphire
+    } else if (streak >= 30) {
+      return "bg-yellow-400 text-white"; // Gold
+    } else if (streak >= 20) {
+      return "bg-gray-400 text-white"; // Silver
+    } else if (streak >= 10) {
+      return "bg-orange-400 text-white"; // Bronze
+    } else if (streak >= 5) {
+      return "bg-teal-400 text-white"; // Starter
+    } else if (streak >= 1) {
+      return "bg-red-400 text-white"; // Beginner
+    } else {
+      return "bg-gray-100 text-gray-500"; // Default for no streak
+    }
+  };
+
   return (
     <div className="flex mb-2 items-center justify-between p-4 bg-white dark:bg-black dark:border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="flex items-center space-x-3">
@@ -281,7 +307,10 @@ export function StreakCard({ userName, userProfilePicture, currentStreak }) {
           </p>
         </div>
       </div>
-      <div className="flex text-sm items-center space-x-1 bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300 rounded-full px-3 py-1">
+      <div
+        className={`flex text-sm items-center space-x-1  rounded-full px-3 py-2",
+       ${getBadgeClasses(currentStreak)} `}
+      >
         <StreakBadge currentStreak={currentStreak} />
       </div>
     </div>
@@ -290,61 +319,71 @@ export function StreakCard({ userName, userProfilePicture, currentStreak }) {
 
 export function StreakBadge({ currentStreak }) {
   const renderBadge = () => {
+    const streakText = currentStreak === 1 ? "Day" : "Days";
+
     switch (true) {
+      case currentStreak >= 200:
+        return (
+          <div className="badge text-xs">
+            <span>💥 Legend</span>
+          </div>
+        );
+      case currentStreak >= 150:
+        return (
+          <div className="badge text-xs">
+            <span>🌟 Master</span>
+          </div>
+        );
       case currentStreak >= 100:
         return (
           <div className="badge text-xs">
-            <span>🏆 {currentStreak} Days</span>
+            <span>🏆 Champion</span>
           </div>
         );
       case currentStreak >= 75:
         return (
           <div className="badge text-xs">
-            <span>💎 {currentStreak} Days</span>
+            <span>💎 Diamond</span>
           </div>
         );
       case currentStreak >= 50:
         return (
           <div className="badge text-xs">
-            <span>🌠 {currentStreak} Days</span>
+            <span>🔷 Sapphire</span>
           </div>
         );
       case currentStreak >= 30:
         return (
           <div className="badge text-xs">
-            <span>🌟 {currentStreak} Days</span>
+            <span>🌟 Gold</span>
           </div>
         );
       case currentStreak >= 20:
         return (
           <div className="badge text-xs">
-            <span>🎖️ {currentStreak} Days</span>
+            <span>🎖️ Silver</span>
           </div>
         );
       case currentStreak >= 10:
         return (
           <div className="badge text-xs">
-            <span>⚡ {currentStreak} Days</span>
+            <span>⚡ Bronze</span>
           </div>
         );
       case currentStreak >= 5:
         return (
           <div className="badge text-xs">
-            <span>🌈 {currentStreak} Days</span>
+            <span>🌈 Starter</span>
           </div>
         );
-      case currentStreak >= 3:
+      case currentStreak >= 1:
         return (
           <div className="badge text-xs">
-            <span>🏅 {currentStreak} Days</span>
+            <span>🏅 Beginner</span>
           </div>
         );
       default:
-        return (
-          <div className="badge text-xs">
-            <span>🔥 {currentStreak} Days</span> {/* Fire */}
-          </div>
-        );
+        return null;
     }
   };
 
