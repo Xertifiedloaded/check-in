@@ -308,8 +308,9 @@ export function StreakCard({ userName, userProfilePicture, currentStreak }) {
         </div>
       </div>
       <div
-        className={`flex text-sm items-center space-x-1  rounded-full px-3 py-2",
-       ${getBadgeClasses(currentStreak)} `}
+        className={`flex text-sm items-center space-x-1 rounded-full px-3 py-1 ${getBadgeClasses(
+          currentStreak
+        )}`}
       >
         <StreakBadge currentStreak={currentStreak} />
       </div>
