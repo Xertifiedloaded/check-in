@@ -33,34 +33,11 @@ model User {
   tasks                   Task[]
   comments                Comment[] @relation("UserComments")
   replies                 Reply[]   @relation("UserReplies")
-  sentChats               Chat[]    @relation("SentChats")
-  receivedChats           Chat[]    @relation("ReceivedChats")
-  sentMessages            Message[] @relation("UserSentMessages")
+
 }
 
-model Chat {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  sender      User      @relation("SentChats", fields: [senderId], references: [id])
-  senderId    String    @db.ObjectId
-  receiver    User      @relation("ReceivedChats", fields: [receiverId], references: [id])
-  receiverId  String    @db.ObjectId
-  messages    Message[]
-  lastMessage String?
-  updatedAt   DateTime  @updatedAt
 
-  @@unique([senderId, receiverId])
-}
 
-model Message {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  content   String
-  createdAt DateTime @default(now())
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  chatId    String   @db.ObjectId
-  sender    User     @relation("UserSentMessages", fields: [senderId], references: [id]) // Add relation name
-  senderId  String   @db.ObjectId
-  read      Boolean  @default(false)
-}
 
 model Task {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
