@@ -1,28 +1,15 @@
 import React, { useState, useEffect, useMemo } from "react";
-
-import DailyCheckin from './Heading'
-import { toast } from "react-toastify";
-import {
-    Clock,
-    Lock,
-    Globe,
-    Sparkles,
-    Image as ImageIcon,
-    X,
-    ListTodo,
-    Plus,
-    Check,
-} from "lucide-react";
+import DailyCheckin from './Heading';
+import { ListTodo, Plus, Check } from "lucide-react";
 import {
     Card,
     CardHeader,
     CardTitle,
     CardDescription,
     CardContent,
-    CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import {
     Select,
     SelectContent,
@@ -30,18 +17,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
-
-
-
-
+import { useToast } from "@/hooks/use-toast";
 
 
 function TaskComponent() {
+    const { toast } = useToast();
     const { data: session } = useSession();
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState("");
@@ -49,27 +30,20 @@ function TaskComponent() {
     const userId = session?.user?.id;
     const [sortBy, setSortBy] = useState("newest");
 
-
-
     const sortedTasks = useMemo(() => {
         let sorted = [...tasks];
         switch (sortBy) {
             case "oldest":
-                return sorted.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+                return sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
             case "pending":
-                return sorted.sort((a, b) => {
-                    if (a.completed === b.completed) return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-                    return a.completed ? 1 : -1;
-                });
+                return sorted.sort((a, b) => a.completed - b.completed || new Date(b.createdAt) - new Date(a.createdAt));
             case "completed":
-                return sorted.sort((a, b) => {
-                    if (a.completed === b.completed) return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-                    return b.completed ? 1 : -1;
-                });
+                return sorted.sort((a, b) => b.completed - a.completed || new Date(b.createdAt) - new Date(a.createdAt));
             default:
-                return sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         }
     }, [tasks, sortBy]);
+
     useEffect(() => {
         if (userId) {
             fetchTasks();
@@ -80,22 +54,32 @@ function TaskComponent() {
         try {
             const response = await fetch(`/api/task/task?userId=${userId}`);
             if (!response.ok) throw new Error("Failed to fetch tasks");
-            console.log(response);
-
             const data = await response.json();
             setTasks(data);
         } catch (error) {
-            toast.error("Failed to fetch tasks");
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Failed to fetch tasks.",
+            });
         }
     };
 
     const handleAddTask = async (e) => {
         e.preventDefault();
         if (!userId) {
-            return toast.warning("Please login to add tasks");
+            return toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Please login to add tasks.",
+            });
         }
         if (!newTask.trim()) {
-            return toast.warning("Task cannot be empty");
+            return toast({
+                variant: "warning",
+                title: "Warning",
+                description: "Task cannot be empty.",
+            });
         }
 
         setLoading(true);
@@ -112,9 +96,17 @@ function TaskComponent() {
 
             await fetchTasks();
             setNewTask("");
-            toast.success("Task added successfully!");
+            toast({
+                variant: "default",
+                title: "Success",
+                description: "Task added successfully!",
+            });
         } catch (error) {
-            toast.error("Failed to add task");
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Failed to add task.",
+            });
         } finally {
             setLoading(false);
         }
@@ -133,9 +125,17 @@ function TaskComponent() {
             if (!response.ok) throw new Error("Failed to update task");
 
             await fetchTasks();
-            toast.success("Task updated successfully!");
+            toast({
+                variant: "default",
+                title: "Success",
+                description: "Task updated successfully!",
+            });
         } catch (error) {
-            toast.error("Failed to update task");
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Failed to update task.",
+            });
         }
     };
 
@@ -178,7 +178,7 @@ function TaskComponent() {
                     </div>
                 </form>
 
-                <Select value={sortBy} disabled={!userId || !newTask.trim() || loading} onValueChange={setSortBy}>
+                <Select value={sortBy} onValueChange={setSortBy} disabled={!userId}>
                     <SelectTrigger className="w-[200px] mt-2">
                         <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
@@ -194,70 +194,32 @@ function TaskComponent() {
                     {sortedTasks.map((task) => (
                         <div
                             key={task.id}
-                            className={cn(
-                                "flex items-center justify-between p-3 border rounded-lg transition-colors duration-200",
+                            className={`flex items-center justify-between p-3 border rounded-lg ${
                                 task.completed
-                                    ? "bg-green-50/50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30"
-                                    : "hover:border-violet-200 dark:hover:border-violet-800"
-                            )}
+                                    ? "bg-green-50 border-green-200"
+                                    : "hover:border-violet-200"
+                            }`}
                         >
-                            <div className="flex flex-col flex-1">
-                                <div className="flex items-center gap-2">
-                                    <span
-                                        className={cn(
-                                            "text-base",
-                                            task.completed && "text-gray-500 line-through"
-                                        )}
-                                    >
-                                        {task.content}
-                                    </span>
-                                    <span
-                                        className={cn(
-                                            "px-2 py-0.5 rounded-full text-xs font-medium",
-                                            task.completed
-                                                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                                                : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400"
-                                        )}
-                                    >
-                                        {task.completed ? "Completed" : "Pending"}
-                                    </span>
-                                </div>
-                                <span className="text-xs text-gray-500 mt-1">
-                                    {new Date(task.createdAt).toLocaleString('en-US', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        hour12: true
-                                    })}
+                            <div className="flex-1">
+                                <span className={task.completed ? "line-through text-gray-500" : ""}>
+                                    {task.content}
                                 </span>
                             </div>
-                            <div className="flex items-center">
-                                {!task.completed ? (
+                            <div>
+                                {!task.completed && (
                                     <Button
                                         onClick={() => handleToggleTask(task.id)}
                                         size="sm"
                                         variant="ghost"
-                                        className="relative group"
                                     >
-                                        <span className="absolute -inset-1 rounded-full bg-green-100 dark:bg-green-900/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                                        <Check className="w-5 h-5 text-green-600 dark:text-green-400 relative z-10 transition-transform group-hover:scale-110" />
+                                        <Check />
                                     </Button>
-                                ) : (
-                                    <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                                        <Check className="w-5 h-5 text-green-600 dark:text-green-400" />
-                                    </div>
                                 )}
                             </div>
                         </div>
                     ))}
-
                     {tasks.length === 0 && (
-                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                            <div className="mb-2">
-                                <ListTodo className="w-12 h-12 mx-auto opacity-50" />
-                            </div>
+                        <div className="text-center py-8 text-gray-500">
                             <p>No tasks yet. Add your first task above!</p>
                         </div>
                     )}
@@ -267,26 +229,4 @@ function TaskComponent() {
     );
 }
 
-
-
-
-export default function TabsWrapper() {
-    return (
-        <div className="max-w-2xl mx-auto p-4">
-            <Tabs defaultValue="checkin">
-                <TabsList className="grid w-full grid-cols-2 mb-4">
-                    <TabsTrigger value="checkin">Daily Check-in</TabsTrigger>
-                    <TabsTrigger value="tasks">My Tasks</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="checkin">
-                    <DailyCheckin />
-                </TabsContent>
-
-                <TabsContent value="tasks">
-                    <TaskComponent />
-                </TabsContent>
-            </Tabs>
-        </div>
-    );
-}
+export default TaskComponent;

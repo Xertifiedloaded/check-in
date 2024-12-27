@@ -1,9 +1,7 @@
 import "./global.css";
-import "react-toastify/dist/ReactToastify.css";
 import { Poppins } from "next/font/google";
 import { AuthProvider } from "../context/AuthContext";
 import { CheckInProvider } from "../context/CheckInContext";
-import { ToastContainer } from "react-toastify";
 import SessionWrapper from "../sessionWrapper/SessionWrapper";
 import { useVisitTracker } from "../hooks/UseVisitorsTracker";
 import Footer from "../components/Footer";
@@ -11,6 +9,7 @@ import { ThemeProvider } from "../context/ThemeContext";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { useRouter } from "next/router";
+import { Toaster } from "@/components/ui/toaster";
 
 const poppin = Poppins({
   weight: ["200", "300", "400", "600", "700", "800"],
@@ -27,7 +26,7 @@ function App({ Component, pageProps }) {
     "/forget-password",
     "/account-verified",
     "/verify-account",
-    '/personal-space'
+    "/personal-space",
   ];
 
   useVisitTracker();
@@ -36,15 +35,7 @@ function App({ Component, pageProps }) {
       <ThemeProvider>
         <SessionWrapper>
           <AuthProvider>
-            <ToastContainer
-              position="top-center"
-              autoClose={5000}
-              hideProgressBar={false}
-              closeOnClick
-              draggable
-              pauseOnHover
-              theme="light"
-            />
+            <Toaster />
             <CheckInProvider>
               <Component {...pageProps} />
               {!hiddenFooterRoutes.includes(router.pathname) && <Footer />}

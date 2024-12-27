@@ -125,7 +125,6 @@ const UpdateProfileStreak = () => {
               {!todayCheckedIn && (
                 <div className="flex justify-center">
                   <Button
-                    onClick={handleCheckIn}
                     className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
                   >
                     Check In Today
