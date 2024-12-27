@@ -19,4 +19,4 @@ async function updateUserStreak(userId, newStreakValue) {
     await prisma.$disconnect();
   }
 }
-updateUserStreak("6713bb6a429cd2def28c955b", 36);
+updateUserStreak("66f91220a12d967d2b4126b9", 0);

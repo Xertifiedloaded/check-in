@@ -55,11 +55,11 @@ export const CheckInProvider = ({ children }) => {
       }
       const data = await response.json();
       setStreaks(data);
-      toast({
-        title: "Success",
-        description: "Ongoing streaks fetched successfully!",
-        variant: "default",
-      });
+      // toast({
+      //   title: "Success",
+      //   description: "Ongoing streaks fetched successfully!",
+      //   variant: "default",
+      // });
     } catch (err) {
       console.error("Error fetching streaks:", err);
       setError(err.message);
