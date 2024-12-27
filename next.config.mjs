@@ -7,7 +7,6 @@ const nextConfig = {
       "api.dicebear.com",
     ],
   },
-  reactStrictMode: false,
 }
 
 export default nextConfig
