@@ -4,8 +4,10 @@ import Image from "next/image"
 import Button from "./Buttons"
 import axios from "axios"
 import { useSession, signIn } from "next-auth/react"
-import { toast } from "react-toastify"
 import { useCheckIn } from "@/context/CheckInContext"
+import { useToast } from '@/hooks/use-toast';
+
+
 export default function Input({ payload, fieldName, handleChange, className }) {
   return (
     <div className="my-3">
@@ -46,6 +48,9 @@ export function ImageUpload() {
   const CLOUDINARY_UPLOAD_PRESET = "iboyi7t9"
   const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/dpn9svwqm/image/upload`
 
+  // Using ShadCN useToast hook
+  const toast = useToast()
+
   useEffect(() => {
     const fetchProfilePicture = async () => {
       if (userId) {
@@ -56,7 +61,7 @@ export function ImageUpload() {
           setPreview(userProfile)
           setFormData((prev) => ({ ...prev, img: userProfile?.profilePicture }))
         } catch (error) {
-    
+          // Handle error (Optional)
         }
       }
     }
@@ -78,10 +83,11 @@ export function ImageUpload() {
         fetchCheckIns()
         FetchFeed()
       } catch (error) {
-        console.error(
-          "Image upload failed:",
-          error.response ? error.response.data : error.message
-        )
+        toast({
+          description: "Image upload failed: " + error.message,
+          type: "error",
+          duration: 3000,
+        })
       }
     }
   }
@@ -96,17 +102,15 @@ export function ImageUpload() {
         fetchCheckIns()
         FetchFeed()
         toast.update(toastId, {
-          render: "Success! Profile picture deleted",
+          description: "Success! Profile picture deleted",
           type: "success",
-          isLoading: false,
-          autoClose: 3000,
+          duration: 3000,
         })
       } catch (error) {
         toast.update(toastId, {
-          render: "Error deleting profile picture: " + error.message,
+          description: "Error deleting profile picture: " + error.message,
           type: "error",
-          isLoading: false,
-          autoClose: 3000,
+          duration: 3000,
         })
         console.error("Failed to delete profile picture:", error)
       }
@@ -124,34 +128,26 @@ export function ImageUpload() {
         })
         console.log("Profile picture updated successfully:", response.data)
 
-
         await signIn("credentials", { redirect: false })
 
         toast.update(toastId, {
-          render: "Success! Profile picture updated.",
+          description: "Success! Profile picture updated.",
           type: "success",
-          isLoading: false,
-          autoClose: 3000,
+          duration: 3000,
         })
       } catch (error) {
         toast.update(toastId, {
-          render:
-            "Error: " + (error.response ? error.response.data : error.message),
+          description: "Error: " + (error.response ? error.response.data : error.message),
           type: "error",
-          isLoading: false,
-          autoClose: 3000,
+          duration: 3000,
         })
-        console.error(
-          "Failed to upload profile picture:",
-          error.response ? error.response.data : error.message
-        )
+        console.error("Failed to upload profile picture:", error.response ? error.response.data : error.message)
       }
     } else {
       toast.update(toastId, {
-        render: "No image uploaded or user ID is missing.",
+        description: "No image uploaded or user ID is missing.",
         type: "error",
-        isLoading: false,
-        autoClose: 3000,
+        duration: 3000,
       })
     }
   }
