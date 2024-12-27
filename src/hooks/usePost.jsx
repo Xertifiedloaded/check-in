@@ -6,11 +6,7 @@ const usePosts = () => {
     const [posts, setPosts] = useState([]);
     const [loadingPosts, setLoadingPosts] = useState(true);
     const { toast } = useToast();
-  
-    useEffect(() => {
-      fetchPosts();
-    }, []);
-  
+
     const fetchPosts = async () => {
       try {
         const response = await fetch("/api/post/all");
@@ -28,7 +24,9 @@ const usePosts = () => {
         setLoadingPosts(false);
       }
     };
-  
+    useEffect(() => {
+        fetchPosts();
+      }, []);
     return { posts, loadingPosts, setPosts ,fetchPosts};
   };
   

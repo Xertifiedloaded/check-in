@@ -36,13 +36,12 @@ export default function CardComponent({ post }) {
   };
 
   const truncateContent = (content) => {
-
-    const text = content || '';
+    const text = content || "";
     const width = window.innerWidth;
     const length = width <= 768 ? 40 : 25;
     return text.length > length ? text.slice(0, length) + "..." : text;
   };
-  
+
   return (
     <>
       <Card className="bg-white dark:bg-black relative rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 mb-3">
@@ -93,11 +92,12 @@ export default function CardComponent({ post }) {
                     )}
                   </div>
                   <p className="lg:text-[9px] text-xs text-gray-500 dark:text-gray-400">
-                    {post.createdAt
+                    {post?.createdAt &&
+                    !isNaN(new Date(post.createdAt).getTime())
                       ? formatDistanceToNow(new Date(post.createdAt), {
                           addSuffix: true,
                         })
-                      : "Unknown time"}
+                      : "Just now"}
                   </p>
                 </div>
               </Link>
@@ -193,9 +193,12 @@ export default function CardComponent({ post }) {
                       {user.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {formatDistanceToNow(new Date(post.createdAt), {
-                        addSuffix: true,
-                      })}
+                    {post?.createdAt &&
+                    !isNaN(new Date(post.createdAt).getTime())
+                      ? formatDistanceToNow(new Date(post.createdAt), {
+                          addSuffix: true,
+                        })
+                      : "Just now"}
                     </p>
                   </div>
                 </div>

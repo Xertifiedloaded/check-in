@@ -3,8 +3,9 @@ import { Toaster } from "@/components/ui/toaster"
 import CheckIn from "../components/CheckIn";
 import { useCheckIn } from "../context/CheckInContext";
 import { MessageCircle } from "lucide-react";
-import CheckinPost from "../components/PostFeed";
+// import CheckinPost from "../components/PostFeed";
 import MainHeader from './MainHeader';
+import PostFeed from "../components/PostFeed";
 export default function Home() {
 
   return (
@@ -23,8 +24,8 @@ export default function Home() {
       <main className="mt-28">
       <Toaster />
       <MainHeader />
-      <CheckinPost/>
-
+      {/* <CheckinPost/> */}
+<PostFeed/>
         {/* <TabsWrapper />
         <CheckIn /> */}
       </main>

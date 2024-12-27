@@ -21,8 +21,9 @@ export default function useLikeStatus(userId, postId) {
         params: { postId },
       });
 
-      setIsLiked(response.data.liked || false);
-      setCount(response.data.likeCount || 0);
+      // Safely set the like status and count
+      setIsLiked(response.data?.liked || false);
+      setCount(response.data?.likeCount || 0);
     } catch (error) {
       console.error("Error fetching like status:", error);
       setError("Failed to fetch like status");
@@ -51,18 +52,26 @@ export default function useLikeStatus(userId, postId) {
     }
 
     try {
+      const newLikedStatus = !isLiked;
+      const newLikeCount = newLikedStatus ? count + 1 : count - 1;
+
+      setIsLiked(newLikedStatus);
+      setCount(newLikeCount);
+
       const response = await axios.post("/api/post/like-unlike", { postId });
-      setIsLiked(response.data.liked);
-      setCount(response.data.likeCount);
+
+      const finalLikedStatus = response.data?.liked || newLikedStatus;
+      const finalLikeCount = response.data?.likeCount || newLikeCount;
+
+      setIsLiked(finalLikedStatus);
+      setCount(finalLikeCount);
 
       toast({
-        title: response.data.liked ? "Liked!" : "Unliked!",
-        description: `The post now has ${response.data.likeCount} like(s).`,
+        title: finalLikedStatus ? "Liked!" : "Unliked!",
+        description: `The post now has ${finalLikeCount} like(s).`,
       });
 
-      await fetchLikeStatus();
-
-      return { liked: response.data.liked, likeCount: response.data.likeCount };
+      return { liked: finalLikedStatus, likeCount: finalLikeCount };
     } catch (error) {
       console.error("Error toggling like:", error);
       setError("Failed to toggle like.");
