@@ -1,4 +1,3 @@
-
 import { prisma } from "../../../lib/prisma";
 import cors from 'cors';
 
@@ -18,10 +17,8 @@ export default async function handler(req, res) {
     });
   });
 
-  // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   try {
@@ -69,8 +66,9 @@ export default async function handler(req, res) {
 
     for (const post of posts) {
       const userId = post.userId;
+
       const currentStreak = 
-        post.user.streaks.length > 0 ? post.user.streaks[0].currentStreak : 0;
+        post.user.streaks && post.user.streaks.length > 0 ? post.user.streaks[0].currentStreak : 0;
 
       const postData = {
         ...post,

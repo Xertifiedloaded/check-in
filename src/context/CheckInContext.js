@@ -1,10 +1,12 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useToast } from '@/hooks/use-toast';
 
 const CheckInContext = createContext();
 
 export const CheckInProvider = ({ children }) => {
+  const { toast } = useToast();
+
   const [todayPosts, setTodayPosts] = useState([]);
   const [yesterdayPosts, setYesterdayPosts] = useState([]);
 
@@ -25,29 +27,24 @@ export const CheckInProvider = ({ children }) => {
       }
 
       const data = await response.json();
-       setTodayPosts(data.posts);
-      // if (
-      //   // !data ||
-      //   // !Array.isArray(data.todayPosts) ||
-      //   // !Array.isArray(data.yesterdayPosts)
-      // ) {
-      //   console.error("Unexpected response structure:", data);
-      //   return;
-      // }
-
-      // setTodayPosts(data.todayPosts);
-      // setYesterdayPosts(data.yesterdayPosts);
+      setTodayPosts(data.posts);
+      toast({
+        title: "Success",
+        description: "Today's posts fetched successfully!",
+        variant: "default",
+      });
     } catch (error) {
       console.error("Error fetching data:", error);
+      setError(error.message);
+      toast({
+        title: "Error",
+        description: "Failed to fetch today's posts. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoadingCheckIns(false);
     }
   };
-
-
-
-
-
 
   const fetchStreaks = async () => {
     setLoadingStreaks(true);
@@ -57,16 +54,24 @@ export const CheckInProvider = ({ children }) => {
         throw new Error("Failed to fetch ongoing streaks");
       }
       const data = await response.json();
-
       setStreaks(data);
+      toast({
+        title: "Success",
+        description: "Ongoing streaks fetched successfully!",
+        variant: "default",
+      });
     } catch (err) {
       console.error("Error fetching streaks:", err);
+      setError(err.message);
+      toast({
+        title: "Error",
+        description: "Failed to fetch streaks. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoadingStreaks(false);
     }
   };
-
-
 
   useEffect(() => {
     fetchCheckIns();

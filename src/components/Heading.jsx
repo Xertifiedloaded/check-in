@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useCheckIn } from "../context/CheckInContext";
-import { toast } from "react-toastify";
+import { useToast } from "@/hooks/use-toast";
+
 import {
   Clock,
   Lock,
@@ -9,6 +9,8 @@ import {
   Sparkles,
   Image as ImageIcon,
   X,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import {
   Card,
@@ -28,21 +30,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import usePosts from "../hooks/usePost";
 
 export default function DailyCheckIn() {
+  const { toast } = useToast();
   const [content, setContent] = useState("");
   const [visibility, setVisibility] = useState("PUBLIC");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const { data: session } = useSession();
-  const { fetchCheckIns } = useCheckIn();
   const userId = session?.user?.id;
   const [loading, setLoading] = useState(false);
+  const {   fetchPosts } = usePosts();
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error("Image must be less than 5MB");
+        toast({
+          title: "Error",
+          description: "Image must be less than 5MB.",
+          variant: "destructive",
+        });
         return;
       }
       setImage(file);
@@ -58,11 +66,25 @@ export default function DailyCheckIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     if (!userId) {
-      return toast.warning("You need to log in to check in.");
+      toast({
+        title: "Error",
+        description: "You need to log in to check in.",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
     }
+
     if (!content.trim()) {
-      return toast.warning("Content cannot be empty.");
+      toast({
+        title: "Error",
+        description: "Content cannot be empty.",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
     }
 
     try {
@@ -80,15 +102,26 @@ export default function DailyCheckIn() {
 
       if (!response.ok) throw new Error("Failed to post check-in");
 
-      const data = await response.json();
-      await fetchCheckIns();
-      toast.success("Check-in posted successfully!");
+      const newPost = await response.json();
+
+      toast({
+        title: "Success",
+        description: "Check-in posted successfully!",
+        duration: 3000,
+        icon: <CheckCircle2 className="h-4 w-4 text-green-500" />,
+      });
+      await fetchPosts();
       setContent("");
       setImage(null);
       setImagePreview(null);
     } catch (error) {
-      setLoading(false);
-      toast.error("Failed to post check-in");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to post check-in",
+        duration: 3000,
+        icon: <AlertCircle className="h-4 w-4" />,
+      });
     } finally {
       setLoading(false);
     }
@@ -112,7 +145,7 @@ export default function DailyCheckIn() {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="pt-6  dark:bg-transparent">
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="content">Your Check-in</Label>
@@ -212,7 +245,7 @@ export default function DailyCheckIn() {
         </CardContent>
 
         <CardFooter className="border-t">
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+          <div className="flex items-center gap-2 text-gray-600">
             <Sparkles className="w-4 h-4 text-yellow-500" />
             <p className="text-sm my-2">
               Pro tip: Share specific achievements to inspire others!
