@@ -1,13 +1,9 @@
 import Head from "next/head";
-import { Toaster } from "@/components/ui/toaster"
-import CheckIn from "../components/CheckIn";
-import { useCheckIn } from "../context/CheckInContext";
-import { MessageCircle } from "lucide-react";
-// import CheckinPost from "../components/PostFeed";
-import MainHeader from './MainHeader';
-import PostFeed from "../components/PostFeed";
-export default function Home() {
+import { Toaster } from "@/components/ui/toaster";
 
+import MainHeader from "./MainHeader";
+import { DailyCheckIn } from "../components/PostFeed";
+export default function Home() {
   return (
     <>
       <Head>
@@ -22,12 +18,9 @@ export default function Home() {
         />
       </Head>
       <main className="mt-28">
-      <Toaster />
-      <MainHeader />
-      {/* <CheckinPost/> */}
-<PostFeed/>
-        {/* <TabsWrapper />
-        <CheckIn /> */}
+        <Toaster />
+        <MainHeader />
+        <DailyCheckIn />
       </main>
     </>
   );

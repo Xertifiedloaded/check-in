@@ -1,9 +1,6 @@
-
-
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
-
 import {
   Clock,
   Lock,
@@ -32,13 +29,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import CardComponent from "./Card";
+
 import usePosts from "../hooks/usePost";
 import { PostSkeleton } from "./Skeletal";
+import { CardComponent } from "./Card";
 
-
-const DailyCheckIn = () => {
-    const { fetchPosts} = usePosts();
+export const DailyCheckIn = () => {
+  const { fetchPosts, setPosts, posts, loadingPosts } = usePosts();
   const { toast } = useToast();
   const [content, setContent] = useState("");
   const [visibility, setVisibility] = useState("PUBLIC");
@@ -111,6 +108,7 @@ const DailyCheckIn = () => {
       const result = await response.json();
       console.log(result);
       fetchPosts();
+      setPosts((prevPosts) => [result.checkIn, ...prevPosts]);
       toast({
         title: "Success",
         description: "Check-in posted successfully!",
@@ -136,8 +134,8 @@ const DailyCheckIn = () => {
   };
 
   return (
-   <section className="max-w-2xl mx-auto">
-     <Card >
+   <section className="wrapper">
+     <Card className='max-w-2xl mx-auto'>
       <CardHeader className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-t-lg text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -259,43 +257,18 @@ const DailyCheckIn = () => {
         </div>
       </CardFooter>
     </Card>
-   </section>
-  );
-};
 
-
-
-const PostFeed = () => {
-  const { posts, loadingPosts, fetchPosts } = usePosts();
-
-  return (
-    <div className="container mx-auto py-8 px-4">
-      <DailyCheckIn fetchPosts={fetchPosts}  />
-      
-      <div className="mt-8 grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="mt-8  grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {loadingPosts ? (
           Array.from({ length: 8 }).map((_, index) => (
             <PostSkeleton key={index} />
           ))
         ) : posts.length > 0 ? (
-          posts.map((post) => (
-            <CardComponent key={post.id} post={post} />
-          ))
+          posts.map((post) => <CardComponent key={post.id} post={post} />)
         ) : (
-          <div className="col-span-full text-center py-12">
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              No posts to show. Be the first to check in today!
-            </p>
-          </div>
+          <p>No posts yet. Share your first one!</p>
         )}
-      </div>
     </div>
+   </section>
   );
 };
-
-export default PostFeed;
-
-
-
-
-

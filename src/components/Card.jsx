@@ -14,13 +14,14 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
+import { useRestoreStreak } from "../hooks/usePost";
 
-export default function CardComponent({ post }) {
+
+export const CardComponent = ({ post }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const user = post.user || {};
@@ -41,6 +42,7 @@ export default function CardComponent({ post }) {
     const length = width <= 768 ? 40 : 25;
     return text.length > length ? text.slice(0, length) + "..." : text;
   };
+  const { restoreStreak, isSteakLoading, currentStreak, error } = useRestoreStreak();
 
   return (
     <>
@@ -193,12 +195,12 @@ export default function CardComponent({ post }) {
                       {user.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                    {post?.createdAt &&
-                    !isNaN(new Date(post.createdAt).getTime())
-                      ? formatDistanceToNow(new Date(post.createdAt), {
-                          addSuffix: true,
-                        })
-                      : "Just now"}
+                      {post?.createdAt &&
+                      !isNaN(new Date(post.createdAt).getTime())
+                        ? formatDistanceToNow(new Date(post.createdAt), {
+                            addSuffix: true,
+                          })
+                        : "Just now"}
                     </p>
                   </div>
                 </div>
@@ -229,6 +231,7 @@ export default function CardComponent({ post }) {
             </HoverCardContent>
           </HoverCard>
         </CardContent>
+
       </Card>
 
       <Dialog
@@ -262,7 +265,31 @@ export default function CardComponent({ post }) {
       </Dialog>
     </>
   );
-}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   const getBadgeClasses = (streak) => {
