@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Share2, BadgeCheck } from "lucide-react";
+import { Heart, Share2 } from "lucide-react";
 import useLikeStatus from "../utils/actions";
 import { useEffect, useState } from "react";
 import { AiOutlineStar, AiOutlineTrophy } from "react-icons/ai";
@@ -15,10 +15,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-
-import { Button } from "@/components/ui/button";
-import { useRestoreStreak } from "../hooks/usePost";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 
 export const CardComponent = ({ post }) => {
@@ -42,11 +39,11 @@ export const CardComponent = ({ post }) => {
     const length = width <= 768 ? 40 : 25;
     return text.length > length ? text.slice(0, length) + "..." : text;
   };
-  const { restoreStreak, isSteakLoading, currentStreak, error } = useRestoreStreak();
 
   return (
     <>
       <Card className="bg-white dark:bg-black relative rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 mb-3">
+        
         <CardHeader>
           <HoverCard>
             <HoverCardTrigger asChild>
@@ -104,47 +101,57 @@ export const CardComponent = ({ post }) => {
                 </div>
               </Link>
             </HoverCardTrigger>
-            <HoverCardContent className="w-80">
-              <div className="flex justify-between space-x-2">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage
-                    src={user?.profilePicture ?? "/no-user-pic.png"}
-                  />
-                  <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div className="space-y-1">
-                  <h4 className="text-sm font-semibold">{user.name}</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {user?.bio || "No bio available"}
-                  </p>
-                  <div className="flex items-center pt-2 gap-4">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      <b>{user.followers ?? 0}</b> followers
-                    </span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      <b>{user.following}</b> following
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </HoverCardContent>
+
           </HoverCard>
 
-          <Button
-            variant="ghost"
-            onClick={handleToggleLike}
-            disabled={loading}
-            className={`flex absolute right-0 top-0 items-center gap-1.5 px-3 py-1.5 rounded-full transition-all`}
-          >
-            <Heart
-              size={16}
-              className={`transition-transform ${
-                isLiked ? "scale-110 text-red-500" : "scale-100"
-              }`}
-              fill={isLiked ? "red" : "none"}
-            />
-            <span className="text-xs font-medium">{count}</span>
-          </Button>
+
+            <button
+              onClick={handleToggleLike}
+              disabled={loading}
+              className={`flex absolute right-0 top-0 items-center gap-1.5 px-3 py-1.5 rounded-full transition-all`}
+            >
+              <div
+                className={`
+          relative p-2 rounded-xl
+          ${
+            isLiked
+              ? "bg-rose-50 dark:bg-rose-500/20"
+              : "bg-gray-100 dark:bg-gray-700/50 hover:bg-gray-200 dark:hover:bg-gray-600/50"
+          }
+          transition-all duration-300
+        `}
+              >
+                <Heart
+                  className={`
+            h-3 w-3 transition-all duration-300
+              ${
+                isLiked
+                  ? "text-rose-500 dark:text-rose-400 scale-110 fill-current"
+                  : "text-gray-600 dark:text-gray-300 group-hover:scale-110"
+              }
+            `}
+                />
+                {isLiked && (
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+                  </span>
+                )}
+              </div>
+              <span
+                className={`
+          text-sm font-medium transition-colors
+          ${
+            isLiked
+              ? "text-rose-500 dark:text-rose-400"
+              : "text-gray-700 dark:text-gray-200"
+          }
+        `}
+              >
+                {count}
+              </span>
+            </button>
+
         </CardHeader>
 
         {post.imageUrl && (
@@ -231,7 +238,6 @@ export const CardComponent = ({ post }) => {
             </HoverCardContent>
           </HoverCard>
         </CardContent>
-
       </Card>
 
       <Dialog
@@ -266,30 +272,6 @@ export const CardComponent = ({ post }) => {
     </>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export function StreakCard({ userName, userProfilePicture, currentStreak }) {
   const getBadgeClasses = (streak) => {

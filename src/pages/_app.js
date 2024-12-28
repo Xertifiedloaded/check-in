@@ -3,13 +3,12 @@ import { Poppins } from "next/font/google";
 import { AuthProvider } from "../context/AuthContext";
 import { CheckInProvider } from "../context/CheckInContext";
 import SessionWrapper from "../sessionWrapper/SessionWrapper";
-import { useVisitTracker } from "../hooks/UseVisitorsTracker";
 import Footer from "../components/Footer";
 import { ThemeProvider } from "../context/ThemeContext";
-import { useEffect } from "react";
-import { io } from "socket.io-client";
+
 import { useRouter } from "next/router";
 import { Toaster } from "@/components/ui/toaster";
+import TabNavigation from "../components/Tab";
 
 const poppin = Poppins({
   weight: ["200", "300", "400", "600", "700", "800"],
@@ -29,7 +28,6 @@ function App({ Component, pageProps }) {
     "/personal-space",
   ];
 
-  useVisitTracker();
   return (
     <div className={`${poppin.className}`}>
       <ThemeProvider>
@@ -38,6 +36,9 @@ function App({ Component, pageProps }) {
             <Toaster />
             <CheckInProvider>
               <Component {...pageProps} />
+              {!hiddenFooterRoutes.includes(router.pathname) && (
+                <TabNavigation />
+              )}
               {!hiddenFooterRoutes.includes(router.pathname) && <Footer />}
             </CheckInProvider>
           </AuthProvider>

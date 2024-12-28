@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 
 const usePosts = () => {
   const [posts, setPosts] = useState([]);
@@ -24,6 +25,7 @@ const usePosts = () => {
       setLoadingPosts(false);
     }
   };
+
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -32,141 +34,138 @@ const usePosts = () => {
 
 export default usePosts;
 
-export const useRestoreStreak = () => {
-  const [isSteakLoading, setLoading] = useState(false);
-  const [currentStreak, setCurrentStreak] = useState(null);
+export const restoreUserStreak = () => {
+  const [streak, setStreak] = useState(null);
+  const [showRestoreModal, setShowRestoreModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-  const [error, setError] = useState(null);
-  const { data: session, status } = useSession();
-  const userId = session?.user?.id;
+
   useEffect(() => {
-    const fetchCurrentStreak = async () => {
-      if (!userId) return;
-
+    const fetchStreak = async () => {
+      setLoading(true);
       try {
-        const response = await fetch(`/api/user/currentstreak`);
-        const data = await response.json();
+        const response = await axios.get("/api/user/currentstreak");
 
-        if (response.ok) {
-          setCurrentStreak(data.currentStreak);
-        } else {
-          toast({
-            title: "Error",
-            description: data.error || "Failed to fetch current streak.",
-            variant: "destructive",
-          });
-        }
+        setStreak(response.data);
       } catch (error) {
-        console.error("Failed to fetch current streak:", error);
-        toast({
-          title: "Error",
-          description: "Something went wrong while fetching your streak.",
-          variant: "destructive",
-        });
-      }
-    };
-
-    fetchCurrentStreak();
-  }, [userId]);
-
-  const restoreStreak = async () => {
-    if (!userId) {
-      toast({
-        title: "Error",
-        description: "You need to log in to restore your streak.",
-        variant: "destructive",
-        action: {
-          label: "Login",
-          onClick: () => {},
-        },
-      });
-      return;
-    }
-
-    if (!currentStreak) {
-      toast({
-        title: "No Streak Found",
-        description:
-          "You don't have an active streak. Would you like to restore it?",
-        variant: "warning",
-        action: {
-          label: "Restore Streak",
-          onClick: async () => {
-            await performStreakRestore();
-          },
-        },
-      });
-      return;
-    }
-
-    await performStreakRestore();
-  };
-
-  const performStreakRestore = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/post/restore-streak", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: "Success",
-          description: "Your streak has been restored!",
-          variant: "success",
-          action: {
-            label: "Undo",
-            onClick: () => {
-              toast({
-                title: "Undo Successful",
-                description: "Your streak restoration has been undone.",
-                variant: "neutral",
-              });
-            },
-          },
-        });
-      } else {
         toast({
           title: "Error",
           description:
-            data.error || "An error occurred while restoring your streak.",
+            error.response?.data?.error || "Failed to fetch streak data.",
           variant: "destructive",
-          action: {
-            label: "Retry",
-            onClick: restoreStreak,
-          },
         });
-        setError(data.error || "Failed to restore streak.");
+      } finally {
+        setLoading(false);
       }
+    };
+
+    fetchStreak();
+  }, [toast]);
+
+  const restoreStreak = async () => {
+    try {
+      const response = await axios.post("/api/user/currentstreak");
+      toast({
+        title: "Success",
+        description: response.data.message,
+        variant: "success",
+      });
+
+      const updatedStreak = await axios.get("/api/user/currentstreak");
+      setStreak(updatedStreak.data);
     } catch (error) {
-      console.error("Failed to restore streak:", error);
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: error.response?.data?.error || "Failed to restore streak.",
         variant: "destructive",
-        action: {
-          label: "Retry",
-          onClick: restoreStreak,
-        },
       });
-      setError("Something went wrong.");
+    } finally {
+      setShowRestoreModal(false);
+    }
+  };
+
+  return {
+    streak,
+    loading,
+    currentStreak: streak?.currentStreak,
+    showRestoreModal,
+    setShowRestoreModal,
+    restoreStreak,
+  };
+};
+
+export const useUserProfile = () => {
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (!userId) return;
+    fetchProfile();
+  }, [userId]);
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `/api/user/profile/userinfo?userId=${userId}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+
+      setProfile(data.data);
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+      setError(err.message);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to load profile data",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  return {
-    restoreStreak,
-    isSteakLoading,
-    currentStreak,
-    error,
+  return { profile, loading, error, fetchProfile };
+};
+
+export const useStreaks = () => {
+  const [streaks, setStreaks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { toast } = useToast();
+
+  const fetchStreaks = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/post/streak");
+      if (!response.ok) {
+        throw new Error("Failed to fetch ongoing streaks");
+      }
+      const data = await response.json();
+      setStreaks(data);
+    } catch (err) {
+      console.error("Error fetching streaks:", err);
+      setError(err.message);
+      toast({
+        title: "Error",
+        description: "Failed to fetch streaks. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchStreaks();
+  }, []);
+
+  return { streaks, isLoading, error, refetch: fetchStreaks };
 };

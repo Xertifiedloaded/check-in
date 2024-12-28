@@ -41,7 +41,9 @@ export const DailyCheckIn = () => {
   const [visibility, setVisibility] = useState("PUBLIC");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const isUserActive = status === "authenticated";
+
   const userId = session?.user?.id;
   const [loading, setLoading] = useState(false);
 
@@ -104,7 +106,7 @@ export const DailyCheckIn = () => {
       });
 
       if (!response.ok) throw new Error("Failed to post check-in");
-      
+
       const result = await response.json();
       console.log(result);
       fetchPosts();
@@ -119,7 +121,6 @@ export const DailyCheckIn = () => {
       setContent("");
       setImage(null);
       setImagePreview(null);
-
     } catch (error) {
       toast({
         variant: "destructive",
@@ -134,131 +135,135 @@ export const DailyCheckIn = () => {
   };
 
   return (
-   <section className="wrapper">
-     <Card className='max-w-2xl mx-auto'>
-      <CardHeader className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-t-lg text-white">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <Clock className="w-6 h-6" />
+    <section className="wrapper">
+      {isUserActive && (
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-t-lg text-white">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-lg">
+                  <Clock className="w-6 h-6" />
+                </div>
+                <CardTitle>Daily Check-In</CardTitle>
+              </div>
+              <Sparkles className="w-6 h-6 text-yellow-300" />
             </div>
-            <CardTitle>Daily Check-In</CardTitle>
-          </div>
-          <Sparkles className="w-6 h-6 text-yellow-300" />
-        </div>
-        <CardDescription className="text-white/90">
-          Share your daily progress and inspire others!
-        </CardDescription>
-      </CardHeader>
+            <CardDescription className="text-white/90">
+              Share your daily progress and inspire others!
+            </CardDescription>
+          </CardHeader>
 
-      <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="content">Your Check-in</Label>
-            <Textarea
-              id="content"
-              placeholder={
-                userId
-                  ? "What will you accomplish today? Share your steps, wins, big or small..."
-                  : "Please login to share your progress..."
-              }
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              disabled={!userId}
-              className="min-h-[150px] resize-none"
-            />
-          </div>
-
-          {imagePreview && (
-            <div className="relative inline-block">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="max-h-48 rounded-lg"
-              />
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                className="absolute top-2 right-2"
-                onClick={handleRemoveImage}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
-
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="visibility">Visibility</Label>
-              <Select
-                value={visibility}
-                onValueChange={setVisibility}
-                disabled={!userId}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select visibility" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="PUBLIC">
-                    <div className="flex items-center gap-2">
-                      <Globe className="w-4 h-4" />
-                      <span>Public Post</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="PRIVATE">
-                    <div className="flex items-center gap-2">
-                      <Lock className="w-4 h-4" />
-                      <span>Private Note</span>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex items-end gap-4 w-full sm:justify-end">
-              <div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  id="image-upload"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => document.getElementById("image-upload").click()}
+          <CardContent className="pt-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="content">Your Check-in</Label>
+                <Textarea
+                  id="content"
+                  placeholder={
+                    userId
+                      ? "What will you accomplish today? Share your steps, wins, big or small..."
+                      : "Please login to share your progress..."
+                  }
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
                   disabled={!userId}
-                >
-                  <ImageIcon className="w-4 h-4 mr-2" />
-                  Add Image
-                </Button>
+                  className="min-h-[150px] resize-none"
+                />
               </div>
 
-              <Button
-                type="submit"
-                disabled={!userId || !content.trim() || loading}
-                className="bg-gradient-to-r text-white from-indigo-600 to-violet-600"
-              >
-                {loading ? "Loading" : "Share Progress"}
-              </Button>
+              {imagePreview && (
+                <div className="relative inline-block">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="max-h-48 rounded-lg"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2"
+                    onClick={handleRemoveImage}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="visibility">Visibility</Label>
+                  <Select
+                    value={visibility}
+                    onValueChange={setVisibility}
+                    disabled={!userId}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select visibility" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="PUBLIC">
+                        <div className="flex items-center gap-2">
+                          <Globe className="w-4 h-4" />
+                          <span>Public Post</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="PRIVATE">
+                        <div className="flex items-center gap-2">
+                          <Lock className="w-4 h-4" />
+                          <span>Private Note</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-end gap-4 w-full sm:justify-end">
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                      id="image-upload"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        document.getElementById("image-upload").click()
+                      }
+                      disabled={!userId}
+                    >
+                      <ImageIcon className="w-4 h-4 mr-2" />
+                      Add Image
+                    </Button>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={!userId || !content.trim() || loading}
+                    className="bg-gradient-to-r text-white from-indigo-600 to-violet-600"
+                  >
+                    {loading ? "Loading" : "Share Progress"}
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </CardContent>
+
+          <CardFooter className="border-t">
+            <div className="flex items-center gap-2 text-gray-600">
+              <Sparkles className="w-4 h-4 text-yellow-500" />
+              <p className="text-sm my-2">
+                Pro tip: Share specific achievements to inspire others!
+              </p>
             </div>
-          </div>
-        </form>
-      </CardContent>
-
-      <CardFooter className="border-t">
-        <div className="flex items-center gap-2 text-gray-600">
-          <Sparkles className="w-4 h-4 text-yellow-500" />
-          <p className="text-sm my-2">
-            Pro tip: Share specific achievements to inspire others!
-          </p>
-        </div>
-      </CardFooter>
-    </Card>
-
-    <div className="mt-8  grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          </CardFooter>
+        </Card>
+      )}
+      <h1 className="text-3xl py-6">Explore Checkin's</h1>
+      <div className=" grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {loadingPosts ? (
           Array.from({ length: 8 }).map((_, index) => (
             <PostSkeleton key={index} />
@@ -268,7 +273,7 @@ export const DailyCheckIn = () => {
         ) : (
           <p>No posts yet. Share your first one!</p>
         )}
-    </div>
-   </section>
+      </div>
+    </section>
   );
 };
