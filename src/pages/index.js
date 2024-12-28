@@ -1,8 +1,9 @@
 import Head from "next/head";
 import { Toaster } from "@/components/ui/toaster";
 
-import MainHeader from "./MainHeader";
 import { DailyCheckIn } from "../components/PostFeed";
+import HomePage from "../components/HomePage";
+
 export default function Home() {
   return (
     <>
@@ -17,9 +18,9 @@ export default function Home() {
           content="Learn about Daily Check-in, our mission, and our team."
         />
       </Head>
-      <main className="mt-28">
+      <main className="">
         <Toaster />
-        <MainHeader />
+        <HomePage />
         <DailyCheckIn />
       </main>
     </>
