@@ -14,14 +14,10 @@ async function sendHappyNewYearEmails() {
       const users = await prisma.user.findMany({
         where: {
           notificationsEnabled: true, 
-          isDeleted: false,
-          email: { not: null },
-        },
-        select: {
-          name: true,
-          email: true,
+          isDeleted: false, 
         },
       });
+  
 
       const validUsers = users.filter(user => validateEmail(user.email));
       for (const user of validUsers) {

@@ -32,14 +32,6 @@ export async function sendRemindersToUnseenUsers() {
       where: {
         notificationsEnabled: true, 
         isDeleted: false, 
-        email: { not: null }, 
-        posts: {
-          none: {
-            createdAt: {
-              gte: today, 
-            },
-          },
-        },
       },
     });
 
