@@ -10,17 +10,11 @@ const HomePage = () => {
   const { data: session, status } = useSession();
   const isUserActive = status === "authenticated";
 
-  const getGreeting = () => {
-    const hours = new Date().getHours();
-    if (hours < 12) return "Good morning";
-    if (hours < 18) return "Good afternoon";
-    return "Good evening";
-  };
 
   return (
     <main className="bg-white dark:bg-black transition-colors duration-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {status === "loading" || !isUserActive ? (
+        {status === "loading" || !isUserActive && (
           <div className="space-y-8">
             {/* Hero Section */}
             <div className="text-center space-y-4">
@@ -160,56 +154,7 @@ const HomePage = () => {
               </CardContent>
             </Card>
           </div>
-        ) : (
-          <div className="space-y-6">
-            {/* User Profile Section */}
-            <Card className="border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-none">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-12 h-12 rounded-full overflow-hidden">
-                      {session?.user?.image ? (
-                        <Image
-                          src={session.user.image}
-                          alt="Profile"
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white text-lg font-medium">
-                          {session?.user?.name?.[0]?.toUpperCase()}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                          {getGreeting()}
-                        </span>
-                        <Sparkles className="w-4 h-4 text-amber-500" />
-                      </div>
-                      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                        {session?.user?.name}
-                      </h2>
-                    </div>
-                  </div>
-
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="relative rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                  >
-                    <Bell className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
-                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-violet-500 rounded-full" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-       
-          </div>
-        )}
+        ) }
       </div>
     </main>
   );
