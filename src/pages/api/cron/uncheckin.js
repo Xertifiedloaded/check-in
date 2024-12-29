@@ -9,7 +9,7 @@ async function sendReminderEmailToAll(users) {
     const personalizedHtml = reminderTemplate(user.name, "https://daily-check-in.com.ng");
 
     const mailOptions = {
-      to: user.email, 
+      to: user.email,
       subject: "Reminder to Check-In",
       html: personalizedHtml,
     };
@@ -30,17 +30,20 @@ export async function sendRemindersToUnseenUsers() {
 
     const users = await prisma.user.findMany({
       where: {
+        notificationsEnabled: true, 
+        isDeleted: false, 
+        email: { not: null }, 
         posts: {
           none: {
             createdAt: {
-              gte: today,
+              gte: today, 
             },
           },
         },
       },
     });
 
-    const validUsers = users.filter(user => user.email && validateEmail(user.email));
+    const validUsers = users.filter(user => validateEmail(user.email));
     if (validUsers.length > 0) {
       await sendReminderEmailToAll(validUsers);
     } else {

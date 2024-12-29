@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { streakEndReminderTemplate } from "./NewYearTemplate";
 import { transporter } from "./nodemailer";
 
-
 const prisma = new PrismaClient();
 
 async function sendStreakEndReminders() {
@@ -12,31 +11,42 @@ async function sendStreakEndReminders() {
 
     const users = await prisma.user.findMany({
       where: {
+        notificationsEnabled: true, 
+        isDeleted: false, 
         streaks: {
           some: {
             lastCheckIn: {
-              lt: new Date(today.getTime() - 24 * 60 * 60 * 1000),
+              lt: new Date(today.getTime() - 24 * 60 * 60 * 1000), 
             },
           },
         },
-        hasPostedToday: false,
+        hasPostedToday: false, 
+      },
+      select: {
+        name: true,
+        email: true,
       },
     });
 
     const validUsers = users.filter(user => user.email && validateEmail(user.email));
 
     if (validUsers.length > 0) {
-      const bccEmails = validUsers.map(user => user.email).join(", ");
-      const personalizedHtml = validUsers.map(user => streakEndReminderTemplate(user.name, user.checkInUrl)).join("<br/>");
+      for (const user of validUsers) {
+        const mailOptions = {
+          to: user.email,
+          subject: "Your streak is about to end - Don't forget to check in!",
+          html: streakEndReminderTemplate(user.name, user.checkInUrl),
+        };
 
-      const mailOptions = {
-        bcc: bccEmails,
-        subject: "Your streak is about to end - Don't forget to check in!",
-        html: personalizedHtml,
-      };
+        try {
+          await transporter.sendMail(mailOptions);
+          console.log(`Streak end reminder sent to ${user.email}`);
+        } catch (error) {
+          console.error(`Failed to send email to ${user.email}:`, error);
+        }
+      }
 
-      await transporter.sendMail(mailOptions);
-      console.log("Streak end reminder emails sent to all eligible users.");
+      console.log(`Streak end reminder emails sent to ${validUsers.length} users.`);
     } else {
       console.log("No users found to send streak end reminders.");
     }
