@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "react-hot-toast";
 import {
   Clock,
   Lock,
@@ -298,6 +299,7 @@ export const DailyCheckIn = () => {
           </div>
         </section>
       )}
+      <Toaster/>
     </>
   );
 };

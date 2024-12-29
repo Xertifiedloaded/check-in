@@ -5,19 +5,28 @@ const ThemeContext = createContext();
 export const useTheme = () => {
   return useContext(ThemeContext);
 };
-
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('dark');
 
-  useEffect(() => {
-    const userPreferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
-    setTheme(userPreferredTheme);
-  }, []);
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        return savedTheme;
+      }
+
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+    }
+    return 'light'; 
+  });
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', theme);
+    }
   }, [theme]);
 
   const toggleTheme = () => {

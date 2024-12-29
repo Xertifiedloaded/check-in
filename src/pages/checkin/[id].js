@@ -6,7 +6,7 @@ import { FeedUserCard } from "../../components/UserFeedCard"
 import { ArrowLeft, MessageCircle } from "lucide-react"
 import Head from "next/head"
 import Link from "next/link"
-
+import { Toaster } from "react-hot-toast";
 const CheckInList = () => {
   const router = useRouter()
   const { id } = router.query
@@ -114,6 +114,7 @@ const CheckInList = () => {
           </div>
         )}
       </main>
+      <Toaster/>
     </>
   )
 }
