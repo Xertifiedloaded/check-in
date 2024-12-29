@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "react-hot-toast";
+import Image from "next/image";
 import {
   Clock,
   Lock,
@@ -24,7 +25,12 @@ import usePosts from "../hooks/usePost";
 import { PostSkeleton } from "./Skeletal";
 import { CardComponent } from "./Card";
 
-
+const getGreeting = () => {
+  const hours = new Date().getHours();
+  if (hours < 12) return "morning";
+  if (hours < 18) return "afternoon";
+  return "evening";
+};
 export const DailyCheckIn = () => {
   const { fetchPosts, setPosts, posts, loadingPosts } = usePosts();
   const { toast } = useToast();
@@ -128,9 +134,8 @@ export const DailyCheckIn = () => {
   return (
     <>
       {isUserActive && (
-
         <section className="wrapper">
-          <div className="space-y-6 max-w-5xl mx-auto py-10">
+          <div className="space-y-6 max-w-5xl mx-auto py-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="p-2 bg-zinc-100 dark:bg-zinc-900 rounded-full">
@@ -145,6 +150,11 @@ export const DailyCheckIn = () => {
                       weekday: "long",
                       month: "long",
                       day: "numeric",
+                    })}{" "}
+                    {new Date().toLocaleTimeString(undefined, {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
                     })}
                   </p>
                 </div>
@@ -189,23 +199,38 @@ export const DailyCheckIn = () => {
                 </Button>
               </div>
             </div>
-
             <Card className="border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-none">
               <CardContent className="p-6 space-y-6">
                 <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white font-medium">
-                    {userId ? userId.charAt(0).toUpperCase() : "?"}
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                    {session?.user?.image ? (
+                      <Image
+                        src={session.user.image}
+                        alt="Profile"
+                        fill
+                        className="object-cover w-full h-full"
+                      />
+                    ) : (
+                      <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white text-lg font-medium">
+                        {session?.user?.name?.[0]?.toUpperCase()}
+                      </div>
+                    )}
                   </div>
+
+                  {/* Textarea */}
                   <div className="flex-1">
                     <Textarea
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      placeholder="What's on your mind today?"
+                      placeholder={`Good ${getGreeting()} ${
+                        session?.user?.name
+                      } What's on your mind this ${getGreeting()} ?`}
                       className="min-h-[120px] placeholder:text-xs border-none resize-none bg-transparent text-zinc-900 dark:text-zinc-50 placeholder:text-zinc-500 dark:placeholder:text-zinc-400 focus-visible:ring-0 p-0 text-lg"
                     />
                   </div>
                 </div>
 
+                {/* Image preview */}
                 {imagePreview && (
                   <div className="relative group rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                     <img
@@ -227,6 +252,7 @@ export const DailyCheckIn = () => {
                 )}
 
                 <div className="flex items-center justify-between pt-4">
+                  {/* File input button */}
                   <div className="flex items-center gap-2">
                     <input
                       type="file"
@@ -252,6 +278,7 @@ export const DailyCheckIn = () => {
                     <Sparkles className="w-5 h-5 text-amber-500" />
                   </div>
 
+                  {/* Submit button */}
                   <Button
                     onClick={handleSubmit}
                     disabled={!userId || !content.trim() || loading}
@@ -299,7 +326,7 @@ export const DailyCheckIn = () => {
           </div>
         </section>
       )}
-      <Toaster/>
+      <Toaster />
     </>
   );
 };
