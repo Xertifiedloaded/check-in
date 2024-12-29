@@ -33,6 +33,7 @@ model User {
   tasks                   Task[]
   comments                Comment[] @relation("UserComments")
   replies                 Reply[]   @relation("UserReplies")
+   notificationsEnabled    Boolean   @default(true)
 }
 
 model Task {

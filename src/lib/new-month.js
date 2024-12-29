@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { happyNewMonthTemplate } from "./NewYearTemplate";
 import { transporter } from "./nodemailer";
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
+
 const prisma = new PrismaClient();
 
 async function sendHappyNewMonthEmails() {
@@ -11,13 +12,18 @@ async function sendHappyNewMonthEmails() {
 
     if (today.getDate() === 1) {
       const users = await prisma.user.findMany({
+        where: {
+          notificationsEnabled: true, 
+          isDeleted: false,
+          email: { not: null }, 
+        },
         select: {
           name: true,
           email: true,
         },
       });
 
-      const validUsers = users.filter(user => user.email && validateEmail(user.email));
+      const validUsers = users.filter(user => validateEmail(user.email));
       for (const user of validUsers) {
         const mailOptions = {
           to: user.email,
@@ -25,22 +31,27 @@ async function sendHappyNewMonthEmails() {
           html: happyNewMonthTemplate(user.name),
           attachments: [
             {
-              filename: 'banner.jpg',
-              path: path.join(process.cwd(), 'public', 'banner.jpg'),
-              cid: 'monthlyBanner' 
-            }
-          ]
+              filename: "banner.jpg",
+              path: path.join(process.cwd(), "public", "banner.jpg"),
+              cid: "monthlyBanner", 
+            },
+          ],
         };
 
-        await transporter.sendMail(mailOptions);
+        try {
+          await transporter.sendMail(mailOptions);
+          console.log(`Email sent to ${user.email}`);
+        } catch (error) {
+          console.error(`Failed to send email to ${user.email}:`, error);
+        }
       }
 
-      console.log(`Happy new month emails sent to ${validUsers.length} users.`);
+      console.log(`Happy New Month emails sent to ${validUsers.length} users.`);
     } else {
-      console.log("Not the start of a new month, skipping happy new month emails.");
+      console.log("Not the start of a new month, skipping Happy New Month emails.");
     }
   } catch (error) {
-    console.error("Error sending happy new month emails:", error);
+    console.error("Error sending Happy New Month emails:", error);
   } finally {
     await prisma.$disconnect();
   }

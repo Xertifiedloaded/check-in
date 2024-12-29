@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { transporter } from "./nodemailer";
 import { happyNewYearTemplate } from "./NewYearTemplate";
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
+
 const prisma = new PrismaClient();
 
 async function sendHappyNewYearEmails() {
@@ -11,13 +12,18 @@ async function sendHappyNewYearEmails() {
 
     if (today.getMonth() === 0 && today.getDate() === 1) {
       const users = await prisma.user.findMany({
+        where: {
+          notificationsEnabled: true, 
+          isDeleted: false,
+          email: { not: null },
+        },
         select: {
           name: true,
           email: true,
         },
       });
 
-      const validUsers = users.filter(user => user.email && validateEmail(user.email));
+      const validUsers = users.filter(user => validateEmail(user.email));
       for (const user of validUsers) {
         const mailOptions = {
           to: user.email,
@@ -25,21 +31,27 @@ async function sendHappyNewYearEmails() {
           html: happyNewYearTemplate(user.name),
           attachments: [
             {
-              filename: 'new-year-2025.jpeg',
-              path: path.join(process.cwd(), 'public', 'new-year-2025.jpeg'),
-              cid: 'newYearBanner'
-            }
-          ]
+              filename: "new-year-2025.jpeg",
+              path: path.join(process.cwd(), "public", "new-year-2025.jpeg"),
+              cid: "newYearBanner",
+            },
+          ],
         };
-        await transporter.sendMail(mailOptions);
+
+        try {
+          await transporter.sendMail(mailOptions);
+          console.log(`Email sent to ${user.email}`);
+        } catch (error) {
+          console.error(`Failed to send email to ${user.email}:`, error);
+        }
       }
 
-      console.log(`Happy new year emails sent to ${validUsers.length} users.`);
+      console.log(`Happy New Year emails sent to ${validUsers.length} users.`);
     } else {
-      console.log("Not the start of a new year, skipping happy new year emails.");
+      console.log("Not the start of a new year, skipping Happy New Year emails.");
     }
   } catch (error) {
-    console.error("Error sending happy new year emails:", error);
+    console.error("Error sending Happy New Year emails:", error);
   } finally {
     await prisma.$disconnect();
   }
