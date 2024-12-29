@@ -8,7 +8,6 @@ export default function Home() {
   return (
     <>
       <main className="">
-        <Toaster />
         <HomePage />
         <DailyCheckIn />
       </main>

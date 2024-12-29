@@ -1,155 +1,188 @@
-"use client"
+"use client";
 
-import axios from "axios"
-import { useState, useEffect } from "react"
-import { FeedUserCard } from "@/components/UserFeedCard"
-import { MessageCircle, RefreshCw, ArrowLeft, Loader2, PenSquare } from "lucide-react"
-import Head from "next/head"
-import Link from "next/link"
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { FeedUserCard } from "@/components/UserFeedCard";
+import {
+  MessageCircle,
+  RefreshCw,
+  ArrowLeft,
+  Loader2,
+  PenSquare,
+  Users,
+  AlertCircle,
+} from "lucide-react";
+import Head from "next/head";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Feed() {
-  const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [refreshing, setRefreshing] = useState(false)
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchPosts = async () => {
     try {
-      setRefreshing(true)
-      const response = await axios.get("/api/post/feed")
-      setPosts(response.data.posts)
-      setError(null)
+      setRefreshing(true);
+      const response = await axios.get("/api/post/feed");
+      setPosts(response.data.posts);
+      setError(null);
     } catch (error) {
-      console.error("Error fetching posts:", error)
-      setError("Failed to load posts.")
+      console.error("Error fetching posts:", error);
+      setError("Failed to load posts.");
     } finally {
-      setLoading(false)
-      setRefreshing(false)
+      setLoading(false);
+      setRefreshing(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchPosts()
-  }, [])
+    fetchPosts();
+  }, []);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-12 h-12 text-blue-500 dark:text-blue-400 animate-spin" />
-          <p className="text-sm text-gray-600 dark:text-gray-400">Loading your feed...</p>
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+        <div className="max-w-5xl mx-auto px-4 pt-20">
+          <div className="space-y-6">
+            {[1, 2, 3].map((i) => (
+              <Card key={i}>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-[200px]" />
+                      <Skeleton className="h-4 w-[160px]" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-24 w-full" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="p-8 max-w-sm mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
-              <MessageCircle className="w-8 h-8 text-red-500 dark:text-red-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-              Unable to Load Feed
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">{error}</p>
-            <button
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center p-4">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="flex flex-col gap-4">
+            <p>{error}</p>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={fetchPosts}
-              className="px-6 py-2.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors duration-200 inline-flex items-center gap-2"
+              className="w-fit"
             >
-              <RefreshCw className="w-4 h-4" />
-              <span>Try Again</span>
-            </button>
-          </div>
-        </div>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Try Again
+            </Button>
+          </AlertDescription>
+        </Alert>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       <Head>
         <title>Community Feed | Daily Check-in</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
         <meta
           name="description"
           content="Explore daily check-ins and connect with our vibrant community sharing their experiences and progress."
         />
       </Head>
 
-      <main className="max-w-4xl mx-auto px-4 pt-16 pb-24">
-
-        <nav className="mb-8">
-          <Link 
-            href="/" 
-            className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+      <header className="fixed top-0 inset-x-0 h-16 bg-background/80 backdrop-blur-sm border-b z-50">
+        <div className="max-w-5xl mx-auto px-4 h-full flex items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            <span className="text-sm font-medium">Return to Dashboard</span>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            <span className="text-sm font-medium">Dashboard</span>
           </Link>
-        </nav>
 
-        <header className="mb-8 px-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="space-y-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
-                Community Feed
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                See what everyone's been up to today
-              </p>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {posts.length > 0 && (
-                <div className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full text-sm">
+          <div className="flex items-center gap-3">
+            {posts.length > 0 && (
+              <div className="hidden sm:flex items-center gap-2 text-muted-foreground">
+                <Users className="w-4 h-4" />
+                <span className="text-sm">
                   {posts.length} {posts.length === 1 ? "update" : "updates"}
-                </div>
-              )}
-              <button
-                onClick={fetchPosts}
-                disabled={refreshing}
-                className="inline-flex items-center px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors duration-200 disabled:opacity-50"
-              >
-                <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-                {refreshing ? 'Refreshing...' : 'Refresh'}
-              </button>
-            </div>
+                </span>
+              </div>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchPosts}
+              disabled={refreshing}
+              className="gap-2"
+            >
+              <RefreshCw
+                className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
+              />
+              {refreshing ? "Refreshing" : "Refresh"}
+            </Button>
           </div>
-        </header>
+        </div>
+      </header>
 
-
-        {posts.length === 0 ? (
-          <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700/50">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center">
-              <MessageCircle className="w-10 h-10 text-gray-400 dark:text-gray-500" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-              No Updates Yet
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm max-w-sm mx-auto">
-              Be the first to share your progress with the community!
+      <main className="max-w-5xl mx-auto px-4">
+        <div className="pt-24 pb-8">
+          <div className="space-y-2 mb-8">
+            <h1 className="text-3xl font-bold tracking-tight">
+              Community Feed
+            </h1>
+            <p className="text-muted-foreground">
+              See what everyone's been up to today
             </p>
           </div>
-        ) : (
-          <div className="space-y-6   ">
-            {posts.map((post) => (
-              <div key={post?.id}>
-                <FeedUserCard post={post} comments={post.comments} />
+
+          <ScrollArea className="h-[calc(100vh-12rem)]">
+            {posts.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
+                    <MessageCircle className="w-8 h-8 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">No Updates Yet</h3>
+                  <p className="text-muted-foreground text-sm max-w-sm">
+                    Be the first to share your progress with the community! Your
+                    updates will appear here.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="">
+                {posts.map((post) => (
+                  <FeedUserCard post={post} comments={post.comments} />
+                ))}
               </div>
-            ))}
-          </div>
-        )}
+            )}
+          </ScrollArea>
+        </div>
       </main>
 
-
-      {/* <button 
-        className="fixed bottom-8 right-8 bg-blue-600 dark:bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-gray-900"
+      <Button
+        size="icon"
+        className="fixed bottom-8 right-8 h-12 w-12 rounded-full shadow-lg"
       >
-        <PenSquare className="w-6 h-6" />
-      </button> */}
+        <PenSquare className="h-5 w-5" />
+      </Button>
     </div>
-  )
+  );
 }

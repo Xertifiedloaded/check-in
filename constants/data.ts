@@ -69,24 +69,28 @@ export const categories = [
 
 export const settings = [
   {
-    title: "My Bookings",
+    title: "Checkin History",
     icon: icons.calendar,
   },
   {
-    title: "Payments",
-    icon: icons.wallet,
-  },
-  {
-    title: "Profile",
-    icon: icons.person,
+    title: "Checkin Stats",
+    icon: icons.calendar,
   },
   {
     title: "Notifications",
     icon: icons.bell,
   },
   {
+    title: "Appearance",
+    icon: icons.people, 
+  },
+  {
     title: "Security",
     icon: icons.shield,
+  },
+  {
+    title: "Data Export",
+    icon: icons.shield, 
   },
   {
     title: "Language",
@@ -107,6 +111,8 @@ export const facilities = [
     title: "Laundry",
     icon: icons.laundry,
   },
+
+
   {
     title: "Car Parking",
     icon: icons.carPark,
