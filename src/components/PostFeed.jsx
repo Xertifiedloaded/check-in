@@ -135,7 +135,6 @@ export const DailyCheckIn = () => {
     <>
       {isUserActive && (
         <section className="wrapper">
-          {/* <RestoreStreak /> */}
           <div className="space-y-6 max-w-5xl mx-auto py-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -313,6 +312,7 @@ export const DailyCheckIn = () => {
               </CardContent>
             </Card>
           </div>
+          <RestoreStreak />
           <h1 className="text-3xl py-6">Explore Checkin's</h1>
           <div className=" grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {loadingPosts ? (

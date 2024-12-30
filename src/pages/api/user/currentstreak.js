@@ -83,20 +83,25 @@ export default async function handler(req, res) {
       }
 
       if (restoreStreak && streak.lastStreak > 0 && !streak.isActive) {
+        console.log("Restoring streak...", { lastStreak: streak.lastStreak, currentStreak: streak.currentStreak });
         const updatedStreak = await prisma.streak.update({
           where: { id: streak.id },
           data: {
-            currentStreak: streak.lastStreak,
+            currentStreak: streak.lastStreak, 
             lastCheckIn: currentDate,
             isActive: true,
           },
         });
-
+      
+        console.log("Streak restored:", updatedStreak);
+        
         return res.status(200).json({
           message: "Streak restored successfully.",
           streak: updatedStreak,
         });
       }
+      
+
 
       const lastCheckInDate = streak.lastCheckIn ? new Date(streak.lastCheckIn) : null;
       
