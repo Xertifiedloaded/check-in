@@ -83,10 +83,10 @@ export default function LeaderBoard() {
     <div className="wrapper min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="px-4 py-8 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold mb-2 dark:text-white">
+          <h1 className="lg:text-3xl text-2xl font-bold mb-2 dark:text-white">
             Daily Streak Leaderboard
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-gray-600 text-sm dark:text-gray-400">
             Top performers and their impressive streaks
           </p>
         </div>
