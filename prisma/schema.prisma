@@ -67,6 +67,7 @@ model Streak {
   currentStreak Int?
   lastStreak    Int?
   lastCheckIn   DateTime?
+  isActive      Boolean   @default(true)
   user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String    @db.ObjectId
 }

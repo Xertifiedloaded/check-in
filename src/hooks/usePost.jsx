@@ -45,7 +45,6 @@ export const restoreUserStreak = () => {
       setLoading(true);
       try {
         const response = await axios.get("/api/user/currentstreak");
-
         setStreak(response.data);
       } catch (error) {
         toast({
@@ -135,18 +134,22 @@ export const useUserProfile = () => {
   return { profile, loading, error, fetchProfile };
 };
 
+
+
 export const useStreaks = () => {
-  const [streaks, setStreaks] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [streaks, setStreaks] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { toast } = useToast();
 
   const fetchStreaks = async () => {
     setIsLoading(true);
+    setError(null);
+
     try {
       const response = await fetch("/api/post/streak");
       if (!response.ok) {
-        throw new Error("Failed to fetch ongoing streaks");
+        throw new Error("Failed to fetch streaks.");
       }
       const data = await response.json();
       setStreaks(data);
@@ -155,7 +158,44 @@ export const useStreaks = () => {
       setError(err.message);
       toast({
         title: "Error",
-        description: "Failed to fetch streaks. Please try again.",
+        description: "Failed to fetch streaks. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const restoreStreak = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/post/streak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ restoreStreak: true }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to restore streak.");
+      }
+
+      const data = await response.json();
+      setStreaks(data.streak);
+
+      toast({
+        title: "Success",
+        description: "Streak restored successfully.",
+        variant: "success",
+      });
+    } catch (err) {
+      console.error("Error restoring streak:", err);
+      setError(err.message);
+
+      toast({
+        title: "Error",
+        description: "Failed to restore streak. Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -167,10 +207,8 @@ export const useStreaks = () => {
     fetchStreaks();
   }, []);
 
-  return { streaks, isLoading, error, refetch: fetchStreaks };
+  return { streaks, isLoading, error, refetch: fetchStreaks, restoreStreak };
 };
-
-
 
 
 

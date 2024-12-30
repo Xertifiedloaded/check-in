@@ -19,11 +19,11 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-
 import { Separator } from "@/components/ui/separator";
 import usePosts from "../hooks/usePost";
 import { PostSkeleton } from "./Skeletal";
 import { CardComponent } from "./Card";
+import RestoreStreak from "./RestoreStreak";
 
 const getGreeting = () => {
   const hours = new Date().getHours();
@@ -135,6 +135,7 @@ export const DailyCheckIn = () => {
     <>
       {isUserActive && (
         <section className="wrapper">
+          {/* <RestoreStreak /> */}
           <div className="space-y-6 max-w-5xl mx-auto py-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
