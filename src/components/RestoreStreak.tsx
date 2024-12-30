@@ -23,6 +23,16 @@ export default function RestoreStreak() {
     return null;
   }
 
+  // if the last check-in was more than 24 hours ago
+  const lastCheckInTime = new Date(streak?.lastCheckIn).getTime();
+  const currentTime = new Date().getTime();
+  const hoursAgo = Math.floor((currentTime - lastCheckInTime) / (1000 * 60 * 60));
+
+  // If the last check-in was more than 24 hours ago, do not render the component
+  if (hoursAgo > 24) {
+    return null;
+  }
+
   return (
     <Card className="border shadow-sm overflow-hidden">
       <CardContent className="p-6 bg-gradient-to-b from-gray-50 dark:from-gray-800/50">
