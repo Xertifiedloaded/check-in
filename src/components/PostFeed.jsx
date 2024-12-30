@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "react-hot-toast";
@@ -31,6 +32,33 @@ const getGreeting = () => {
   if (hours < 18) return "afternoon";
   return "evening";
 };
+export function CurrentTime() {
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000); 
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
+    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      {currentTime.toLocaleDateString(undefined, {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      })}{" "}
+      {currentTime.toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })}
+    </p>
+  );
+}
+
 export const DailyCheckIn = () => {
   const { fetchPosts, setPosts, posts, loadingPosts } = usePosts();
   const { toast } = useToast();
@@ -145,18 +173,7 @@ export const DailyCheckIn = () => {
                   <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
                     Daily Check-in
                   </h2>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {new Date().toLocaleDateString(undefined, {
-                      weekday: "long",
-                      month: "long",
-                      day: "numeric",
-                    })}{" "}
-                    {new Date().toLocaleTimeString(undefined, {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      second: "2-digit",
-                    })}
-                  </p>
+                  <CurrentTime />
                 </div>
               </div>
 
