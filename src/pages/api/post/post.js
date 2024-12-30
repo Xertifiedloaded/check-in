@@ -86,16 +86,15 @@ export default async function handler(req, res) {
           startDate: currentDate,
           currentStreak: 1,
           lastCheckIn: currentDate,
-          lastStreak: 0,
+          lastStreak: 0, 
           isActive: true,
         },
       });
       streakUpdated = true;
     } else {
       const lastCheckIn = new Date(streak.lastCheckIn);
-      
+    
       if (isWithin24Hours(lastCheckIn, currentDate)) {
-        // Within 24 hours, maintain or increment streak
         if (!isSameDay(lastCheckIn, currentDate)) {
           newStreak = await prisma.streak.update({
             where: { id: streak.id },
@@ -107,21 +106,22 @@ export default async function handler(req, res) {
           });
           streakUpdated = true;
         } else {
-          newStreak = streak; 
+          newStreak = streak;
         }
       } else {
         newStreak = await prisma.streak.update({
           where: { id: streak.id },
           data: {
-            lastStreak: streak.currentStreak,
-            currentStreak: 1,
+            lastStreak: streak.currentStreak, 
+            currentStreak: 1, 
             lastCheckIn: currentDate,
-            isActive: true,
+            isActive: true, 
           },
         });
         streakUpdated = true;
       }
     }
+    
 
     let imageUrl = null;
     if (imageFile) {
