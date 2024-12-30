@@ -38,13 +38,13 @@ export function CurrentTime() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
-    }, 1000); 
+    }, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+    <p className="text-xs text-zinc-500 dark:text-zinc-400">
       {currentTime.toLocaleDateString(undefined, {
         weekday: "long",
         month: "long",
@@ -173,6 +173,9 @@ export const DailyCheckIn = () => {
                   <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
                     Daily Check-in
                   </h2>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                    Good {getGreeting()} {session?.user?.name}
+                  </p>
                   <CurrentTime />
                 </div>
               </div>
@@ -239,9 +242,7 @@ export const DailyCheckIn = () => {
                     <Textarea
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      placeholder={`Good ${getGreeting()} ${
-                        session?.user?.name
-                      } What's on your mind this ${getGreeting()} ?`}
+                      placeholder={`What's on your mind this ${getGreeting()} ?`}
                       className="min-h-[120px] placeholder:text-xs border-none resize-none bg-transparent text-zinc-900 dark:text-zinc-50 placeholder:text-zinc-500 dark:placeholder:text-zinc-400 focus-visible:ring-0 p-0 text-lg"
                     />
                   </div>
