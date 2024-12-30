@@ -6,17 +6,51 @@ import { Bell, Sparkles, ArrowRight, TrendingUp, Users, ClipboardList, MapPin, T
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+const LoadingSkeleton = () => (
+  <div className="space-y-8 animate-pulse">
+    <div className="text-center space-y-4">
+      <div className="h-10 bg-zinc-200 dark:bg-zinc-800 rounded-lg w-3/4 mx-auto"></div>
+      <div className="h-6 bg-zinc-200 dark:bg-zinc-800 rounded w-2/3 mx-auto"></div>
+    </div>
+    <Card className="max-w-6xl mx-auto border-zinc-200 dark:border-zinc-800">
+      <CardContent className="p-8 space-y-6">
+        <div className="flex justify-center">
+          <div className="w-14 h-14 bg-zinc-200 dark:bg-zinc-800 rounded-xl"></div>
+        </div>
+        <div className="space-y-2 text-center">
+          <div className="h-6 bg-zinc-200 dark:bg-zinc-800 rounded w-1/3 mx-auto"></div>
+          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-1/2 mx-auto"></div>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3 pt-2">
+          <div className="h-10 bg-zinc-200 dark:bg-zinc-800 rounded w-full sm:w-1/2"></div>
+          <div className="h-10 bg-zinc-200 dark:bg-zinc-800 rounded w-full sm:w-1/2"></div>
+        </div>
+      </CardContent>
+    </Card>
+
+    {[...Array(4)].map((_, index) => (
+      <Card key={index} className="border-zinc-200 dark:border-zinc-800">
+        <CardContent className="p-6 space-y-4">
+          <div className="h-6 bg-zinc-200 dark:bg-zinc-800 rounded w-1/4"></div>
+          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-2/3"></div>
+          <div className="h-10 bg-zinc-200 dark:bg-zinc-800 rounded w-1/3"></div>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+);
+
 const HomePage = () => {
   const { data: session, status } = useSession();
   const isUserActive = status === "authenticated";
 
-
   return (
     <main className="bg-white dark:bg-black transition-colors duration-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {status === "loading" || !isUserActive && (
+        {status === "loading" ? (
+          <LoadingSkeleton />
+        ) : !isUserActive && (
           <div className="space-y-8">
-            {/* Hero Section */}
             <div className="text-center space-y-4">
               <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">
                 Track Your Journey
@@ -59,8 +93,8 @@ const HomePage = () => {
               </CardContent>
             </Card>
 
-                 {/* Goals Section */}
-                 <Card className="border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-none">
+            {/* Goals Section */}
+            <Card className="border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-none">
               <CardContent className="p-6 space-y-4">
                 <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
                   Your Goals
@@ -90,6 +124,8 @@ const HomePage = () => {
                 </Button>
               </CardContent>
             </Card>
+
+            {/* Quick Actions */}
             <Card className="border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-none">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-4">
@@ -111,6 +147,8 @@ const HomePage = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Statistics */}
             <Card className="border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-none">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-4">
@@ -128,6 +166,8 @@ const HomePage = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Community Highlights */}
             <Card className="border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-none">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-4">
@@ -154,7 +194,7 @@ const HomePage = () => {
               </CardContent>
             </Card>
           </div>
-        ) }
+        )}
       </div>
     </main>
   );

@@ -2,21 +2,24 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function updateUserStreak(userId, newStreakValue) {
+async function resetUserStreak(userId) {
   try {
     await prisma.streak.updateMany({
       where: {
-        userId: userId,  
+        userId: userId,
       },
       data: {
-        currentStreak: newStreakValue,  
+        currentStreak: 0, // Reset the current streak
+        lastStreak: 15, 
+        isActive: true   // Reset the last streak
       },
     });
-    console.log(`Streak updated to ${newStreakValue} for user with ID ${userId}.`);
+    console.log(`Streak reset for user with ID ${userId}.`);
   } catch (error) {
-    console.error("Error updating user streak:", error);
+    console.error("Error resetting user streak:", error);
   } finally {
     await prisma.$disconnect();
   }
 }
-updateUserStreak("66f91220a12d967d2b4126b9", 0);
+
+resetUserStreak("66f91220a12d967d2b4126b9");
