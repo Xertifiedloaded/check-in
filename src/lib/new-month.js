@@ -17,7 +17,6 @@ async function sendHappyNewMonthEmails() {
           isDeleted: false, 
         },
       });
-  
 
       const validUsers = users.filter(user => validateEmail(user.email));
       for (const user of validUsers) {
