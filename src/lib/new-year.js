@@ -21,6 +21,7 @@ async function sendHappyNewYearEmails() {
           email: true,
         },
       });
+  
 
       const validUsers = users.filter(user => validateEmail(user.email));
       const sentEmails = new Set();
