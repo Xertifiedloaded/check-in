@@ -5,7 +5,14 @@ import { reminderTemplate } from "../../../lib/CheckinReminder";
 const prisma = new PrismaClient();
 
 async function sendReminderEmailToAll(users) {
+  const sentEmails = new Set(); 
+
   for (const user of users) {
+    if (sentEmails.has(user.email)) {
+      console.log(`Skipping duplicate email for ${user.email}`);
+      continue;
+    }
+
     const personalizedHtml = reminderTemplate(user.name, "https://daily-check-in.com.ng");
 
     const mailOptions = {
@@ -17,6 +24,7 @@ async function sendReminderEmailToAll(users) {
     try {
       await transporter.sendMail(mailOptions);
       console.log(`Reminder email sent to ${user.email}`);
+      sentEmails.add(user.email); 
     } catch (error) {
       console.error(`Failed to send email to ${user.email}:`, error);
     }
@@ -28,11 +36,12 @@ export async function sendRemindersToUnseenUsers() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // Fetch users who haven't posted today
     const users = await prisma.user.findMany({
       where: {
         notificationsEnabled: true, 
-        isDeleted: false, 
-        email: { not: null }, 
+        isDeleted: false,
+        // email: { not: null },
         posts: {
           none: {
             createdAt: {
@@ -44,6 +53,7 @@ export async function sendRemindersToUnseenUsers() {
     });
 
     const validUsers = users.filter(user => validateEmail(user.email));
+
     if (validUsers.length > 0) {
       await sendReminderEmailToAll(validUsers);
     } else {
