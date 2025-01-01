@@ -247,8 +247,6 @@ export const DailyCheckIn = () => {
                     />
                   </div>
                 </div>
-
-                {/* Image preview */}
                 {imagePreview && (
                   <div className="relative group rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                     <img
