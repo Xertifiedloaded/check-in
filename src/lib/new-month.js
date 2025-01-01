@@ -15,7 +15,6 @@ async function sendHappyNewMonthEmails() {
         where: {
           notificationsEnabled: true, 
           isDeleted: false,
-          email: { not: null }, 
         },
         select: {
           name: true,
