@@ -58,5 +58,6 @@ jobs:
 
       - name: Run Reminder Script
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: echo "DATABASE_URL=$DATABASE_URL"
         run: node reminder.js
