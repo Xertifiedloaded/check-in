@@ -16,23 +16,31 @@
     "strictFunctionTypes": false,
     "strictBindCallApply": false,
     "noImplicitThis": false,
-    "alwaysStrict": false ,
+    "alwaysStrict": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": ".",                   // Add this line
+    "baseUrl": ".", // Add this line
     "paths": {
-      "@/*": ["./src/*"]              // Add this line
+      "@/*": [
+        "./src/*"
+      ] // Add this line
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/pages/chat/index.tsx"
-, "src/pages/personal-space/index.js", "src/components/PostSection.js", "src/pages/api/post/history.js", "src/components/Calender.jsx", "src/pages/profile/index.js"  ],
+    "src/pages/personal-space/index.js",
+    "src/api/send-notification.ts",
+    "src/components/PostSection.js",
+    "src/pages/api/post/history.js",
+    "src/components/Calender.jsx",
+    "src/pages/profile/index.js",
+    "src/hooks/useFcmToken.tsx"
+  ],
   "exclude": [
     "node_modules"
   ]

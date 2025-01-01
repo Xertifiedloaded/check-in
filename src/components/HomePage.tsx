@@ -46,11 +46,11 @@ const HomePage = () => {
 
   return (
     <main className="bg-white dark:bg-black transition-colors duration-200">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="">
         {status === "loading" ? (
           <LoadingSkeleton />
         ) : !isUserActive && (
-          <div className="space-y-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center space-y-4">
               <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">
                 Track Your Journey
