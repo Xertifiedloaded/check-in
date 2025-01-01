@@ -13,22 +13,34 @@ async function sendHappyNewYearEmails() {
     if (today.getMonth() === 0 && today.getDate() === 1) {
       const users = await prisma.user.findMany({
         where: {
-          notificationsEnabled: true, 
-          isDeleted: false, 
+          notificationsEnabled: true,
+          isDeleted: false,
+        },
+        select: {
+          name: true,
+          email: true,
         },
       });
   
 
       const validUsers = users.filter(user => validateEmail(user.email));
+      const sentEmails = new Set();
+
       for (const user of validUsers) {
+        // Skip sending if the email has already been processed
+        if (sentEmails.has(user.email)) {
+          console.log(`Skipping duplicate email for ${user.email}`);
+          continue;
+        }
+
         const mailOptions = {
           to: user.email,
           subject: "Happy New Year from Daily Checkin!",
           html: happyNewYearTemplate(user.name),
           attachments: [
             {
-              filename: "new-year-2025.jpeg",
-              path: path.join(process.cwd(), "public", "new-year-2025.jpeg"),
+              filename: "new-year2025.jpg",
+              path: path.join(process.cwd(), "public", "new-year2025.jpg"),
               cid: "newYearBanner",
             },
           ],
@@ -37,12 +49,13 @@ async function sendHappyNewYearEmails() {
         try {
           await transporter.sendMail(mailOptions);
           console.log(`Email sent to ${user.email}`);
+          sentEmails.add(user.email);
         } catch (error) {
           console.error(`Failed to send email to ${user.email}:`, error);
         }
       }
 
-      console.log(`Happy New Year emails sent to ${validUsers.length} users.`);
+      console.log(`Happy New Year emails sent to ${sentEmails.size} users.`);
     } else {
       console.log("Not the start of a new year, skipping Happy New Year emails.");
     }
