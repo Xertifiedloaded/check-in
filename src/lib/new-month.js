@@ -14,11 +14,7 @@ async function sendHappyNewMonthEmails() {
       const users = await prisma.user.findMany({
         where: {
           notificationsEnabled: true, 
-          isDeleted: false,
-        },
-        select: {
-          name: true,
-          email: true,
+          isDeleted: false, 
         },
       });
 

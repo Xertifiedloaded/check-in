@@ -37,20 +37,16 @@ export async function sendRemindersToUnseenUsers() {
     today.setHours(0, 0, 0, 0);
 
     // Fetch users who haven't posted today
-    const users = await prisma.user.findMany({
-      where: {
-        notificationsEnabled: true, 
-        isDeleted: false,
-        // email: { not: null },
-        posts: {
-          none: {
-            createdAt: {
-              gte: today, 
-            },
-          },
+      const users = await prisma.user.findMany({
+        where: {
+          notificationsEnabled: true,
+          isDeleted: false,
         },
-      },
-    });
+        select: {
+          name: true,
+          email: true,
+        },
+      });
 
     const validUsers = users.filter(user => validateEmail(user.email));
 
