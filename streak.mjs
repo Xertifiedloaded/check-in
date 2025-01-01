@@ -10,7 +10,7 @@ async function resetUserStreak(userId) {
         userId: userId,
       },
       data: {
-        currentStreak: 88, 
+        currentStreak: 78, 
       },
     });
 
@@ -26,7 +26,7 @@ async function resetUserStreak(userId) {
   }
 }
 
-resetUserStreak("670a67c36794978e92c316ca");
+resetUserStreak("670b89c78cecb168cf3dbcc4");
 
 
 
