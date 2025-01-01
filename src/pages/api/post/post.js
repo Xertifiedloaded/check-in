@@ -1,9 +1,4 @@
 
-
-
-
-
-
 import { authOptions } from "../../../lib/authOptions";
 import { prisma } from "../../../lib/prisma";
 import { getServerSession } from "next-auth";
@@ -15,6 +10,21 @@ export const config = {
     bodyParser: false,
   },
 };
+
+function getDayBounds(date) {
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+  
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+  
+  return { startOfDay, endOfDay };
+}
+
+function isWithin24Hours(date1, date2) {
+  const hoursDifference = Math.abs(date2 - date1) / (1000 * 60 * 60);
+  return hoursDifference <= 24;
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -28,7 +38,7 @@ export default async function handler(req, res) {
     }
 
     const form = formidable({
-      maxFileSize: 10 * 1024 * 1024, 
+      maxFileSize: 10 * 1024 * 1024,
       keepExtensions: true,
       multiples: false,
     });
@@ -40,15 +50,27 @@ export default async function handler(req, res) {
       });
     });
 
-    const content = fields.content?.[0] || fields.content; 
+    const content = fields.content?.[0] || fields.content;
     const visibility = fields.visibility?.[0] || fields.visibility || "PUBLIC";
-    const imageFile = files.image?.[0] || files.image; 
+    const imageFile = files.image?.[0] || files.image;
 
     if (!content || typeof content !== 'string' || !content.trim()) {
       return res.status(400).json({ message: "Check-in message is required" });
     }
 
     const currentDate = new Date();
+    const { startOfDay, endOfDay } = getDayBounds(currentDate);
+
+    // Check for existing check-ins today
+    const todayCheckIns = await prisma.post.count({
+      where: {
+        userId: session.user.id,
+        createdAt: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+      },
+    });
 
     let streak = await prisma.streak.findFirst({
       where: { userId: session.user.id },
@@ -60,33 +82,40 @@ export default async function handler(req, res) {
     if (!streak) {
       newStreak = await prisma.streak.create({
         data: {
-          userId: session.user.id,
+          userId: session?.user?.id,
           startDate: currentDate,
           currentStreak: 1,
           lastCheckIn: currentDate,
           lastStreak: 0,
+          isActive: true,
         },
       });
       streakUpdated = true;
     } else {
-      if (isConsecutiveDay(streak.lastCheckIn, currentDate)) {
-        newStreak = await prisma.streak.update({
-          where: { id: streak.id },
-          data: {
-            currentStreak: streak.currentStreak + 1,
-            lastCheckIn: currentDate,
-          },
-        });
-        streakUpdated = true;
-      } else if (isSameDay(streak.lastCheckIn, currentDate)) {
-        newStreak = streak;
+      const lastCheckIn = new Date(streak.lastCheckIn);
+      
+      if (isWithin24Hours(lastCheckIn, currentDate)) {
+        if (!isSameDay(lastCheckIn, currentDate)) {
+          newStreak = await prisma.streak.update({
+            where: { id: streak.id },
+            data: {
+              currentStreak: streak.currentStreak + 1,
+              lastCheckIn: currentDate,
+              isActive: true,
+            },
+          });
+          streakUpdated = true;
+        } else {
+          newStreak = streak; 
+        }
       } else {
         newStreak = await prisma.streak.update({
           where: { id: streak.id },
           data: {
-            lastStreak: streak.currentStreak, 
+            lastStreak: streak.currentStreak,
+            currentStreak: 1,
             lastCheckIn: currentDate,
-            currentStreak: 1, 
+            isActive: true,
           },
         });
         streakUpdated = true;
@@ -100,7 +129,6 @@ export default async function handler(req, res) {
         if (!allowedTypes.includes(imageFile.mimetype)) {
           return res.status(400).json({ message: "Invalid file type. Only images are allowed." });
         }
-
         imageUrl = await uploadToStorage(imageFile);
       } catch (error) {
         console.error("Image upload failed:", error);
@@ -113,7 +141,7 @@ export default async function handler(req, res) {
         content: content.trim(),
         imageUrl,
         visibility,
-        createdAt: new Date(),
+        createdAt: currentDate,
         userId: session.user.id,
       },
       include: {
@@ -126,23 +154,13 @@ export default async function handler(req, res) {
       },
     });
 
-    const todayCheckIns = await prisma.post.count({
-      where: {
-        userId: session.user.id,
-        createdAt: {
-          gte: new Date(new Date().setHours(0, 0, 0, 0)),
-          lte: new Date(new Date().setHours(23, 59, 59, 999)),
-        },
-      },
-    });
-
     return res.status(201).json({
       message: "Check-in posted successfully",
       checkIn,
-      updatedStreak: newStreak ? newStreak.currentStreak : 0,
-      lastStreak: newStreak?.lastStreak || 0,
+      updatedStreak: newStreak.currentStreak,
+      lastStreak: newStreak.lastStreak,
       streakUpdated,
-      todayCheckInsCount: todayCheckIns,
+      todayCheckInsCount: todayCheckIns + 1,
     });
   } catch (error) {
     console.error("Error creating check-in:", error);
@@ -153,17 +171,12 @@ export default async function handler(req, res) {
   }
 }
 
-function isConsecutiveDay(date1, date2) {
-  const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
-  const differenceInDays = Math.round((date2 - date1) / oneDayInMilliseconds);
-  return differenceInDays === 1;
-}
-
 function isSameDay(date1, date2) {
+  date1 = new Date(date1);
+  date2 = new Date(date2);
   return (
     date1.getFullYear() === date2.getFullYear() &&
     date1.getMonth() === date2.getMonth() &&
     date1.getDate() === date2.getDate()
   );
 }
-
