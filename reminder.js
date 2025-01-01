@@ -1,8 +1,9 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 const nodemailer = require("nodemailer");
 
 
-const prisma = new PrismaClient();
+
 
  const transporter = nodemailer.createTransport({
     service: "gmail",
