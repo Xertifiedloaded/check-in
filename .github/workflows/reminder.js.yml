@@ -1,33 +1,60 @@
-name: Checkin Reminder Cron Job
+# name: Checkin Reminder Cron Job
+
+# on:
+#   schedule:
+#    - cron: '0 9 * * *'
+#   workflow_dispatch:
+
+# jobs:
+#   send-reminder:
+#     runs-on: ubuntu-latest
+    
+#     steps:
+#       - name: Send reminder to production endpoint
+#         run: |
+#           response=$(curl -s -w "\n%{http_code}" --max-time 60 --retry 3 -X POST 'https://daily-check-in.com.ng/api/cron/send-reminder')
+#           status_code=$(echo "$response" | tail -n1)
+#           body=$(echo "$response" | sed '$d')
+          
+#           echo "Status code: $status_code"
+#           echo "Response body: $body"
+          
+#           if [ "$status_code" -ge 200 ] && [ "$status_code" -lt 300 ]; then
+#             echo "Request successful"
+#           else
+#             echo "Request failed with status code $status_code"
+#             exit 1
+#           fi
+#         continue-on-error: true
+      
+#       - name: Debug Cron Trigger
+#         run: |
+#           echo "Workflow triggered at: $(date)"
+#           echo "Last cron run: $(date --date='1 minute ago')"
+
+
+name: Send Reminder Emails
 
 on:
   schedule:
-   - cron: '0 9 * * *'
-  workflow_dispatch:
+    - cron: "0 8 * * *"
+  workflow_dispatch: 
 
 jobs:
   send-reminder:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Send reminder to production endpoint
-        run: |
-          response=$(curl -s -w "\n%{http_code}" --max-time 60 --retry 3 -X POST 'https://daily-check-in.com.ng/api/cron/send-reminder')
-          status_code=$(echo "$response" | tail -n1)
-          body=$(echo "$response" | sed '$d')
-          
-          echo "Status code: $status_code"
-          echo "Response body: $body"
-          
-          if [ "$status_code" -ge 200 ] && [ "$status_code" -lt 300 ]; then
-            echo "Request successful"
-          else
-            echo "Request failed with status code $status_code"
-            exit 1
-          fi
-        continue-on-error: true
-      
-      - name: Debug Cron Trigger
-        run: |
-          echo "Workflow triggered at: $(date)"
-          echo "Last cron run: $(date --date='1 minute ago')"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Reminder Script
+        run: node reminder.js
