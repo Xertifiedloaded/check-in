@@ -36,6 +36,16 @@ model User {
   replies                 Reply[]   @relation("UserReplies")
   notificationsEnabled    Boolean   @default(true)
 }
+model Streak {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  startDate     DateTime
+  currentStreak Int?
+  lastStreak    Int?
+  lastCheckIn   DateTime?
+  isActive      Boolean   @default(true)
+  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String    @db.ObjectId
+}
 
 model Task {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -62,16 +72,7 @@ model Post {
   comments   Comment[] @relation("PostComments")
 }
 
-model Streak {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  startDate     DateTime
-  currentStreak Int?
-  lastStreak    Int?
-  lastCheckIn   DateTime?
-  isActive      Boolean   @default(true)
-  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String    @db.ObjectId
-}
+
 
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId

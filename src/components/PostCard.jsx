@@ -80,7 +80,7 @@ const TwitterStylePost = ({
         setCommentCount={setCommentCount}
       />
 
-      {showComments && (
+      {/* {showComments && (
         <div className="border-t border-gray-100 dark:border-gray-700/50">
           <CommentSection
             handleToggleComments={handleToggleComments}
@@ -91,7 +91,7 @@ const TwitterStylePost = ({
             updateCommentCount={setCommentCount}
           />
         </div>
-      )}
+      )} */}
     </>
   );
 };
@@ -145,7 +145,7 @@ const SocialPost = ({
                   className="w-full h-full object-cover"
                 />
               </div>
-              {user.isVerified && (
+              {/* {user.isVerified && (
                 <div className="absolute -right-0.5 -bottom-0.5 bg-blue-500 rounded-full p-1">
                   <svg className="w-3 h-3 text-white" viewBox="0 0 24 24">
                     <path
@@ -154,7 +154,7 @@ const SocialPost = ({
                     />
                   </svg>
                 </div>
-              )}
+              )} */}
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100">
@@ -301,7 +301,7 @@ const SocialPost = ({
         </span>
       </button>
 
-      <button
+      {/* <button
         onClick={handleToggleComments}
         className="group relative flex items-center gap-3 transition-transform hover:scale-105 active:scale-95"
       >
@@ -311,7 +311,7 @@ const SocialPost = ({
         <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
           {commentCount}
         </span>
-      </button>
+      </button> */}
 
       <button
         onClick={handleShare}
