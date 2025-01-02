@@ -10,9 +10,9 @@ export default function Home() {
     <>
       <main className="">
         <HomePage />
-        <div className="wrapper flex text-xs justify-center items-center">
+        {/* <div className="wrapper flex text-xs justify-center items-center">
           <Worker />
-        </div>
+        </div> */}
         <DailyCheckIn />
       </main>
     </>

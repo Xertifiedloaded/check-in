@@ -23,5 +23,5 @@ async function deleteUser(email) {
   }
 }
 
-const emailToDelete = 'test@gmail.com'; 
+const emailToDelete = 'certifiedloaded@gmail.com'; 
 deleteUser(emailToDelete);
