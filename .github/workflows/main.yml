@@ -1,0 +1,29 @@
+
+name: Send Reminder Emails
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch: 
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Reminder Script
+        env:
+         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: echo "DATABASE_URL=$DATABASE_URL"
+        run: node reminder.js
