@@ -1,25 +1,26 @@
 require('dotenv').config();
 const { PrismaClient } = require('@prisma/client');
+const nodemailer = require('nodemailer');
 const prisma = new PrismaClient();
 
-const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  secure: true,
+  auth: {
+    user: 'certifiedloaded@gmail.com',
+    pass: 'kzisjgrcckzfbhdn',
+  },
+});
 
-
-
-
- const transporter = nodemailer.createTransport({
-    service: "gmail",
-    secure: false,
-    auth: {
-      user: 'certifiedloaded@gmail.com',
-      pass: "kzisjgrcckzfbhdn",
-    },
-  })
+const BATCH_SIZE = 50; 
+const DELAY = 2000; 
 
 async function sendReminderEmailToAll(users) {
   const sentEmails = new Set();
 
-  for (const user of users) {
+  for (let i = 0; i < users.length; i++) {
+    const user = users[i];
+
     if (sentEmails.has(user.email)) {
       console.log(`Skipping duplicate email for ${user.email}`);
       continue;
@@ -40,32 +41,51 @@ async function sendReminderEmailToAll(users) {
     } catch (error) {
       console.error(`Failed to send email to ${user.email}:`, error.message);
     }
+
+    if ((i + 1) % BATCH_SIZE === 0) {
+      console.log(`Batch of ${BATCH_SIZE} emails sent. Pausing for ${DELAY / 1000} seconds...`);
+      await delay(DELAY);
+    }
   }
 }
 
 async function sendRemindersToUnseenUsers() {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0); // Set time to midnight to compare only the date
 
+    // Fetch users and their latest streak information
     const users = await prisma.user.findMany({
       where: {
         notificationsEnabled: true,
         isDeleted: false,
       },
-      select: {
-        name: true,
-        email: true,
+      include: {
+        streaks: {
+          orderBy: {
+            lastCheckIn: 'desc', // Order by last check-in date to get the latest streak
+          },
+          take: 1, // Only take the most recent streak
+        },
       },
     });
 
-    const validUsers = users.filter(user => validateEmail(user.email));
+    // Filter users who haven't checked in today
+    const validUsers = users.filter(user => {
+      if (user.streaks.length === 0) return true; // No streak, send reminder
+
+      const lastStreak = user.streaks[0];
+      return !lastStreak.lastCheckIn || new Date(lastStreak.lastCheckIn).getDate() !== today.getDate();
+    }).map(user => ({
+      name: user.name,
+      email: user.email,
+    }));
 
     if (validUsers.length > 0) {
-      console.log(`Sending reminders to ${validUsers.length} users...`);
+      console.log(`Sending reminders to ${validUsers.length} users who haven't checked in today...`);
       await sendReminderEmailToAll(validUsers);
     } else {
-      console.log("No users found to send reminders.");
+      console.log("No valid users found to send reminders.");
     }
   } catch (error) {
     console.error("Error fetching users:", error.message);
@@ -74,27 +94,21 @@ async function sendRemindersToUnseenUsers() {
   }
 }
 
-function validateEmail(email) {
-  const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return re.test(email);
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 sendRemindersToUnseenUsers();
 
-
-
-
-
-
-
+// Reminder email template
 const reminderTemplate = (userName, websiteUrl) => {
-    return `
+  return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Document</title>
+      <title>Reminder to Check-In</title>
     </head>
     <body>
       <table cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; margin: 0 auto; font-family: 'Nunito', Helvetica, Arial, sans-serif;">
@@ -120,8 +134,5 @@ const reminderTemplate = (userName, websiteUrl) => {
       </table>
     </body>
     </html>
-      `;
-  };
-  
-
-  
+  `;
+};

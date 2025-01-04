@@ -1,10 +1,9 @@
-
 name: Annual Cron Job
 
 on:
   schedule:
-   - cron: '0 0 1 1 *'
-  workflow_dispatch: 
+    - cron: '0 0 1 1 *'
+  workflow_dispatch:
 
 jobs:
   send-reminder:
@@ -24,9 +23,7 @@ jobs:
 
       - name: Run Reminder Script
         env:
-         DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: echo "DATABASE_URL=$DATABASE_URL"
-        run: node new-year.js
-
-
-          
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "DATABASE_URL=$DATABASE_URL"
+          node new-year.js
