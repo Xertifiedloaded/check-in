@@ -7,19 +7,21 @@ import { useToast } from "@/hooks/use-toast";
 
 const TabIcon = ({ focused, icon, title }) => {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center justify-center">
       <Image
         src={icon}
-        width={24}
-        height={24}
+        width={20}
+        height={20}
         alt={title}
-        className={`${focused ? "opacity-100" : "opacity-50"} dark:invert`}
+        className={`${
+          focused ? "opacity-100" : "opacity-50"
+        } dark:invert transition-opacity`}
       />
       <span
-        className={`text-xs mt-1 ${
+        className={`text-[10px] hidden md:block mt-0.5 ${
           focused
-            ? "text-blue-500 dark:text-blue-400 font-medium"
-            : "text-gray-600 dark:text-gray-400 text-center"
+            ? "text-primary font-medium"
+            : "text-muted-foreground"
         }`}
       >
         {title}
@@ -36,74 +38,53 @@ export default function TabNavigation() {
   const handleTabChange = (value: string) => {
     if (value === "/profile" && status !== "authenticated") {
       toast({
-        title: "Not authenticated",
-        description: "Please log in to access your profile.",
+        title: "Sign in required",
+        description: "Please sign in to view your profile",
         variant: "destructive",
         action: (
           <button
             onClick={() => router.push("/auth/login")}
-            className="bg-black text-white rounded-[25px] text-sm px-8 py-2  w-auto"
+            className="rounded-full bg-primary px-4 py-1 text-xs text-primary-foreground"
           >
-            Log in
+            Sign in
           </button>
         ),
       });
       return;
-    } else {
-      router.push(value);
     }
+    router.push(value);
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 min-h-[70px] w-full backdrop-blur-lg bg-opacity-80 dark:bg-opacity-80">
-      <Tabs
-        defaultValue={router.pathname}
-        onValueChange={handleTabChange}
-        className="w-full"
-      >
-        <TabsList className="w-full h-full grid grid-cols-4 bg-transparent">
-          <TabsTrigger
-            value="/"
-            className="data-[state=active]:bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <TabIcon
-              title="Home"
-              icon={icons.home}
-              focused={router.pathname === "/"}
-            />
-          </TabsTrigger>
-          <TabsTrigger
-            value="/streaks"
-            className="data-[state=active]:bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <TabIcon
-              title="Streaks"
-              icon={icons.people}
-              focused={router.pathname === "/streaks"}
-            />
-          </TabsTrigger>
-          <TabsTrigger
-            value="/feed"
-            className="data-[state=active]:bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <TabIcon
-              title="Feed"
-              icon={icons.search}
-              focused={router.pathname === "/feed"}
-            />
-          </TabsTrigger>
-          <TabsTrigger
-            value="/profile"
-            className="data-[state=active]:bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <TabIcon
-              title="Profile"
-              icon={icons.person}
-              focused={router.pathname === "/profile"}
-            />
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+    <div className="fixed bottom-0 left-0 right-0 z-50">
+      <div className="safe-area-bottom bg-background/80 backdrop-blur-lg border-t border-border">
+        <Tabs
+          defaultValue={router.pathname}
+          onValueChange={handleTabChange}
+          className="w-full"
+        >
+          <TabsList className="w-full h-14 grid grid-cols-4 bg-transparent gap-1 p-0">
+            {[
+              { path: "/", title: "Home", icon: icons.home },
+              { path: "/streaks", title: "Streaks", icon: icons.people },
+              { path: "/feed", title: "Feed", icon: icons.search },
+              { path: "/profile", title: "Profile", icon: icons.person },
+            ].map((tab) => (
+              <TabsTrigger
+                key={tab.path}
+                value={tab.path}
+                className="data-[state=active]:bg-transparent hover:bg-accent/50 rounded-lg transition-colors"
+              >
+                <TabIcon
+                  title={tab.title}
+                  icon={tab.icon}
+                  focused={router.pathname === tab.path}
+                />
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      </div>
     </div>
   );
 }

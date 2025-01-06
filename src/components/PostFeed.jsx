@@ -21,10 +21,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import usePosts from "../hooks/usePost";
+import usePosts, { useRestoreStreak } from "../hooks/usePost";
 import { PostSkeleton } from "./Skeletal";
 import { CardComponent } from "./Card";
-import RestoreStreak from "./RestoreStreak";
+import StreakManager from "./StreakManager";
 
 const getGreeting = () => {
   const hours = new Date().getHours();
@@ -68,7 +68,8 @@ export const DailyCheckIn = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const { data: session, status } = useSession();
   const isUserActive = status === "authenticated" && status !== "loading";
-
+  const { setisStreakLoader, message, currentStreak, handleRestoreStreak } =
+    useRestoreStreak();
   const userId = session?.user?.id;
   const [loading, setLoading] = useState(false);
 
@@ -328,8 +329,11 @@ export const DailyCheckIn = () => {
               </CardContent>
             </Card>
           </div>
-          <RestoreStreak />
-          <h1 className="text-3xl py-6">Explore Checkin's</h1>
+          <div className="flex my-10 justify-between items-center">
+            <h1 className="text-lg lg:text-3xl ">Explore Checkin's</h1>
+            {currentStreak === null ||
+              (currentStreak <= 0 && <StreakManager />)}
+          </div>
           <div className=" grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {loadingPosts ? (
               Array.from({ length: 8 }).map((_, index) => (

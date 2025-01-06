@@ -34,64 +34,6 @@ const usePosts = () => {
 
 export default usePosts;
 
-export const restoreUserStreak = () => {
-  const [streak, setStreak] = useState(null);
-  const [showRestoreModal, setShowRestoreModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchStreak = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get("/api/user/currentstreak");
-        setStreak(response.data);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description:
-            error.response?.data?.error || "Failed to fetch streak data.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStreak();
-  }, [toast]);
-
-  const restoreStreak = async () => {
-    try {
-      const response = await axios.post("/api/user/currentstreak");
-      toast({
-        title: "Success",
-        description: response.data.message,
-        variant: "success",
-      });
-
-      const updatedStreak = await axios.get("/api/user/currentstreak");
-      setStreak(updatedStreak.data);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: error.response?.data?.error || "Failed to restore streak.",
-        variant: "destructive",
-      });
-    } finally {
-      setShowRestoreModal(false);
-    }
-  };
-
-  return {
-    streak,
-    loading,
-    currentStreak: streak?.currentStreak,
-    showRestoreModal,
-    setShowRestoreModal,
-    restoreStreak,
-  };
-};
 
 export const useUserProfile = () => {
   const { data: session } = useSession();
@@ -210,5 +152,58 @@ export const useStreaks = () => {
   return { streaks, isLoading, error, refetch: fetchStreaks, restoreStreak };
 };
 
+
+
+
+
+
+
+export const useRestoreStreak = () => {
+  const [isStreakLoader, setisStreakLoader] = useState(false);
+  const [message, setMessage] = useState("");
+  const [currentStreak, setCurrentStreak] = useState(null);
+
+  // Fetch current streak
+  const fetchStreak = async () => {
+    try {
+      const response = await axios.get("/api/user/currentstreak");
+      setCurrentStreak(response.data.streak.currentStreak);
+      console.log(currentStreak);
+    } catch (error) {
+      console.error("Failed to fetch streak:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStreak();
+  }, []);
+
+  // Handle restore streak
+  const handleRestoreStreak = async () => {
+    setisStreakLoader(true);
+    setMessage("");
+    try {
+      const response = await axios.patch("/api/user/currentstreak", {
+        restoreStreakRequested: true,
+      });
+      setMessage(response.data.message);
+      fetchStreak();
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message ||
+        "Failed to restore streak. Please try again."
+      );
+    } finally {
+      setisStreakLoader(false);
+    }
+  };
+
+  return {
+    isStreakLoader,
+    message,
+    currentStreak,
+    handleRestoreStreak,
+  };
+};
 
 

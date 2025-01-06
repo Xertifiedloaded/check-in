@@ -57,7 +57,15 @@ body {
 input{
   font-size: 16px;
 }
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
 
+@supports not (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: 0px;
+  }
+}
 .loader {
   width: 65px;
   aspect-ratio: 1;
